@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE resources [<!ENTITY appName "Stolen Car Detector"><!ENTITY appId ""><!ENTITY appVersion "v0.1"><!ENTITY appDate "21/03/2020"><!ENTITY adMobAppId "ca-app-pub-3940256099942544~3347511713"><!ENTITY adMobBannerId "ca-app-pub-3940256099942544/6300978111">]><!--test adMobAppId "ca-app-pub-3940256099942544~3347511713"-->
+<!--test adMobBannerId "ca-app-pub-3940256099942544/6300978111"-->
+
+<resources>
+
+    <string name="app_name">&appName;</string>
+    <string name="app_id">&appId;</string>
+    <string name="app_version">&appVersion;</string>
+    <string name="app_date">&appDate;</string>
+    <string name="app_ad_id">&adMobAppId;</string>
+    <string name="app_banner_id">&adMobBannerId;</string>
+
+    <string name="permission_granted">Permission request granted</string>
+    <string name="permission_denied">Permission request denied</string>
+    <string name="switch_camera">Switch camera</string>
+    <string name="capture">Capture</string>
+    <string name="gallery">Gallery</string>
+    <string name="share">Share</string>
+    <string name="share_hint">Share using</string>
+    <string name="delete">Delete</string>
+    <string name="back">Back</string>
+    <string name="delete_dialog">Are you sure you want to delete current photo?</string>
+    <string name="delete_title">Confirm</string>
+    <string name="capture_mode_camera">Camera</string>
+    <string name="capture_mode_hdr">HDR</string>
+    <string name="capture_mode_night">Night</string>
+
+</resources>
