@@ -5,7 +5,5 @@ This is the Machine Learning repository of the object detector. The model itself
 
 
 - The model building and training procedure can be found in the Object detection Notebook, which is in the root directory.
-- Find the data preparation process in /data subfolder. Note that the dataset itself is not uploaded due to its size, but image samples will be uploaded.
-
-
+- Find the data preparation process in /data subfolder. Note that the dataset itself is not uploaded due to its size, but image samples will be uploaded. A Power BI report is also accessible that visualizes the dataset.
 
