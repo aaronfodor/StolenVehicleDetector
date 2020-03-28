@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         deviceOrientationListener = object : OrientationEventListener(this,
             SensorManager.SENSOR_DELAY_NORMAL) {
             override fun onOrientationChanged(orientation: Int) {
-                ObjectDetectionAnalyzer.deviceOrientation = orientation
+                MainViewModel.deviceOrientation = orientation
             }
         }
 

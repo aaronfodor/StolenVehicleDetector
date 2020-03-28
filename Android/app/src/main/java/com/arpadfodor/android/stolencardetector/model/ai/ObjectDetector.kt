@@ -49,6 +49,9 @@ abstract class ObjectDetector(
     // the inference model
     var model: Interpreter? = null
 
+    // pre-allocated buffer to the labels
+    var labels: ArrayList<String>? = null
+
     // GPU delegate to run the model on device GPU
     var gpuDelegate: GpuDelegate? = null
 
@@ -57,9 +60,6 @@ abstract class ObjectDetector(
 
     // pre-allocated buffer to the input image
     val intValues: IntArray
-
-    // pre-allocated buffer to the labels
-    val labels: ArrayList<String>
 
     // contains the number of detected boxes - array of shape [DIM_BATCH_SIZE]
     val numDetections: FloatArray
@@ -88,9 +88,12 @@ abstract class ObjectDetector(
         imgData = initImgData()
         intValues = IntArray(IMAGE_SIZE_X * IMAGE_SIZE_Y)
 
-        val mappedByteBuffer = loadModelFile(assets)
-        model = buildModel(mappedByteBuffer, numThreads)
-        labels = loadLabels(assets)
+        // Time consuming loading on a different thread
+        Thread{
+            val mappedByteBuffer = loadModelFile(assets)
+            model = buildModel(mappedByteBuffer, numThreads)
+            labels = loadLabels(assets)
+        }.start()
 
         log("Model initialized")
 
@@ -187,13 +190,18 @@ abstract class ObjectDetector(
         val startInferenceTime = SystemClock.uptimeMillis()
 
         // inference call on the model
-        model?.runForMultipleInputsOutputs(inputArray, outputMap)?:log("Model has not been loaded")
+        model?.runForMultipleInputsOutputs(inputArray, outputMap)
+            // return an empty list if the model is not ready
+            ?: run {
+            log("INFERENCE FAILURE: Model has not been loaded")
+            return ArrayList<Recognition>(0)
+            }
 
         val inferenceDuration = SystemClock.uptimeMillis() - startInferenceTime
         log("Inference duration: $inferenceDuration")
         Trace.endSection()
 
-        // Show the best detections after scaling them back to the input size
+        // Show the top detections after scaling them back to the input size
         val recognitions: ArrayList<Recognition> = ArrayList<Recognition>(NUM_DETECTIONS)
 
         for (i in 0 until NUM_DETECTIONS){
@@ -213,10 +221,18 @@ abstract class ObjectDetector(
              */
             val labelOffset = 1
 
+            // title from labels list
+            val title = labels?.get(outputClasses[0][i].toInt() + labelOffset)
+                                    // return an empty list if the labels are not ready
+                                    ?: run{
+                                        log("INFERENCE FAILURE: Labels list is empty")
+                                        return ArrayList<Recognition>(0)
+                                    }
+
             recognitions.add(
                 Recognition(
                     "" + i,
-                    labels[outputClasses[0][i].toInt() + labelOffset],
+                    title,
                     outputScores[0][i],
                     detection
                 )
@@ -232,7 +248,7 @@ abstract class ObjectDetector(
 
     private fun preProcessImage(image: Bitmap): ByteBuffer{
 
-        // Preprocess image
+        // Pre-process image
         Trace.beginSection("preprocess image")
         val startPreprocessTime = SystemClock.uptimeMillis()
 

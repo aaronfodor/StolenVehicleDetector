@@ -25,13 +25,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
     companion object{
 
         private const val MAXIMUM_RECOGNITIONS_TO_SHOW = 10
-
         private const val NUM_THREADS = 4
 
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0
         private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val PHOTO_EXTENSION = ".jpg"
+
+        var deviceOrientation: Int = 0
 
     }
 
@@ -63,7 +64,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
     /**
      * Executes recognition
      *
-     * @param bitmap                Bitmap to evaluate
+     * @param image                 Bitmap to evaluate
      *
      * @return List<Recognition>    Recognition results in a list
      */

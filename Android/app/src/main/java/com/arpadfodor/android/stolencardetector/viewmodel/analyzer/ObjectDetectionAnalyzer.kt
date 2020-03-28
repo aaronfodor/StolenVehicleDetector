@@ -10,10 +10,6 @@ import java.util.*
 
 class ObjectDetectionAnalyzer(listener: DetectionListener? = null, injectedViewModel: MainViewModel) : ImageAnalysis.Analyzer{
 
-    companion object{
-        var deviceOrientation: Int = 0
-    }
-
     private val frameRateWindow = 8
     private val frameTimestamps = ArrayDeque<Long>(5)
     private val listeners = ArrayList<DetectionListener>().apply { listener?.let { add(it) } }
@@ -79,7 +75,7 @@ class ObjectDetectionAnalyzer(listener: DetectionListener? = null, injectedViewM
         lastAnalyzedTimestamp = frameTimestamps.first
 
         val cameraOrientation = image.imageInfo.rotationDegrees
-        val requiredRotation = deviceOrientation + cameraOrientation
+        val requiredRotation = MainViewModel.deviceOrientation + cameraOrientation
 
         val inputImage = ImageConverter.imageProxyToBitmap(image, requiredRotation, viewModel.getModelInputSize())
 
