@@ -14,8 +14,7 @@ class ObjectDetectionAnalyzer(listener: DetectionListener? = null, injectedViewM
     private val frameTimestamps = ArrayDeque<Long>(5)
     private val listeners = ArrayList<DetectionListener>().apply { listener?.let { add(it) } }
     private var lastAnalyzedTimestamp = 0L
-    var framesPerSecond: Double = -1.0
-        private set
+    private var framesPerSecond: Double = -1.0
 
     private val viewModel: MainViewModel = injectedViewModel
 
@@ -70,14 +69,13 @@ class ObjectDetectionAnalyzer(listener: DetectionListener? = null, injectedViewM
                 frameTimestamps.size.coerceAtLeast(1).toDouble()) * 1000.0
 
         // Analysis could take an arbitrarily long amount of time
-        // Since we are running in a different thread, it won't stall other use cases
+        // Since it is running in a different thread, it won't stall other use cases
 
         lastAnalyzedTimestamp = frameTimestamps.first
 
         val cameraOrientation = image.imageInfo.rotationDegrees
-        val requiredRotation = MainViewModel.deviceOrientation + cameraOrientation
 
-        val inputImage = ImageConverter.imageProxyToBitmap(image, requiredRotation, viewModel.getModelInputSize())
+        val inputImage = ImageConverter.imageProxyToBitmap(image, cameraOrientation, viewModel.getModelInputSize())
 
         // Compute results
         val recognitions = viewModel.detectImage(inputImage)

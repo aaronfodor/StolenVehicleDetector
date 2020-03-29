@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="bounding_box_colors">
+        <item>#B326282F</item>
+        <item>#B3459389</item>
+        <item>#B35F2600</item>
+        <item>#B3045D56</item>
+        <item>#B3FF6859</item>
+        <item>#B3FFCF44</item>
+        <item>#B3B15DFF</item>
+        <item>#B31EB980</item>
+
+    </string-array>
+
+</resources>

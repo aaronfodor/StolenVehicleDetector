@@ -26,5 +26,6 @@
     <string name="capture_mode_camera">Camera</string>
     <string name="capture_mode_hdr">HDR</string>
     <string name="capture_mode_night">Night</string>
+    <string name="ivBoundingBoxes_description">Image to draw the bounding boxes on</string>
 
 </resources>

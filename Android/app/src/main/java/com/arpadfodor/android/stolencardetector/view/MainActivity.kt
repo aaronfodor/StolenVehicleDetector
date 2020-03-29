@@ -12,8 +12,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.arpadfodor.android.stolencardetector.R
 import com.arpadfodor.android.stolencardetector.view.utils.FLAGS_FULLSCREEN
 import com.arpadfodor.android.stolencardetector.viewmodel.MainViewModel
-import com.arpadfodor.android.stolencardetector.viewmodel.analyzer.ObjectDetectionAnalyzer
-
 
 const val KEY_EVENT_ACTION = "key_event_action"
 const val KEY_EVENT_EXTRA = "key_event_extra"
@@ -38,9 +36,27 @@ class MainActivity : AppCompatActivity() {
         deviceOrientationListener = object : OrientationEventListener(this,
             SensorManager.SENSOR_DELAY_NORMAL) {
             override fun onOrientationChanged(orientation: Int) {
-                MainViewModel.deviceOrientation = orientation
+
+                var currentOrientation = 0
+
+                if(315 < orientation || orientation <= 45){
+                    currentOrientation = 0
+                }
+                else if(orientation in 46..135){
+                    currentOrientation = 90
+                }
+                else if(orientation in 136..225){
+                    currentOrientation = 180
+                }
+                else if(orientation in 226..315){
+                    currentOrientation = 270
+                }
+
+                MainViewModel.deviceOrientation = currentOrientation
             }
         }
+
+        supportActionBar?.hide()
 
     }
 
@@ -63,6 +79,11 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         deviceOrientationListener.disable()
         super.onPause()
+    }
+
+    override fun onDestroy() {
+        viewModel.closeResources()
+        super.onDestroy()
     }
 
     /**

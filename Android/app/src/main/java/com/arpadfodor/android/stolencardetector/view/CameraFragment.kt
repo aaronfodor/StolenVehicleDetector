@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
-import android.graphics.Color
+import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
 import android.media.MediaScannerConnection
@@ -14,6 +14,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Half.toFloat
 import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
@@ -22,12 +23,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.camera.core.*
+import androidx.camera.core.Camera
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
+import androidx.core.view.drawToBitmap
 import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
@@ -48,9 +52,11 @@ import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.math.max
+import kotlin.math.min
 
 /** Helper type alias used for analysis use case callbacks */
-typealias DetectionListener = (recognition: List<Recognition>?) -> Unit
+typealias DetectionListener = (recognition: List<Recognition>) -> Unit
 
 /**
  * Main fragment of the app. Implements camera operations including:
@@ -66,6 +72,7 @@ class CameraFragment() : Fragment() {
 
     private lateinit var container: ConstraintLayout
     private lateinit var viewFinder: PreviewView
+    private lateinit var boundingBoxesImageView: ImageView
     private lateinit var broadcastManager: LocalBroadcastManager
 
     private var displayId: Int = -1
@@ -177,6 +184,7 @@ class CameraFragment() : Fragment() {
 
         container = view as ConstraintLayout
         viewFinder = container.findViewById(R.id.view_finder)
+        boundingBoxesImageView = container.findViewById(R.id.ivBoundingBoxes)
 
         // Initialize the background executor
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -270,15 +278,31 @@ class CameraFragment() : Fragment() {
             imageAnalyzer = ImageAnalysis.Builder()
                 // Request aspect ratio but no resolution
                 .setTargetAspectRatio(screenAspectRatio)
+                // Non-blocking behavior: keep only the latest frame
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 // Set initial target rotation - needs to be called again if rotation changes during the lifecycle of this use case
                 .setTargetRotation(cameraOrientation)
                 .build()
                 // The analyzer can then be assigned to the instance
                 .also {
+
                     it.setAnalyzer(cameraExecutor, ObjectDetectionAnalyzer({ recognition ->
+
                         Log.d(TAG, "Object detection: $recognition")
+
+                        if(viewFinder.isLaidOut){
+
+                            val viewFinderBitmap = viewFinder.drawToBitmap(Bitmap.Config.ARGB_8888)
+                            val overlayBitmap = viewModel.drawBoundingBoxes(viewFinderBitmap, recognition)
+
+                            activity?.runOnUiThread{
+                                boundingBoxesImageView.setImageBitmap(overlayBitmap)
+                            }
+
+                        }
+
                     }, viewModel))
+
                 }
 
             // Must unbind the use-cases before rebinding them

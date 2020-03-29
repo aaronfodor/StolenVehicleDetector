@@ -23,4 +23,7 @@
     <dimen name="rect_button_width">80dp</dimen>
     <dimen name="rect_button_height">24dp</dimen>
     <dimen name="shutter_button_margin">80dp</dimen>
+
+    <dimen name="bounding_box_line_width">3dp</dimen>
+    <dimen name="bounding_box_radius">8dp</dimen>
 </resources>

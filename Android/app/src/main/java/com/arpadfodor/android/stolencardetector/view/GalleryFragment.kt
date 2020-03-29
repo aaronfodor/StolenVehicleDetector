@@ -57,7 +57,7 @@ class GalleryFragment internal constructor() : Fragment() {
         retainInstance = true
 
         // Get root directory of media from navigation arguments
-        val rootDirectory = File(args.rootDirectory)
+        val rootDirectory = File(args.getRootDirectory())
 
         // Walk through all files in the root directory
         // Reverse the order of the list to present the last photos first

@@ -9,6 +9,7 @@ import androidx.camera.core.ImageProxy
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.arpadfodor.android.stolencardetector.R
+import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
 import com.arpadfodor.android.stolencardetector.model.ImageConverter
 import com.arpadfodor.android.stolencardetector.model.ai.MobileNetV1Coco
 import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetector
@@ -24,6 +25,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
 
     companion object{
 
+        private const val MINIMUM_PREDICTION_CERTAINTY = 0.3f
         private const val MAXIMUM_RECOGNITIONS_TO_SHOW = 10
         private const val NUM_THREADS = 4
 
@@ -41,24 +43,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
     /*
      * The model
      */
-    val model: ObjectDetector
-
-    /*
-     * Last classification result
-     */
-    val result: MutableLiveData<List<Recognition>> by lazy {
-        MutableLiveData<List<Recognition>>()
-    }
-
-    /*
- * Last classification result
- */
-    val currentDeviceOrientation: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>()
-    }
+    private val model: ObjectDetector
 
     init {
+
         model = MobileNetV1Coco(app.assets, NUM_THREADS)
+
+        val radius = app.resources.getDimension(R.dimen.bounding_box_radius)
+        val width = app.resources.getDimension(R.dimen.bounding_box_line_width)
+        val colors = app.resources.getStringArray(R.array.bounding_box_colors)
+
+        BoundingBoxDrawer.initialize(radius, width, colors)
+
     }
 
     /**
@@ -69,7 +65,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
      * @return List<Recognition>    Recognition results in a list
      */
     fun detectImage(image: Bitmap) : List<Recognition>{
-        val results = model.recognizeImage(image)
+        val results = model.recognizeImage(image,
+            MAXIMUM_RECOGNITIONS_TO_SHOW, MINIMUM_PREDICTION_CERTAINTY)
         return results
     }
 
@@ -126,6 +123,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
 
     fun getModelInputSize(): Size {
         return Size(model.IMAGE_SIZE_X, model.IMAGE_SIZE_Y)
+    }
+
+    fun drawBoundingBoxes(viewFinderBitmap: Bitmap, recognition: List<Recognition>): Bitmap{
+        return BoundingBoxDrawer.drawBoundingBoxes(viewFinderBitmap, deviceOrientation, getModelInputSize(), recognition)
+    }
+
+    fun closeResources(){
+        model.close()
     }
 
 }

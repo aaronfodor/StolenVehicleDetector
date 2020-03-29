@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.MainActivity2"></activity>
+
         <activity
             android:name=".view.MainActivity"
             android:clearTaskOnLaunch="true"
@@ -45,7 +45,9 @@
             <meta-data
                 android:name="android.notch_support"
                 android:value="true" />
-        </activity> <!-- FileProvider used to share photos with other apps -->
+        </activity>
+
+        <!-- FileProvider used to share photos with other apps -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -55,6 +57,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
     </application>
 
 </manifest>
