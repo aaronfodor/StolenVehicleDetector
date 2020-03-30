@@ -2,15 +2,11 @@ package com.arpadfodor.android.stolencardetector.viewmodel
 
 import android.app.Application
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.util.Size
 import androidx.camera.core.AspectRatio
-import androidx.camera.core.ImageProxy
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import com.arpadfodor.android.stolencardetector.R
 import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
-import com.arpadfodor.android.stolencardetector.model.ImageConverter
 import com.arpadfodor.android.stolencardetector.model.ai.MobileNetV1Coco
 import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetector
 import com.arpadfodor.android.stolencardetector.model.ai.Recognition
@@ -25,8 +21,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
 
     companion object{
 
-        private const val MINIMUM_PREDICTION_CERTAINTY = 0.3f
+        private const val MINIMUM_PREDICTION_CERTAINTY = 0.5f
         private const val MAXIMUM_RECOGNITIONS_TO_SHOW = 10
+        private const val SP_BOUNDING_BOX_TEXT_SIZE = 15
+
         private const val NUM_THREADS = 4
 
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
@@ -51,9 +49,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
 
         val radius = app.resources.getDimension(R.dimen.bounding_box_radius)
         val width = app.resources.getDimension(R.dimen.bounding_box_line_width)
+        val scaledBbTextSizeInPixels: Float = SP_BOUNDING_BOX_TEXT_SIZE * app.resources.displayMetrics.scaledDensity
         val colors = app.resources.getStringArray(R.array.bounding_box_colors)
 
-        BoundingBoxDrawer.initialize(radius, width, colors)
+        BoundingBoxDrawer.initialize(radius, width, scaledBbTextSizeInPixels, colors)
 
     }
 

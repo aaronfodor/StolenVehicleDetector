@@ -9,15 +9,19 @@ import kotlin.math.min
 object BoundingBoxDrawer {
 
     private var boxRadius = 10f
+    private var textBoxRadius = 5f
     private var lineWidth = 5f
+    private var bbTextSize = 40f
     private val fallbackColor = Color.parseColor("#B3FF0000")
     private val colorsList = mutableListOf<Int>()
     private var colorsMap: MutableMap<String, Int> = HashMap()
 
-    fun initialize(radius: Float, width: Float, colors: Array<String>){
+    fun initialize(_boxRadius: Float, _lineWidth: Float, _bbTextSize: Float, colors: Array<String>){
 
-        boxRadius = radius
-        lineWidth = width
+        boxRadius = _boxRadius
+        textBoxRadius = _boxRadius/2
+        lineWidth = _lineWidth
+        bbTextSize = _bbTextSize
 
         for(color in colors){
             colorsList.add(Color.parseColor(color))
@@ -42,8 +46,20 @@ object BoundingBoxDrawer {
         val boxPaint = Paint().apply {
             isAntiAlias = true
             style = Paint.Style.STROKE
-            color = Color.RED
+            color = fallbackColor
             strokeWidth = lineWidth
+        }
+
+        val textBackgroundPaint = Paint().apply {
+            style = Paint.Style.FILL
+            color = fallbackColor
+        }
+
+        val textPaint = Paint().apply {
+            style = Paint.Style.FILL
+            color = Color.WHITE
+            textSize = bbTextSize
+            textAlign = Paint.Align.CENTER
         }
 
         val names = mutableListOf<String>()
@@ -57,17 +73,30 @@ object BoundingBoxDrawer {
 
             val toDraw = Canvas(overlayBitmap)
 
+            val boxColor = colorsMap[recognition.title] ?: fallbackColor
+            boxPaint.color = boxColor
+            textBackgroundPaint.color = boxColor
+
             val horizontalScale = overlayBitmap.width.toFloat() / modelInputSize.width.toFloat()
             val verticalScale = overlayBitmap.height.toFloat() / modelInputSize.height.toFloat()
             val scale = min(horizontalScale, verticalScale)
             val padding = (max(overlayBitmap.width, overlayBitmap.height).toFloat() - min(overlayBitmap.width, overlayBitmap.height).toFloat()) / 2f
             val smallerDimension = min(overlayBitmap.width, overlayBitmap.height)
-            val rect = recognition.location
 
+            val rect = recognition.location
             val scaledRect = getScaledRect(rect, scale, padding, smallerDimension, deviceOrientation)
 
-            boxPaint.color = colorsMap[recognition.title] ?: fallbackColor
             toDraw.drawRoundRect(scaledRect, boxRadius, boxRadius, boxPaint)
+
+            val textToShow = "${recognition.title} ${"%.2f".format(recognition.confidence*100)}%"
+            val textWidth: Float = textPaint.measureText(textToShow)
+            val textHeight: Float = textPaint.textSize
+
+            val textRect = RectF(scaledRect.left + (lineWidth/2), scaledRect.top + (lineWidth/2),
+                scaledRect.left + lineWidth + textWidth, scaledRect.top + lineWidth + textHeight)
+
+            toDraw.drawRoundRect(textRect, textBoxRadius, textBoxRadius, textBackgroundPaint)
+            toDraw.drawText(textToShow, scaledRect.left + (textWidth/2), scaledRect.top + textHeight ,textPaint)
 
             overlayBitmap?.let { Canvas(it) }?.apply {
                 toDraw
