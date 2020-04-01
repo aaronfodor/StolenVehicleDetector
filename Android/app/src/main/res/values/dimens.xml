@@ -26,4 +26,5 @@
 
     <dimen name="bounding_box_line_width">3dp</dimen>
     <dimen name="bounding_box_radius">8dp</dimen>
+    <dimen name="bounding_box_text_size">15sp</dimen>
 </resources>

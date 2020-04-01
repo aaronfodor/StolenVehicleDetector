@@ -293,10 +293,10 @@ class CameraFragment() : Fragment() {
                         if(viewFinder.isLaidOut){
 
                             val viewFinderBitmap = viewFinder.drawToBitmap(Bitmap.Config.ARGB_8888)
-                            val overlayBitmap = viewModel.drawBoundingBoxes(viewFinderBitmap, recognition)
+                            val boundingBoxBitmap = viewModel.drawBoundingBoxes(viewFinderBitmap, recognition)
 
                             activity?.runOnUiThread{
-                                boundingBoxesImageView.setImageBitmap(overlayBitmap)
+                                boundingBoxesImageView.setImageBitmap(boundingBoxBitmap)
                             }
 
                         }

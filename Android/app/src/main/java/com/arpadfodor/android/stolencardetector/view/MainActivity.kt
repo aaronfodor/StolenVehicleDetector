@@ -35,25 +35,11 @@ class MainActivity : AppCompatActivity() {
 
         deviceOrientationListener = object : OrientationEventListener(this,
             SensorManager.SENSOR_DELAY_NORMAL) {
+
             override fun onOrientationChanged(orientation: Int) {
-
-                var currentOrientation = 0
-
-                if(315 < orientation || orientation <= 45){
-                    currentOrientation = 0
-                }
-                else if(orientation in 46..135){
-                    currentOrientation = 90
-                }
-                else if(orientation in 136..225){
-                    currentOrientation = 180
-                }
-                else if(orientation in 226..315){
-                    currentOrientation = 270
-                }
-
-                MainViewModel.deviceOrientation = currentOrientation
+                MainViewModel.deviceOrientation = orientation
             }
+
         }
 
         supportActionBar?.hide()
@@ -79,11 +65,6 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         deviceOrientationListener.disable()
         super.onPause()
-    }
-
-    override fun onDestroy() {
-        viewModel.closeResources()
-        super.onDestroy()
     }
 
     /**

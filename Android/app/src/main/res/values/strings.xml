@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!DOCTYPE resources [<!ENTITY appName "Stolen Car Detector"><!ENTITY appId ""><!ENTITY appVersion "v0.1"><!ENTITY appDate "21/03/2020"><!ENTITY adMobAppId "ca-app-pub-3940256099942544~3347511713"><!ENTITY adMobBannerId "ca-app-pub-3940256099942544/6300978111">]><!--test adMobAppId "ca-app-pub-3940256099942544~3347511713"-->
-<!--test adMobBannerId "ca-app-pub-3940256099942544/6300978111"-->
+<!DOCTYPE resources [
+    <!ENTITY appName "Stolen Car Detector">
+    <!ENTITY appId "">
+    <!ENTITY appVersion "v0.2">
+    <!ENTITY appDate "01/04/2020">
+    <!ENTITY adMobAppId "ca-app-pub-3940256099942544~3347511713">
+    <!ENTITY adMobBannerId "ca-app-pub-3940256099942544/6300978111">
+    <!--test adMobAppId "ca-app-pub-3940256099942544~3347511713"-->
+    <!--test adMobBannerId "ca-app-pub-3940256099942544/6300978111"-->
+    ]>
 
 <resources>
 

@@ -2,13 +2,13 @@ package com.arpadfodor.android.stolencardetector.viewmodel
 
 import android.app.Application
 import android.graphics.Bitmap
-import android.util.Size
 import androidx.camera.core.AspectRatio
+import androidx.camera.core.ImageProxy
 import androidx.lifecycle.AndroidViewModel
 import com.arpadfodor.android.stolencardetector.R
 import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
-import com.arpadfodor.android.stolencardetector.model.ai.MobileNetV1Coco
-import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetector
+import com.arpadfodor.android.stolencardetector.model.ImageConverter
+import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
 import com.arpadfodor.android.stolencardetector.model.ai.Recognition
 import java.io.File
 import java.text.SimpleDateFormat
@@ -23,9 +23,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
 
         private const val MINIMUM_PREDICTION_CERTAINTY = 0.5f
         private const val MAXIMUM_RECOGNITIONS_TO_SHOW = 10
-        private const val SP_BOUNDING_BOX_TEXT_SIZE = 15
-
-        private const val NUM_THREADS = 4
 
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0
@@ -38,24 +35,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
 
     var app: Application = application
 
-    /*
-     * The model
-     */
-    private val model: ObjectDetector
-
-    init {
-
-        model = MobileNetV1Coco(app.assets, NUM_THREADS)
-
-        val radius = app.resources.getDimension(R.dimen.bounding_box_radius)
-        val width = app.resources.getDimension(R.dimen.bounding_box_line_width)
-        val scaledBbTextSizeInPixels: Float = SP_BOUNDING_BOX_TEXT_SIZE * app.resources.displayMetrics.scaledDensity
-        val colors = app.resources.getStringArray(R.array.bounding_box_colors)
-
-        BoundingBoxDrawer.initialize(radius, width, scaledBbTextSizeInPixels, colors)
-
-    }
-
     /**
      * Executes recognition
      *
@@ -64,9 +43,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
      * @return List<Recognition>    Recognition results in a list
      */
     fun detectImage(image: Bitmap) : List<Recognition>{
-        val results = model.recognizeImage(image,
-            MAXIMUM_RECOGNITIONS_TO_SHOW, MINIMUM_PREDICTION_CERTAINTY)
-        return results
+        return ObjectDetectionService.recognizeImage(image,
+            MAXIMUM_RECOGNITIONS_TO_SHOW, MINIMUM_PREDICTION_CERTAINTY
+        )
+    }
+
+    fun drawBoundingBoxes(inputBitmap: Bitmap, recognition: List<Recognition>): Bitmap{
+        return BoundingBoxDrawer.drawBoundingBoxes(inputBitmap, deviceOrientation, ObjectDetectionService.getModelInputSize(), recognition)
+    }
+
+    fun imageProxyToBitmap(image: ImageProxy, cameraOrientation: Int): Bitmap{
+        return ImageConverter.imageProxyToBitmap(image, cameraOrientation, ObjectDetectionService.getModelInputSize())
     }
 
     /**
@@ -118,18 +105,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
             appContext.filesDir
         }
 
-    }
-
-    fun getModelInputSize(): Size {
-        return Size(model.IMAGE_SIZE_X, model.IMAGE_SIZE_Y)
-    }
-
-    fun drawBoundingBoxes(viewFinderBitmap: Bitmap, recognition: List<Recognition>): Bitmap{
-        return BoundingBoxDrawer.drawBoundingBoxes(viewFinderBitmap, deviceOrientation, getModelInputSize(), recognition)
-    }
-
-    fun closeResources(){
-        model.close()
     }
 
 }

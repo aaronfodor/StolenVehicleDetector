@@ -75,7 +75,7 @@ class ObjectDetectionAnalyzer(listener: DetectionListener? = null, injectedViewM
 
         val cameraOrientation = image.imageInfo.rotationDegrees
 
-        val inputImage = ImageConverter.imageProxyToBitmap(image, cameraOrientation, viewModel.getModelInputSize())
+        val inputImage = viewModel.imageProxyToBitmap(image, cameraOrientation)
 
         // Compute results
         val recognitions = viewModel.detectImage(inputImage)

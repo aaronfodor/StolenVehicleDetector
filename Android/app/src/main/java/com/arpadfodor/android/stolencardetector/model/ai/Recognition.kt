@@ -13,8 +13,8 @@ data class Recognition(
 ){
 
     fun getStringShortData(): String {
-        val confidencePercentage = "%.3f".format(confidence*100)
-        val resultString = "$title ($confidencePercentage)"
+        val confidencePercentage = "${"%.2f".format(confidence*100)}%"
+        val resultString = "${title} ${confidencePercentage}"
         return resultString
     }
 

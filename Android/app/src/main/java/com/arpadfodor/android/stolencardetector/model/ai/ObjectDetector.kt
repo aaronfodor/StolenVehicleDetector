@@ -43,7 +43,6 @@ abstract class ObjectDetector(
     val NUM_DETECTIONS: Int
     ) {
 
-
     // the inference model
     var model: Interpreter? = null
 

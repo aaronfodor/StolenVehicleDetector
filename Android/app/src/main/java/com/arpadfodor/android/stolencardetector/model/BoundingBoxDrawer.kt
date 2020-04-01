@@ -30,18 +30,18 @@ object BoundingBoxDrawer {
     }
 
     /**
-     * Returns the resized image
+     * Returns a bitmap with bounding boxes on it
      *
-     * @param viewFinderBitmap      Image with required properties
+     * @param inputBitmap           Input bitmap with dimensions
      * @param deviceOrientation     Orientation of the device
      * @param modelInputSize        Size to scale from
      * @param recognitions          List of recognitions to draw
      *
      * @return Bitmap               Bitmap with bounding boxes
      */
-    fun drawBoundingBoxes(viewFinderBitmap: Bitmap, deviceOrientation: Int, modelInputSize: Size, recognitions: List<Recognition>): Bitmap{
+    fun drawBoundingBoxes(inputBitmap: Bitmap, deviceOrientation: Int, modelInputSize: Size, recognitions: List<Recognition>): Bitmap{
 
-        val overlayBitmap = Bitmap.createBitmap(viewFinderBitmap.width, viewFinderBitmap.height, Bitmap.Config.ARGB_8888)
+        val bitmapToDrawOn = Bitmap.createBitmap(inputBitmap.width, inputBitmap.height, Bitmap.Config.ARGB_8888)
 
         val boxPaint = Paint().apply {
             isAntiAlias = true
@@ -71,40 +71,53 @@ object BoundingBoxDrawer {
 
         for (recognition in recognitions) {
 
-            val toDraw = Canvas(overlayBitmap)
-
-            val boxColor = colorsMap[recognition.title] ?: fallbackColor
-            boxPaint.color = boxColor
-            textBackgroundPaint.color = boxColor
-
-            val horizontalScale = overlayBitmap.width.toFloat() / modelInputSize.width.toFloat()
-            val verticalScale = overlayBitmap.height.toFloat() / modelInputSize.height.toFloat()
-            val scale = min(horizontalScale, verticalScale)
-            val padding = (max(overlayBitmap.width, overlayBitmap.height).toFloat() - min(overlayBitmap.width, overlayBitmap.height).toFloat()) / 2f
-            val smallerDimension = min(overlayBitmap.width, overlayBitmap.height)
-
-            val rect = recognition.location
-            val scaledRect = getScaledRect(rect, scale, padding, smallerDimension, deviceOrientation)
-
-            toDraw.drawRoundRect(scaledRect, boxRadius, boxRadius, boxPaint)
-
-            val textToShow = "${recognition.title} ${"%.2f".format(recognition.confidence*100)}%"
-            val textWidth: Float = textPaint.measureText(textToShow)
-            val textHeight: Float = textPaint.textSize
-
-            val textRect = RectF(scaledRect.left + (lineWidth/2), scaledRect.top + (lineWidth/2),
-                scaledRect.left + lineWidth + textWidth, scaledRect.top + lineWidth + textHeight)
-
-            toDraw.drawRoundRect(textRect, textBoxRadius, textBoxRadius, textBackgroundPaint)
-            toDraw.drawText(textToShow, scaledRect.left + (textWidth/2), scaledRect.top + textHeight ,textPaint)
-
-            overlayBitmap?.let { Canvas(it) }?.apply {
-                toDraw
-            }
+            drawBoundingBox(bitmapToDrawOn, deviceOrientation, modelInputSize, recognition,
+                boxPaint, textBackgroundPaint, textPaint)
 
         }
 
-        return overlayBitmap
+        return bitmapToDrawOn
+
+    }
+
+    /**
+     * Does not return a value, but draws on the input Bitmap
+     *
+     * @param bitmapToDrawOn           Input bitmap which the function draws on
+     */
+    private fun drawBoundingBox(bitmapToDrawOn: Bitmap, deviceOrientation: Int, modelInputSize: Size, recognition: Recognition,
+                                boxPaint: Paint, textBackgroundPaint: Paint, textPaint: Paint){
+
+        val toDrawOnCanvas = Canvas(bitmapToDrawOn)
+
+        val boxColor = colorsMap[recognition.title] ?: fallbackColor
+        boxPaint.color = boxColor
+        textBackgroundPaint.color = boxColor
+
+        val horizontalScale = bitmapToDrawOn.width.toFloat() / modelInputSize.width.toFloat()
+        val verticalScale = bitmapToDrawOn.height.toFloat() / modelInputSize.height.toFloat()
+        val scale = min(horizontalScale, verticalScale)
+        val padding = (max(bitmapToDrawOn.width, bitmapToDrawOn.height).toFloat() - min(bitmapToDrawOn.width, bitmapToDrawOn.height).toFloat()) / 2f
+        val smallerDimension = min(bitmapToDrawOn.width, bitmapToDrawOn.height)
+
+        val rect = recognition.location
+        val scaledRect = getScaledRect(rect, scale, padding, smallerDimension, deviceOrientation)
+
+        toDrawOnCanvas.drawRoundRect(scaledRect, boxRadius, boxRadius, boxPaint)
+
+        val textToShow = recognition.getStringShortData()
+        val textWidth: Float = textPaint.measureText(textToShow)
+        val textHeight: Float = textPaint.textSize
+
+        val textRect = RectF(scaledRect.left + (lineWidth/2), scaledRect.top + (lineWidth/2),
+            scaledRect.left + lineWidth + textWidth, scaledRect.top + lineWidth + textHeight)
+
+        toDrawOnCanvas.drawRoundRect(textRect, textBoxRadius, textBoxRadius, textBackgroundPaint)
+        toDrawOnCanvas.drawText(textToShow, scaledRect.left + (textWidth/2), scaledRect.top + textHeight ,textPaint)
+
+        bitmapToDrawOn?.let { Canvas(it) }.apply {
+            toDrawOnCanvas
+        }
 
     }
 
@@ -142,7 +155,22 @@ object BoundingBoxDrawer {
         var top = 0f
         var bottom = 0f
 
-        when (deviceOrientation) {
+        var currentOrientation = 0
+
+        if(315 < deviceOrientation || deviceOrientation <= 45){
+            currentOrientation = 0
+        }
+        else if(deviceOrientation in 46..135){
+            currentOrientation = 90
+        }
+        else if(deviceOrientation in 136..225){
+            currentOrientation = 180
+        }
+        else if(deviceOrientation in 226..315){
+            currentOrientation = 270
+        }
+
+        when (currentOrientation) {
             0 -> {
                 left = rect.left*scale
                 right = rect.right*scale
