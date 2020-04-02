@@ -1,14 +1,23 @@
 package com.arpadfodor.android.stolencardetector.model.ai
 
+import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.util.Size
 
-object ObjectDetectionService {
+class ObjectDetectionService {
 
-    var model: ObjectDetector? = null
+    companion object{
 
-    fun initialize(_model: ObjectDetector){
-        model = _model
+        var model: ObjectDetector? = null
+
+        fun initialize(assets: AssetManager, numThreads: Int){
+            model = MobileNetV1Coco(assets, numThreads)
+        }
+
+        fun close(){
+            model?.close()
+        }
+
     }
 
     fun recognizeImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<Recognition>{
@@ -20,10 +29,6 @@ object ObjectDetectionService {
         val width = model?.IMAGE_SIZE_X ?: 0
         val height = model?.IMAGE_SIZE_Y ?: 0
         return Size(width, height)
-    }
-
-    fun close(){
-        model?.close()
     }
 
 }

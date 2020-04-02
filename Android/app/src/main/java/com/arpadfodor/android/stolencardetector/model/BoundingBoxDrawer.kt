@@ -16,14 +16,14 @@ object BoundingBoxDrawer {
     private val colorsList = mutableListOf<Int>()
     private var colorsMap: MutableMap<String, Int> = HashMap()
 
-    fun initialize(_boxRadius: Float, _lineWidth: Float, _bbTextSize: Float, colors: Array<String>){
+    fun initialize(boxRadius_: Float, lineWidth_: Float, bbTextSize_: Float, colorsList_: Array<String>){
 
-        boxRadius = _boxRadius
-        textBoxRadius = _boxRadius/2
-        lineWidth = _lineWidth
-        bbTextSize = _bbTextSize
+        boxRadius = boxRadius_
+        textBoxRadius = boxRadius_/2
+        lineWidth = lineWidth_
+        bbTextSize = bbTextSize_
 
-        for(color in colors){
+        for(color in colorsList_){
             colorsList.add(Color.parseColor(color))
         }
 

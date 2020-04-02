@@ -24,16 +24,6 @@ class ObjectDetectionAnalyzer(listener: DetectionListener? = null, injectedViewM
     fun onFrameAnalyzed(listener: DetectionListener) = listeners.add(listener)
 
     /**
-     * Helper extension function used to extract a byte array from an image plane buffer
-     */
-    private fun ByteBuffer.toByteArray(): ByteArray {
-        rewind()    // Rewind the buffer to zero
-        val data = ByteArray(remaining())
-        get(data)   // Copy the buffer into a byte array
-        return data // Return the byte array
-    }
-
-    /**
      * Analyzes an image to produce a result.
      *
      * The caller is responsible for ensuring this analysis method can be executed quickly

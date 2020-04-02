@@ -1,39 +1,34 @@
 package com.arpadfodor.android.stolencardetector.viewmodel
 
-import android.app.Application
 import android.graphics.Bitmap
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.ImageProxy
-import androidx.lifecycle.AndroidViewModel
-import com.arpadfodor.android.stolencardetector.R
+import androidx.lifecycle.ViewModel
 import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
 import com.arpadfodor.android.stolencardetector.model.ImageConverter
+import com.arpadfodor.android.stolencardetector.model.MediaHandler
 import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
 import com.arpadfodor.android.stolencardetector.model.ai.Recognition
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class MainViewModel(application: Application) : AndroidViewModel(application){
+class MainViewModel() : ViewModel(){
 
     companion object{
 
-        private const val MINIMUM_PREDICTION_CERTAINTY = 0.5f
+        private const val MINIMUM_PREDICTION_CERTAINTY_TO_SHOW = 0.5f
         private const val MAXIMUM_RECOGNITIONS_TO_SHOW = 10
 
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0
-        private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private const val PHOTO_EXTENSION = ".jpg"
 
         var deviceOrientation: Int = 0
 
     }
 
-    var app: Application = application
+    private val objectDetectionService = ObjectDetectionService()
 
     /**
      * Executes recognition
@@ -43,17 +38,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
      * @return List<Recognition>    Recognition results in a list
      */
     fun detectImage(image: Bitmap) : List<Recognition>{
-        return ObjectDetectionService.recognizeImage(image,
-            MAXIMUM_RECOGNITIONS_TO_SHOW, MINIMUM_PREDICTION_CERTAINTY
+        return objectDetectionService.recognizeImage(image,
+            MAXIMUM_RECOGNITIONS_TO_SHOW, MINIMUM_PREDICTION_CERTAINTY_TO_SHOW
         )
     }
 
     fun drawBoundingBoxes(inputBitmap: Bitmap, recognition: List<Recognition>): Bitmap{
-        return BoundingBoxDrawer.drawBoundingBoxes(inputBitmap, deviceOrientation, ObjectDetectionService.getModelInputSize(), recognition)
+        return BoundingBoxDrawer.drawBoundingBoxes(inputBitmap, deviceOrientation, objectDetectionService.getModelInputSize(), recognition)
     }
 
     fun imageProxyToBitmap(image: ImageProxy, cameraOrientation: Int): Bitmap{
-        return ImageConverter.imageProxyToBitmap(image, cameraOrientation, ObjectDetectionService.getModelInputSize())
+        return ImageConverter.imageProxyToBitmap(image, cameraOrientation, objectDetectionService.getModelInputSize())
     }
 
     /**
@@ -81,30 +76,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application){
 
     }
 
-    /**
-     * Creates a timestamped file
-     * */
-    fun createFile(baseFolder: File) : File{
-        return File(baseFolder, SimpleDateFormat(FILENAME, Locale.US).format(System.currentTimeMillis()) + PHOTO_EXTENSION)
+    fun getOutputDirectory(): File{
+        return MediaHandler.getOutputDirectory()
     }
 
-    /**
-     * Use external media if available, otherwise the app's file directory
-     */
-    fun getOutputDirectory(): File {
-
-        val appContext = app.applicationContext.applicationContext
-        val mediaDir = app.applicationContext.externalMediaDirs.firstOrNull()?.let {
-            File(it, appContext.resources.getString(R.string.app_name)).apply { mkdirs() }
-        }
-
-        return if(mediaDir != null && mediaDir.exists()){
-            mediaDir
-        }
-        else{
-            appContext.filesDir
-        }
-
+    fun createFile(baseFolder: File) : File{
+        return MediaHandler.createFile(baseFolder)
     }
 
 }

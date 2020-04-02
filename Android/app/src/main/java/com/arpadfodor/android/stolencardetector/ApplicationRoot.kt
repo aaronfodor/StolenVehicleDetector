@@ -3,7 +3,7 @@ package com.arpadfodor.android.stolencardetector
 import android.app.Application
 import android.util.Log
 import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
-import com.arpadfodor.android.stolencardetector.model.ai.MobileNetV1Coco
+import com.arpadfodor.android.stolencardetector.model.MediaHandler
 import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
 
 class ApplicationRoot : Application() {
@@ -11,7 +11,6 @@ class ApplicationRoot : Application() {
     companion object{
         private const val TAG = "Application Root"
         private const val NUM_THREADS = 4
-        private const val SP_BOUNDING_BOX_TEXT_SIZE = 15
     }
 
     /**
@@ -29,8 +28,7 @@ class ApplicationRoot : Application() {
         super.onCreate()
         Log.i(TAG, "onCreate fired")
 
-        val model = MobileNetV1Coco(assets, NUM_THREADS)
-        ObjectDetectionService.initialize(model)
+        ObjectDetectionService.initialize(assets, NUM_THREADS)
 
         val radius = resources.getDimension(R.dimen.bounding_box_radius)
         val width = resources.getDimension(R.dimen.bounding_box_line_width)
@@ -38,6 +36,10 @@ class ApplicationRoot : Application() {
         val colors = resources.getStringArray(R.array.bounding_box_colors)
 
         BoundingBoxDrawer.initialize(radius, width, textSize, colors)
+
+        val appName = getString(R.string.app_name)
+
+        MediaHandler.initialize(applicationContext, appName)
 
     }
 
