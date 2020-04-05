@@ -5,6 +5,7 @@ import android.util.Log
 import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
 import com.arpadfodor.android.stolencardetector.model.MediaHandler
 import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
+import com.arpadfodor.android.stolencardetector.viewmodel.MainViewModel
 
 class ApplicationRoot : Application() {
 
@@ -40,6 +41,9 @@ class ApplicationRoot : Application() {
         val appName = getString(R.string.app_name)
 
         MediaHandler.initialize(applicationContext, appName)
+
+        MainViewModel.KEY_EVENT_ACTION = getString(R.string.KEY_EVENT_ACTION)
+        MainViewModel.KEY_EVENT_EXTRA = getString(R.string.KEY_EVENT_EXTRA)
 
     }
 

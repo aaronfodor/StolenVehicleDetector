@@ -14,7 +14,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Half.toFloat
 import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
@@ -31,16 +30,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
-import androidx.core.view.drawToBitmap
 import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.Navigation
 import com.arpadfodor.android.stolencardetector.R
-import com.arpadfodor.android.stolencardetector.model.ai.Recognition
 import com.arpadfodor.android.stolencardetector.viewmodel.MainViewModel
-import com.arpadfodor.android.stolencardetector.viewmodel.analyzer.ObjectDetectionAnalyzer
+import com.arpadfodor.android.stolencardetector.viewmodel.analyzer.ObjectDetectionAnalyzerProcessor
 import com.arpadfodor.android.stolencardetector.view.utils.ANIMATION_FAST_MILLIS
 import com.arpadfodor.android.stolencardetector.view.utils.ANIMATION_SLOW_MILLIS
 import com.arpadfodor.android.stolencardetector.view.utils.CameraFragmentDirections
@@ -52,11 +49,9 @@ import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.math.max
-import kotlin.math.min
 
 /** Helper type alias used for analysis use case callbacks */
-typealias DetectionListener = (recognition: List<Recognition>) -> Unit
+typealias DetectionListener = (recognition: Bitmap) -> Unit
 
 /**
  * Main fragment of the app. Implements camera operations including:
@@ -76,7 +71,6 @@ class CameraFragment() : Fragment() {
     private lateinit var broadcastManager: LocalBroadcastManager
 
     private var displayId: Int = -1
-    private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
     private var preview: Preview? = null
     private var imageCapture: ImageCapture? = null
     private var imageAnalyzer: ImageAnalysis? = null
@@ -98,7 +92,7 @@ class CameraFragment() : Fragment() {
 
         override fun onReceive(context: Context, intent: Intent) {
 
-            when(intent.getIntExtra(KEY_EVENT_EXTRA, KeyEvent.KEYCODE_UNKNOWN)){
+            when(intent.getIntExtra(MainViewModel.KEY_EVENT_EXTRA, KeyEvent.KEYCODE_UNKNOWN)){
                 // When the volume down button is pressed, simulate a shutter button click
                 KeyEvent.KEYCODE_VOLUME_DOWN -> {
                     val shutter = container.findViewById<ImageButton>(R.id.camera_capture_button)
@@ -192,7 +186,7 @@ class CameraFragment() : Fragment() {
         broadcastManager = LocalBroadcastManager.getInstance(view.context)
 
         // setting up the intent filter that receives main activity events
-        val filter = IntentFilter().apply { addAction(KEY_EVENT_ACTION) }
+        val filter = IntentFilter().apply { addAction(MainViewModel.KEY_EVENT_ACTION) }
         broadcastManager.registerReceiver(volumeDownReceiver, filter)
 
         // when device screen orientation changes, update rotation for use cases
@@ -239,10 +233,11 @@ class CameraFragment() : Fragment() {
         Log.d(TAG, "Screen metrics: ${metrics.widthPixels} x ${metrics.heightPixels}")
 
         val screenAspectRatio = viewModel.aspectRatio(metrics.widthPixels, metrics.heightPixels)
+        viewModel.setScreenProperties(metrics.widthPixels, metrics.heightPixels)
         Log.d(TAG, "Preview aspect ratio: $screenAspectRatio")
 
         // bind CameraProvider to the LifeCycleOwner
-        val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+        val cameraSelector = CameraSelector.Builder().requireLensFacing(MainViewModel.lensFacing).build()
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         val cameraOrientation = viewFinder.display.rotation
@@ -286,22 +281,17 @@ class CameraFragment() : Fragment() {
                 // The analyzer can then be assigned to the instance
                 .also {
 
-                    it.setAnalyzer(cameraExecutor, ObjectDetectionAnalyzer({ recognition ->
-
-                        Log.d(TAG, "Object detection: $recognition")
+                    it.setAnalyzer(cameraExecutor, ObjectDetectionAnalyzerProcessor { boundingBoxImage ->
 
                         if(viewFinder.isLaidOut){
 
-                            val viewFinderBitmap = viewFinder.drawToBitmap(Bitmap.Config.ARGB_8888)
-                            val boundingBoxBitmap = viewModel.drawBoundingBoxes(viewFinderBitmap, recognition)
-
                             activity?.runOnUiThread{
-                                boundingBoxesImageView.setImageBitmap(boundingBoxBitmap)
+                                boundingBoxesImageView.setImageBitmap(boundingBoxImage)
                             }
 
                         }
 
-                    }, viewModel))
+                    })
 
                 }
 
@@ -357,7 +347,7 @@ class CameraFragment() : Fragment() {
                 // Setup image capture metadata
                 val metadata = ImageCapture.Metadata().apply {
                     // Mirror the image when using the front camera
-                    isReversedHorizontal = (lensFacing == CameraSelector.LENS_FACING_FRONT)
+                    isReversedHorizontal = (MainViewModel.lensFacing == CameraSelector.LENS_FACING_FRONT)
                 }
 
                 // Create output options object which contains file + metadata
@@ -422,7 +412,7 @@ class CameraFragment() : Fragment() {
 
         // Listener for button used to switch camera
         controls.findViewById<ImageButton>(R.id.camera_switch_button).setOnClickListener {
-            lensFacing = if (CameraSelector.LENS_FACING_FRONT == lensFacing) {
+            MainViewModel.lensFacing = if (CameraSelector.LENS_FACING_FRONT == MainViewModel.lensFacing) {
                 CameraSelector.LENS_FACING_BACK
             }
             else {

@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.ImageButton
-import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentManager
@@ -20,9 +19,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.viewpager.widget.ViewPager
 import com.arpadfodor.android.stolencardetector.BuildConfig
 import com.arpadfodor.android.stolencardetector.R
+import com.arpadfodor.android.stolencardetector.view.utils.AppDialog
 import com.arpadfodor.android.stolencardetector.view.utils.GalleryFragmentArgs
 import com.arpadfodor.android.stolencardetector.view.utils.padWithDisplayCutout
-import com.arpadfodor.android.stolencardetector.view.utils.showImmersive
 import java.io.File
 import java.util.Locale
 
@@ -57,7 +56,7 @@ class GalleryFragment internal constructor() : Fragment() {
         retainInstance = true
 
         // Get root directory of media from navigation arguments
-        val rootDirectory = File(args.getRootDirectory())
+        val rootDirectory = File(args.rootDirectory)
 
         // Walk through all files in the root directory
         // Reverse the order of the list to present the last photos first
@@ -131,35 +130,33 @@ class GalleryFragment internal constructor() : Fragment() {
 
             mediaList.getOrNull(mediaViewPager.currentItem)?.let { mediaFile ->
 
-                AlertDialog.Builder(view.context, android.R.style.Theme_Material_Dialog)
-                    .setTitle(getString(R.string.delete_title))
-                    .setMessage(getString(R.string.delete_dialog))
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(android.R.string.yes) { _, _ ->
+                val deleteDialog = AppDialog(this.requireContext(), getString(R.string.delete_title), getString(R.string.delete_dialog),
+                    resources.getDrawable(R.drawable.warning))
+                deleteDialog.setPositiveButton {
 
-                        // Delete current photo
-                        mediaFile.delete()
+                    // Delete current photo
+                    mediaFile.delete()
 
-                        // Send relevant broadcast to notify other apps of deletion
-                        MediaScannerConnection.scanFile(
-                            view.context, arrayOf(mediaFile.absolutePath), null, null)
+                    // Send relevant broadcast to notify other apps of deletion
+                    MediaScannerConnection.scanFile(
+                        view.context, arrayOf(mediaFile.absolutePath), null, null)
 
-                        // Notify our view pager
-                        mediaList.removeAt(mediaViewPager.currentItem)
-                        mediaViewPager.adapter?.notifyDataSetChanged()
+                    // Notify our view pager
+                    mediaList.removeAt(mediaViewPager.currentItem)
+                    mediaViewPager.adapter?.notifyDataSetChanged()
 
-                        // If all photos have been deleted, return to camera
-                        if (mediaList.isEmpty()) {
-                            Navigation.findNavController(requireActivity(),
-                                R.id.fragment_container
-                            ).navigateUp()
-                        }
-
+                    // If all photos have been deleted, return to camera
+                    if (mediaList.isEmpty()) {
+                        Navigation.findNavController(requireActivity(),
+                            R.id.fragment_container
+                        ).navigateUp()
                     }
 
-                    .setNegativeButton(android.R.string.no, null)
-                    .create().showImmersive()
+                }
+                deleteDialog.show()
+
             }
+
         }
 
     }

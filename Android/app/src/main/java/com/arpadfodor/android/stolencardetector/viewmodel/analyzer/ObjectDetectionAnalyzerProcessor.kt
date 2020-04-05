@@ -1,14 +1,18 @@
 package com.arpadfodor.android.stolencardetector.viewmodel.analyzer
 
+import android.graphics.Bitmap
+import android.util.Size
+import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
 import com.arpadfodor.android.stolencardetector.model.ImageConverter
+import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
 import com.arpadfodor.android.stolencardetector.view.DetectionListener
 import com.arpadfodor.android.stolencardetector.viewmodel.MainViewModel
-import java.nio.ByteBuffer
 import java.util.*
 
-class ObjectDetectionAnalyzer(listener: DetectionListener? = null, injectedViewModel: MainViewModel) : ImageAnalysis.Analyzer{
+class ObjectDetectionAnalyzerProcessor(listener: DetectionListener? = null) : ImageAnalysis.Analyzer{
 
     private val frameRateWindow = 8
     private val frameTimestamps = ArrayDeque<Long>(5)
@@ -16,7 +20,7 @@ class ObjectDetectionAnalyzer(listener: DetectionListener? = null, injectedViewM
     private var lastAnalyzedTimestamp = 0L
     private var framesPerSecond: Double = -1.0
 
-    private val viewModel: MainViewModel = injectedViewModel
+    private val objectDetectionService = ObjectDetectionService()
 
     /**
      * Used to add listeners that will be called with each detection computed
@@ -37,7 +41,6 @@ class ObjectDetectionAnalyzer(listener: DetectionListener? = null, injectedViewM
      * @param image image being analyzed VERY IMPORTANT: Analyzer method implementation must
      * call image.close() on received images when finished using them. Otherwise, new images
      * may not be received or the camera may stall, depending on back pressure setting.
-     *
      */
     override fun analyze(image: ImageProxy) {
 
@@ -64,14 +67,31 @@ class ObjectDetectionAnalyzer(listener: DetectionListener? = null, injectedViewM
         lastAnalyzedTimestamp = frameTimestamps.first
 
         val cameraOrientation = image.imageInfo.rotationDegrees
+        val deviceOrientation = MainViewModel.deviceOrientation
 
-        val inputImage = viewModel.imageProxyToBitmap(image, cameraOrientation)
+        val inputImage = ImageConverter.imageProxyToBitmap(image)
+        val rotatedInputImage = ImageConverter.rotateBitmap(inputImage, cameraOrientation)
+
+        // if front camera provided the image, it needs to be mirrored before inference
+        if(MainViewModel.lensFacing == CameraSelector.LENS_FACING_FRONT){
+            ImageConverter.mirrorHorizontallyBitmap(rotatedInputImage)
+        }
+
+        val bitmapNxN = ImageConverter.bitmapToCroppedNxNImage(rotatedInputImage)
+        val requiredInputImage = ImageConverter.resizeBitmap(bitmapNxN, objectDetectionService.getModelInputSize())
 
         // Compute results
-        val recognitions = viewModel.detectImage(inputImage)
+        val recognitions = objectDetectionService.recognizeImage(requiredInputImage,
+            MainViewModel.MAXIMUM_RECOGNITIONS_TO_SHOW, MainViewModel.MINIMUM_PREDICTION_CERTAINTY_TO_SHOW)
 
-        // Call all listeners with new value
-        listeners.forEach { it(recognitions) }
+        val templateBoundingBoxBitmap =
+            ImageConverter.createSpecifiedBitmap(Size(rotatedInputImage.width, rotatedInputImage.height), Bitmap.Config.ARGB_8888)
+
+        val boundingBoxBitmap = BoundingBoxDrawer.drawBoundingBoxes(templateBoundingBoxBitmap,
+            deviceOrientation, objectDetectionService.getModelInputSize(), recognitions)
+
+        // Call all listeners with new image with bounding boxes
+        listeners.forEach { it(boundingBoxBitmap) }
 
         image.close()
 

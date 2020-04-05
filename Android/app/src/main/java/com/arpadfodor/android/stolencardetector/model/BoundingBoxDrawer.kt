@@ -32,9 +32,7 @@ object BoundingBoxDrawer {
     /**
      * Returns a bitmap with bounding boxes on it
      *
-     * @param inputBitmap           Input bitmap with dimensions
-     * @param deviceOrientation     Orientation of the device
-     * @param modelInputSize        Size to scale from
+     * @param inputBitmap           Input bitmap which dimensions are used to create the output bitmap
      * @param recognitions          List of recognitions to draw
      *
      * @return Bitmap               Bitmap with bounding boxes
@@ -66,6 +64,7 @@ object BoundingBoxDrawer {
         for(recognition in recognitions){
             names.add(recognition.title)
         }
+
         // update the color according to recognition id
         updateColorsMap(names)
 
@@ -81,9 +80,9 @@ object BoundingBoxDrawer {
     }
 
     /**
-     * Does not return a value, but draws on the input Bitmap
+     * Does not return a value, draws on the input Bitmap
      *
-     * @param bitmapToDrawOn           Input bitmap which the function draws on
+     * @param bitmapToDrawOn           Input bitmap on which the function draws
      */
     private fun drawBoundingBox(bitmapToDrawOn: Bitmap, deviceOrientation: Int, modelInputSize: Size, recognition: Recognition,
                                 boxPaint: Paint, textBackgroundPaint: Paint, textPaint: Paint){
@@ -101,7 +100,7 @@ object BoundingBoxDrawer {
         val smallerDimension = min(bitmapToDrawOn.width, bitmapToDrawOn.height)
 
         val rect = recognition.location
-        val scaledRect = getScaledRect(rect, scale, padding, smallerDimension, deviceOrientation)
+        val scaledRect = getScaledRect(rect, scale, padding, deviceOrientation)
 
         toDrawOnCanvas.drawRoundRect(scaledRect, boxRadius, boxRadius, boxPaint)
 
@@ -148,7 +147,7 @@ object BoundingBoxDrawer {
 
     }
 
-    private fun getScaledRect(rect: RectF, scale: Float, padding: Float, smallerDimension: Int, deviceOrientation: Int): RectF{
+    private fun getScaledRect(rect: RectF, scale: Float, padding: Float, deviceOrientation: Int): RectF{
 
         var left = 0f
         var right = 0f

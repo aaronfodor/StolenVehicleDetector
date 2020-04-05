@@ -24,7 +24,24 @@
     <dimen name="rect_button_height">24dp</dimen>
     <dimen name="shutter_button_margin">80dp</dimen>
 
-    <dimen name="bounding_box_line_width">3dp</dimen>
-    <dimen name="bounding_box_radius">8dp</dimen>
-    <dimen name="bounding_box_text_size">15sp</dimen>
+    <dimen name="bounding_box_line_width">2dp</dimen>
+    <dimen name="bounding_box_radius">4dp</dimen>
+    <dimen name="bounding_box_text_size">8sp</dimen>
+
+    <dimen name="subtitle_text_size">16sp</dimen>
+    <dimen name="subtitle_padding">8dp</dimen>
+
+    <dimen name="paragraph_text_size">12sp</dimen>
+    <dimen name="paragraph_padding">8dp</dimen>
+
+    <dimen name="button_corner_radius">4dp</dimen>
+
+    <dimen name="dialog_corner_radius">10dp</dimen>
+    <dimen name="dialog_horizontal_padding">40dp</dimen>
+    <dimen name="dialog_vertical_padding">20dp</dimen>
+    <dimen name="dialog_margin">8dp</dimen>
+
+    <dimen name="card_corner_radius">10dp</dimen>
+    <dimen name="card_padding">8dp</dimen>
+
 </resources>

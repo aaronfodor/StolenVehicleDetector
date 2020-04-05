@@ -3,6 +3,7 @@ package com.arpadfodor.android.stolencardetector.model.ai
 import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.RectF
+import android.net.Uri
 import android.os.SystemClock
 import android.os.Trace
 import android.util.Log
@@ -24,6 +25,7 @@ abstract class ObjectDetector(
     assets: AssetManager,
     threads: Int,
     // Model and label paths
+    val BASE_PATH: String,
     val MODEL_PATH: String,
     val LABEL_PATH: String,
     // float model
@@ -101,7 +103,7 @@ abstract class ObjectDetector(
      */
     private fun loadModelFile(assets: AssetManager): MappedByteBuffer{
 
-        val fileDescriptor = assets.openFd(MODEL_PATH)
+        val fileDescriptor = assets.openFd(BASE_PATH + MODEL_PATH)
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
         val fileChannel = inputStream.channel
         val startOffset = fileDescriptor.startOffset
@@ -114,7 +116,7 @@ abstract class ObjectDetector(
 
     private fun loadLabels(assets: AssetManager): ArrayList<String>{
 
-        val inputStream = assets.open(LABEL_PATH)
+        val inputStream = assets.open(BASE_PATH + LABEL_PATH)
 
         val labels = arrayListOf<String>()
         inputStream.bufferedReader().useLines {
@@ -247,6 +249,8 @@ abstract class ObjectDetector(
 
         Trace.endSection()
 
+        log("detection results: ${recognitions}")
+
         return recognitions
 
     }
@@ -254,7 +258,7 @@ abstract class ObjectDetector(
     private fun preProcessImage(image: Bitmap): ByteBuffer{
 
         // Pre-process image
-        Trace.beginSection("preprocess image")
+        Trace.beginSection("pre-processing image")
         val startPreprocessTime = SystemClock.uptimeMillis()
 
         image.getPixels(intValues, 0, image.width, 0, 0, image.width, image.height)
@@ -283,7 +287,7 @@ abstract class ObjectDetector(
         }
 
         val preprocessDuration = SystemClock.uptimeMillis() - startPreprocessTime
-        log("Image preprocess duration: $preprocessDuration")
+        log("Image pre-processing duration: $preprocessDuration")
         Trace.endSection()
 
         return imgData
@@ -307,6 +311,7 @@ abstract class ObjectDetector(
 
     fun getStatsString(): String{
         val stats =
+            "Base folder: $BASE_PATH/n" +
             "Model file name: $MODEL_PATH/n" +
             "Label file name: $LABEL_PATH/n/n" +
             "Img mean: $IMAGE_MEAN/n" +

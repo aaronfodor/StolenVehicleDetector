@@ -6,6 +6,33 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:navigationBarColor">@color/navigationBar</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/slide_in_left</item>
+        <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
+    </style>
+
+    <style name="OptionsScreen" parent="AppTheme">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textColorSecondary">@color/colorText</item>
+        <item name="android:windowBackground">@color/optionsBackground</item>
+    </style>
+
+    <style name="ParagraphBody">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textSize">@dimen/paragraph_text_size</item>
+        <item name="android:fontFamily">@font/paragraph</item>
+        <item name="android:padding">@dimen/paragraph_padding</item>
+    </style>
+
+    <style name="SubtitleText">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textSize">@dimen/subtitle_text_size</item>
+        <item name="android:fontFamily">@font/subtitle</item>
+        <item name="android:padding">@dimen/subtitle_padding</item>
     </style>
 
 </resources>

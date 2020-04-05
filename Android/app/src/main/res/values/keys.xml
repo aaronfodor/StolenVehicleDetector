@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="PREFERENCE">preference</string>
+    <string name="KEY_EVENT_ACTION">key_event_action</string>
+    <string name="KEY_EVENT_EXTRA">key_event_extra</string>
 
 </resources>

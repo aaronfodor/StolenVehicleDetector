@@ -12,6 +12,7 @@ class MobileNetV1Coco(assets: AssetManager, threads: Int) : ObjectDetector(
      */
 
     // Model and label paths
+    BASE_PATH = "detector/",
     MODEL_PATH = "model.tflite",
     LABEL_PATH = "labelmap.txt",
 

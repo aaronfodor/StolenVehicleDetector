@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/app_dialog"
+        android:id="@+id/viewAppDialog">
+
+    <ImageView
+        android:id="@+id/ivAppDialog"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginStart="@dimen/dialog_margin"
+        android:layout_marginEnd="@dimen/dialog_margin"
+        android:layout_marginTop="@dimen/dialog_margin"
+        android:layout_marginBottom="@dimen/dialog_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/glMiddle"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        style="@style/SubtitleText"
+        android:id="@+id/tvCustomDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dialog_margin"
+        android:layout_marginEnd="@dimen/dialog_margin"
+        android:layout_marginBottom="@dimen/dialog_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/glMiddle" />
+
+    <TextView
+        style="@style/ParagraphBody"
+        android:id="@+id/tvAppDialogDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dialog_margin"
+        android:layout_marginEnd="@dimen/dialog_margin"
+        android:layout_marginTop="@dimen/dialog_margin"
+        android:layout_marginBottom="@dimen/dialog_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCustomDialogTitle"
+        app:layout_constraintBottom_toTopOf="@+id/btnPositiveAppDialog" />
+
+    <com.arpadfodor.android.stolencardetector.view.utils.AppButton
+        android:id="@+id/btnPositiveAppDialog"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dialog_margin"
+        android:layout_marginStart="@dimen/dialog_margin"
+        android:layout_marginBottom="@dimen/dialog_margin"
+        android:textStyle="bold"
+        android:text="@string/positive_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/glVerticalMiddle"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.arpadfodor.android.stolencardetector.view.utils.AppButton
+        android:id="@+id/btnNegativeAppDialog"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dialog_margin"
+        android:layout_marginEnd="@dimen/dialog_margin"
+        android:layout_marginBottom="@dimen/dialog_margin"
+        android:textStyle="bold"
+        android:text="@string/negative_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/glVerticalMiddle"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:id="@+id/glVerticalMiddle"
+                                                app:layout_constraintGuide_percent="0.5"
+                                                android:orientation="vertical"/>
+
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:id="@+id/glMiddle"
+                                                app:layout_constraintGuide_percent="0.5"
+                                                android:orientation="horizontal"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

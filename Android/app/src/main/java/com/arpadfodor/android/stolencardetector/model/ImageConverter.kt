@@ -9,7 +9,7 @@ import kotlin.math.max
 
 object ImageConverter {
 
-    fun imageProxyToBitmap(image: ImageProxy, rotation: Int, desiredSize: Size): Bitmap {
+    fun imageProxyToBitmap(image: ImageProxy): Bitmap {
 
         val yBuffer = image.planes[0].buffer // Y
         val uBuffer = image.planes[1].buffer // U
@@ -32,15 +32,113 @@ object ImageConverter {
         yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 50, out)
         val imageBytes = out.toByteArray()
 
-        val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-        val croppedBitmap = bitmapToCroppedNxNImage(bitmap)
-        val inputBitmap = rotateAndResizeBitmap(croppedBitmap, rotation, desiredSize)
-
-        return inputBitmap
+        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
     }
 
-    private fun bitmapToCroppedNxNImage(sourceBitmap: Bitmap): Bitmap{
+    /**
+     * Returns the resized image
+     *
+     * @param bitmap            The input image which has NxN dimensions
+     * @param desiredSize       The desired output image dimensions
+     *
+     * @return Bitmap           The resized Bitmap
+     */
+    fun resizeBitmap(bitmap: Bitmap, desiredSize: Size): Bitmap{
+
+        val cropToFrameTransform = Matrix()
+
+        val resizedBitmap: Bitmap = Bitmap.createBitmap(
+            desiredSize.width,
+            desiredSize.height,
+            Bitmap.Config.ARGB_8888
+        )
+
+        val frameToReScaleTransform = getTransformationMatrix(
+            bitmap.width,
+            bitmap.height,
+            desiredSize.width,
+            desiredSize.height,
+            0,
+            //maintain aspect ratio
+            true
+        )
+
+        frameToReScaleTransform.invert(cropToFrameTransform)
+
+        val canvas = Canvas(resizedBitmap)
+        canvas.drawBitmap(bitmap, frameToReScaleTransform, null)
+
+        return resizedBitmap
+
+    }
+
+    /**
+     * Returns the resized image
+     *
+     * @param bitmap            The input bitmap
+     *
+     * @return Bitmap           The resized Bitmap
+     */
+    fun mirrorHorizontallyBitmap(bitmap: Bitmap): Bitmap{
+
+        val mirrorTransform = Matrix()
+        mirrorTransform.postScale(-1f, 1f, (bitmap.width / 2f), (bitmap.height / 2f))
+
+        val canvas = Canvas(bitmap)
+        canvas.drawBitmap(bitmap, mirrorTransform, null)
+
+        return bitmap
+
+    }
+
+    /**
+     * Returns the rotated image
+     *
+     * @param bitmap            The input image which has NxN dimensions
+     * @param rotationDegrees   Value of desired rotation in degrees
+     *
+     * @return Bitmap           The resized Bitmap
+     */
+    fun rotateBitmap(bitmap: Bitmap, rotationDegrees: Int): Bitmap{
+
+        val cropToFrameTransform = Matrix()
+
+        var newWidth = bitmap.width
+        var newHeight = bitmap.height
+
+        //rotate image dimensions if necessary (90 degrees or 270 degrees); 180 degrees has the same dimensions
+        if(rotationDegrees == 90 || rotationDegrees == 270){
+            newWidth = bitmap.height
+            newHeight = bitmap.width
+        }
+
+        val rotatedBitmap: Bitmap = Bitmap.createBitmap(
+            newWidth,
+            newHeight,
+            Bitmap.Config.ARGB_8888
+        )
+
+        val frameToReScaleTransform = getTransformationMatrix(
+            bitmap.width,
+            bitmap.height,
+            newWidth,
+            newHeight,
+            rotationDegrees,
+            //maintain aspect ratio
+            true
+        )
+
+        frameToReScaleTransform.invert(cropToFrameTransform)
+
+        val canvas = Canvas(rotatedBitmap)
+        canvas.drawBitmap(bitmap, frameToReScaleTransform, null)
+
+        return rotatedBitmap
+
+    }
+
+    fun bitmapToCroppedNxNImage(sourceBitmap: Bitmap): Bitmap{
 
         val croppedBitmap: Bitmap?
 
@@ -75,54 +173,20 @@ object ImageConverter {
 
     }
 
-    /**
-     * Returns the resized image
-     *
-     * @param croppedBitmap     The input image which has NxN dimensions
-     * @param rotationDegrees   Value of desired rotation in degrees
-     * @param desiredSize       The desired output image dimensions
-     *
-     * @return Bitmap           The resized Bitmap
-     */
-    private fun rotateAndResizeBitmap(croppedBitmap: Bitmap, rotationDegrees: Int, desiredSize: Size): Bitmap{
-
-        val cropToFrameTransform = Matrix()
-
-        val resizedBitmap: Bitmap = Bitmap.createBitmap(
-            desiredSize.width,
-            desiredSize.height,
-            Bitmap.Config.ARGB_8888
-        )
-
-        val frameToReScaleTransform = getTransformationMatrix(
-            croppedBitmap.width,
-            croppedBitmap.height,
-            desiredSize.width,
-            desiredSize.height,
-            rotationDegrees,
-            //maintain aspect ratio
-            true
-        )
-
-        frameToReScaleTransform.invert(cropToFrameTransform)
-
-        val canvas = Canvas(resizedBitmap)
-        canvas.drawBitmap(croppedBitmap, frameToReScaleTransform, null)
-
-        return resizedBitmap
-
+    fun createSpecifiedBitmap(desiredSize: Size, config: Bitmap.Config): Bitmap {
+        return Bitmap.createBitmap(desiredSize.width, desiredSize.height, config)
     }
 
     /**
      * Returns a transformation matrix from one reference frame into another
      * Handles cropping (if maintaining aspect ratio is desired) and rotation
      *
-     * @param srcWidth Width of source frame
-     * @param srcHeight Height of source frame
-     * @param dstWidth Width of destination frame
-     * @param dstHeight Height of destination frame
-     * @param applyRotation Amount of rotation to apply from one frame to another. Must be a multiple of 90
-     * @param maintainAspectRatio If true, will ensure that scaling in x and y remains constant, cropping the image if necessary
+     * @param srcWidth                  Width of source frame
+     * @param srcHeight                 Height of source frame
+     * @param dstWidth                  Width of destination frame
+     * @param dstHeight                 Height of destination frame
+     * @param applyRotation             Amount of rotation to apply from one frame to another. Must be a multiple of 90
+     * @param maintainAspectRatio       If true, will ensure that scaling in x and y remains constant, cropping the image if necessary
      *
      * @return The transformation fulfilling the desired requirements
      */
@@ -131,6 +195,7 @@ object ImageConverter {
         val matrix = Matrix()
 
         if (applyRotation != 0) {
+
             if (applyRotation % 90 != 0) {
             }
 
