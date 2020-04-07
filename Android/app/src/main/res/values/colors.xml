@@ -13,6 +13,7 @@
     <color name="colorNormalButtonPressed">#AAFFFFFF</color>
 
     <color name="navigationBar">#000000</color>
+    <color name="transparentToolbar">#00000000</color>
 
     <color name="icActive">#FFFFFFFF</color>
     <color name="icFocused">#DDFFFFFF</color>

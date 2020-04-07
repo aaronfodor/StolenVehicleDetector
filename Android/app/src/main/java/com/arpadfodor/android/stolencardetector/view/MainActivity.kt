@@ -4,18 +4,25 @@ import android.content.Intent
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.MenuItem
 import android.view.OrientationEventListener
 import android.view.View.*
 import android.widget.FrameLayout
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.arpadfodor.android.stolencardetector.R
 import com.arpadfodor.android.stolencardetector.viewmodel.MainViewModel
+import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_toolbar.*
 
 private const val IMMERSIVE_FLAG_TIMEOUT = 500L
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var viewModel: MainViewModel
 
@@ -40,6 +47,23 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        val toolbar = findViewById<Toolbar>(R.id.camera_toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        val drawerToggle = ActionBarDrawerToggle(this, mainActivityDrawerLayout, toolbar, R.string.menu_open, R.string.menu_close)
+        mainActivityDrawerLayout.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
+
+        menu_navigation.setNavigationItemSelectedListener(this)
+        val navigationMenuView = findViewById<NavigationView>(R.id.menu_navigation)
+        val header = navigationMenuView?.getHeaderView(0)
+
+        menu_navigation.bringToFront()
+        menu_navigation.parent.requestLayout()
+
     }
 
     override fun onResume() {
@@ -52,8 +76,6 @@ class MainActivity : AppCompatActivity() {
         container.postDelayed({
             container.systemUiVisibility = (SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN and SYSTEM_UI_FLAG_LAYOUT_STABLE)
         }, IMMERSIVE_FLAG_TIMEOUT)
-
-        supportActionBar?.hide()
 
         deviceOrientationListener.enable()
 
@@ -85,6 +107,35 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+    }
+
+    /**
+     * Called when an item in the navigation menu is selected.
+     *
+     * @param item The selected item
+     * @return true to display the item as the selected item
+     */
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.navigation_live -> {
+            }
+            R.id.navigation_load -> {
+            }
+            R.id.navigation_gallery -> {
+            }
+            R.id.navigation_reports -> {
+            }
+            R.id.navigation_settings -> {
+            }
+            else ->{
+                return false
+            }
+        }
+
+        mainActivityDrawerLayout.closeDrawer(GravityCompat.START)
+        return true
 
     }
 

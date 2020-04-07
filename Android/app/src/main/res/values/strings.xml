@@ -45,4 +45,12 @@
     <string name="exit_title">Confirm exit</string>
     <string name="exit_dialog">Are you sure you want to exit?</string>
 
+    <string name="menu_open">Open navigation menu</string>
+    <string name="menu_close">Close navigation menu</string>
+    <string name="menu_live">Live</string>
+    <string name="menu_load">Load</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_reports">Reports</string>
+    <string name="menu_settings">Settings</string>
+
 </resources>

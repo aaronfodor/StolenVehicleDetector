@@ -256,7 +256,7 @@ class CameraFragment() : Fragment() {
                 .build()
 
             // attach the viewfinder's surface provider to preview use case
-            preview?.setSurfaceProvider(viewFinder.previewSurfaceProvider)
+            preview?.setSurfaceProvider(viewFinder.createSurfaceProvider(camera?.cameraInfo))
 
             // ImageCapture
             imageCapture = ImageCapture.Builder()
