@@ -1,5 +1,6 @@
 package com.arpadfodor.android.stolencardetector.view
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.hardware.SensorManager
 import android.os.Bundle
@@ -15,10 +16,10 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.arpadfodor.android.stolencardetector.R
+import com.arpadfodor.android.stolencardetector.view.utils.AppDialog
 import com.arpadfodor.android.stolencardetector.viewmodel.MainViewModel
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_toolbar.*
 
 private const val IMMERSIVE_FLAG_TIMEOUT = 500L
 
@@ -136,6 +137,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         mainActivityDrawerLayout.closeDrawer(GravityCompat.START)
         return true
+
+    }
+
+    override fun onBackPressed() {
+        if(mainActivityDrawerLayout.isDrawerOpen(GravityCompat.START)){
+            mainActivityDrawerLayout.closeDrawer(GravityCompat.START)
+        }
+        else{
+            exitDialog()
+        }
+    }
+
+    /**
+     * Asks for exit confirmation
+     */
+    private fun exitDialog(){
+
+        val exitDialog = AppDialog(this, getString(R.string.exit_title), getString(R.string.exit_dialog), resources.getDrawable(R.drawable.warning))
+        exitDialog.setPositiveButton {
+            //showing the home screen - app is not visible but running
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_HOME)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+        }
+        exitDialog.show()
 
     }
 

@@ -3,12 +3,9 @@ package com.arpadfodor.android.stolencardetector.model.ai
 import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.RectF
-import android.net.Uri
 import android.os.SystemClock
 import android.os.Trace
 import android.util.Log
-import android.util.Size
-import com.arpadfodor.android.stolencardetector.model.ImageConverter
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.gpu.GpuDelegate
 import java.io.FileInputStream
@@ -108,9 +105,12 @@ abstract class ObjectDetector(
         val fileChannel = inputStream.channel
         val startOffset = fileDescriptor.startOffset
         val declaredLength = fileDescriptor.declaredLength
+        val byteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)
+
+        inputStream.close()
 
         log("Model file loaded")
-        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)
+        return  byteBuffer
 
     }
 
@@ -119,9 +119,12 @@ abstract class ObjectDetector(
         val inputStream = assets.open(BASE_PATH + LABEL_PATH)
 
         val labels = arrayListOf<String>()
-        inputStream.bufferedReader().useLines {
-                lines -> lines.forEach { labels.add(it) }
-        }
+
+        inputStream.apply {
+            bufferedReader().useLines {
+                    lines -> lines.forEach { labels.add(it) }
+            }
+        }.close()
 
         log("Labels loaded")
         return labels

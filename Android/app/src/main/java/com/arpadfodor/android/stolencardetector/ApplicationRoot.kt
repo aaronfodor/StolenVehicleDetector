@@ -47,9 +47,4 @@ class ApplicationRoot : Application() {
 
     }
 
-    override fun onTerminate() {
-        ObjectDetectionService.close()
-        super.onTerminate()
-    }
-
 }
