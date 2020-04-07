@@ -121,6 +121,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         when (item.itemId) {
             R.id.navigation_live -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, CameraFragment())
+                    .commit()
             }
             R.id.navigation_load -> {
             }
@@ -129,6 +133,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.navigation_reports -> {
             }
             R.id.navigation_settings -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, SettingsFragment())
+                    .commit()
             }
             else ->{
                 return false

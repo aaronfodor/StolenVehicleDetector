@@ -4,4 +4,7 @@
     <string name="KEY_EVENT_ACTION">key_event_action</string>
     <string name="KEY_EVENT_EXTRA">key_event_extra</string>
 
+    <string name="SETTINGS_KEY_MAXIMUM_RECOGNITIONS">maximum_recognitions_to_show</string>
+    <string name="SETTINGS_KEY_MINIMUM_PREDICTION_CERTAINTY">minimum_prediction_certainty_to_show</string>
+
 </resources>

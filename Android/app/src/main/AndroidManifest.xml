@@ -54,6 +54,20 @@
                 android:value="true" />
         </activity>
 
+        <activity
+            android:name=".view.SettingsActivity"
+            android:icon="@mipmap/ic_launcher"
+            android:rotationAnimation="seamless"
+            android:screenOrientation="fullUser"
+            android:theme="@style/AppTheme"
+            tools:targetApi="O">
+
+            <!-- Declare notch support -->
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
+        </activity>
+
         <!-- FileProvider used to share photos with other apps -->
         <provider
             android:name="androidx.core.content.FileProvider"

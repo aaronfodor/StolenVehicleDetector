@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:asp="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="@string/about">
+
+        <Preference
+        android:title="@string/app_name"
+        android:summary="@string/app_version" />
+
+        <Preference
+            android:title="@string/app_creator"
+            android:summary="@string/app_date" />
+
+        <Preference android:title="@string/further">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/developer_page" />
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/detector_settings">
+
+        <SeekBarPreference
+            android:title="@string/setting_max_recognition"
+            android:summary="@string/setting_summary_max_recognition"
+            android:enabled="true"
+            android:selectable="true"
+            android:max="10"
+            asp:min="1"
+            android:defaultValue="10"/>
+
+        <SeekBarPreference
+            android:title="@string/setting_min_certainty"
+            android:summary="@string/setting_summary_min_certainty"
+            android:enabled="true"
+            android:selectable="true"
+            android:max="100"
+            asp:min="1"
+            android:defaultValue="50"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
