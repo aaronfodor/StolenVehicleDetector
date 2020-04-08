@@ -1,7 +1,9 @@
 package com.arpadfodor.android.stolencardetector.view
 
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.KeyEvent
@@ -12,20 +14,24 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.preference.PreferenceManager
+import com.arpadfodor.android.stolencardetector.ApplicationRoot
 import com.arpadfodor.android.stolencardetector.R
 import com.arpadfodor.android.stolencardetector.view.utils.AppDialog
-import com.arpadfodor.android.stolencardetector.viewmodel.MainViewModel
+import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_camera.*
 
 private const val IMMERSIVE_FLAG_TIMEOUT = 500L
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: CameraViewModel
 
     private lateinit var container: FrameLayout
 
@@ -34,16 +40,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        container = findViewById(R.id.fragment_container)
+        setContentView(R.layout.activity_camera)
+        container = findViewById(R.id.camera_container)
 
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(CameraViewModel::class.java)
 
         deviceOrientationListener = object : OrientationEventListener(this,
             SensorManager.SENSOR_DELAY_NORMAL) {
 
             override fun onOrientationChanged(orientation: Int) {
-                MainViewModel.deviceOrientation = orientation
+                viewModel.deviceOrientation = orientation
             }
 
         }
@@ -58,13 +64,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mainActivityDrawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
-        menu_navigation.setNavigationItemSelectedListener(this)
-        val navigationMenuView = findViewById<NavigationView>(R.id.menu_navigation)
+        camera_navigation.setNavigationItemSelectedListener(this)
+        val navigationMenuView = findViewById<NavigationView>(R.id.camera_navigation)
         val header = navigationMenuView?.getHeaderView(0)
 
-        menu_navigation.bringToFront()
-        menu_navigation.parent.requestLayout()
+        camera_navigation.bringToFront()
+        camera_navigation.parent.requestLayout()
 
+        // Request camera permissions
+        if (allPermissionsGranted()) {
+            activateCamera()
+        }
+        else{
+            requestPermission()
+        }
+
+    }
+
+    private fun activateCamera(){
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.camera_container, CameraFragment())
+            .commit()
     }
 
     override fun onResume() {
@@ -79,6 +100,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }, IMMERSIVE_FLAG_TIMEOUT)
 
         deviceOrientationListener.enable()
+
+        // read settings from preferences
+        val settings = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val settingsMaximumRecognitions = getString(R.string.SETTINGS_MAXIMUM_RECOGNITIONS)
+        val settingsMinimumPredictionCertainty = getString(R.string.SETTINGS_MINIMUM_PREDICTION_CERTAINTY)
+        val maximumRecognitionsToShow = settings.getInt(settingsMaximumRecognitions, resources.getInteger(R.integer.settings_maximum_recognitions_default))
+        val minimumPredictionCertaintyToShow = settings.getInt(settingsMinimumPredictionCertainty, resources.getInteger(R.integer.settings_minimum_prediction_certainty_default))
+        CameraViewModel.maximumRecognitionsToShow = maximumRecognitionsToShow
+        CameraViewModel.minimumPredictionCertaintyToShow = minimumPredictionCertaintyToShow.toFloat()
 
     }
 
@@ -96,8 +126,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             KeyEvent.KEYCODE_VOLUME_DOWN -> {
 
-                val intent = Intent(MainViewModel.KEY_EVENT_ACTION).apply {
-                    putExtra(MainViewModel.KEY_EVENT_EXTRA, keyCode)
+                val intent = Intent(CameraViewModel.KEY_EVENT_ACTION).apply {
+                    putExtra(CameraViewModel.KEY_EVENT_EXTRA, keyCode)
                 }
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
                 true
@@ -121,10 +151,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         when (item.itemId) {
             R.id.navigation_live -> {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, CameraFragment())
-                    .commit()
             }
             R.id.navigation_load -> {
             }
@@ -133,28 +159,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.navigation_reports -> {
             }
             R.id.navigation_settings -> {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, SettingsFragment())
-                    .commit()
+                val intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
             }
             else ->{
                 return false
             }
         }
 
-        mainActivityDrawerLayout.closeDrawer(GravityCompat.START)
+        if(mainActivityDrawerLayout.isDrawerOpen(GravityCompat.START)){
+            mainActivityDrawerLayout.closeDrawer(GravityCompat.START)
+        }
         return true
 
     }
 
     override fun onBackPressed() {
+
         if(mainActivityDrawerLayout.isDrawerOpen(GravityCompat.START)){
             mainActivityDrawerLayout.closeDrawer(GravityCompat.START)
         }
         else{
             exitDialog()
         }
+
     }
 
     /**
@@ -172,6 +200,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         exitDialog.show()
 
+    }
+
+    /**
+     * Check if all permission specified in the manifest have been granted
+     */
+    private fun allPermissionsGranted() = ApplicationRoot.requiredPermissions.all {
+        ContextCompat.checkSelfPermission(
+            baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestPermission(){
+        ActivityCompat.requestPermissions(this, ApplicationRoot.requiredPermissions, CameraViewModel.REQUEST_CODE_PERMISSIONS)
     }
 
 }

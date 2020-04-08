@@ -1,17 +1,20 @@
 package com.arpadfodor.android.stolencardetector
 
+import android.Manifest
 import android.app.Application
 import android.util.Log
 import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
 import com.arpadfodor.android.stolencardetector.model.MediaHandler
 import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
-import com.arpadfodor.android.stolencardetector.viewmodel.MainViewModel
+import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
 
 class ApplicationRoot : Application() {
 
     companion object{
         private const val TAG = "Application Root"
         private const val NUM_THREADS = 4
+
+        val requiredPermissions = arrayOf(Manifest.permission.CAMERA)
     }
 
     /**
@@ -42,8 +45,8 @@ class ApplicationRoot : Application() {
 
         MediaHandler.initialize(applicationContext, appName)
 
-        MainViewModel.KEY_EVENT_ACTION = getString(R.string.KEY_EVENT_ACTION)
-        MainViewModel.KEY_EVENT_EXTRA = getString(R.string.KEY_EVENT_EXTRA)
+        CameraViewModel.KEY_EVENT_ACTION = getString(R.string.KEY_EVENT_ACTION)
+        CameraViewModel.KEY_EVENT_EXTRA = getString(R.string.KEY_EVENT_EXTRA)
 
     }
 

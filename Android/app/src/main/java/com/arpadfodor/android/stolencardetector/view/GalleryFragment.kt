@@ -96,7 +96,7 @@ class GalleryFragment internal constructor() : Fragment() {
         // Handle back button press
         view.findViewById<ImageButton>(R.id.back_button).setOnClickListener {
             Navigation.findNavController(requireActivity(),
-                R.id.fragment_container
+                R.id.camera_container
             ).navigateUp()
         }
 
@@ -148,7 +148,7 @@ class GalleryFragment internal constructor() : Fragment() {
                     // If all photos have been deleted, return to camera
                     if (mediaList.isEmpty()) {
                         Navigation.findNavController(requireActivity(),
-                            R.id.fragment_container
+                            R.id.camera_container
                         ).navigateUp()
                     }
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <integer name="settings_maximum_recognitions_max">10</integer>
+    <integer name="settings_maximum_recognitions_min">1</integer>
+    <integer name="settings_maximum_recognitions_default">10</integer>
+
+    <integer name="settings_minimum_prediction_certainty_max">100</integer>
+    <integer name="settings_minimum_prediction_certainty_min">1</integer>
+    <integer name="settings_minimum_prediction_certainty_default">50</integer>
+</resources>

@@ -2,14 +2,42 @@
 
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:asp="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/AppTheme.AppBarOverlay">
+
+    <PreferenceCategory
+        android:title="@string/detector_settings">
+
+        <SeekBarPreference
+            app:key="@string/SETTINGS_MAXIMUM_RECOGNITIONS"
+            android:title="@string/setting_max_recognition"
+            android:summary="@string/setting_summary_max_recognition"
+            android:enabled="true"
+            android:selectable="true"
+            app:showSeekBarValue="true"
+            android:max="@integer/settings_maximum_recognitions_max"
+            app:min="@integer/settings_maximum_recognitions_min"
+            android:defaultValue="@integer/settings_maximum_recognitions_default"/>
+
+        <SeekBarPreference
+            app:key="@string/SETTINGS_MINIMUM_PREDICTION_CERTAINTY"
+            android:title="@string/setting_min_certainty"
+            android:summary="@string/setting_summary_min_certainty"
+            android:enabled="true"
+            android:selectable="true"
+            app:showSeekBarValue="true"
+            android:max="@integer/settings_minimum_prediction_certainty_max"
+            app:min="@integer/settings_minimum_prediction_certainty_min"
+            android:defaultValue="@integer/settings_minimum_prediction_certainty_default"/>
+
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/about">
 
         <Preference
-        android:title="@string/app_name"
-        android:summary="@string/app_version" />
+            android:title="@string/app_name"
+            android:summary="@string/app_version" />
 
         <Preference
             android:title="@string/app_creator"
@@ -20,29 +48,6 @@
                 android:action="android.intent.action.VIEW"
                 android:data="@string/developer_page" />
         </Preference>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/detector_settings">
-
-        <SeekBarPreference
-            android:title="@string/setting_max_recognition"
-            android:summary="@string/setting_summary_max_recognition"
-            android:enabled="true"
-            android:selectable="true"
-            android:max="10"
-            asp:min="1"
-            android:defaultValue="10"/>
-
-        <SeekBarPreference
-            android:title="@string/setting_min_certainty"
-            android:summary="@string/setting_summary_min_certainty"
-            android:enabled="true"
-            android:selectable="true"
-            android:max="100"
-            asp:min="1"
-            android:defaultValue="50"/>
 
     </PreferenceCategory>
 

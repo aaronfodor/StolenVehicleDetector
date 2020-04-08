@@ -9,10 +9,10 @@ import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
 import com.arpadfodor.android.stolencardetector.model.ImageConverter
 import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
 import com.arpadfodor.android.stolencardetector.view.DetectionListener
-import com.arpadfodor.android.stolencardetector.viewmodel.MainViewModel
+import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
 import java.util.*
 
-class ObjectDetectionAnalyzerProcessor(listener: DetectionListener? = null) : ImageAnalysis.Analyzer{
+class ObjectDetectionAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewModel) : ImageAnalysis.Analyzer{
 
     private val frameRateWindow = 8
     private val frameTimestamps = ArrayDeque<Long>(5)
@@ -20,6 +20,7 @@ class ObjectDetectionAnalyzerProcessor(listener: DetectionListener? = null) : Im
     private var lastAnalyzedTimestamp = 0L
     private var framesPerSecond: Double = -1.0
 
+    private val viewModel: CameraViewModel = viewModel_
     private val objectDetectionService = ObjectDetectionService()
 
     /**
@@ -67,13 +68,13 @@ class ObjectDetectionAnalyzerProcessor(listener: DetectionListener? = null) : Im
         lastAnalyzedTimestamp = frameTimestamps.first
 
         val cameraOrientation = image.imageInfo.rotationDegrees
-        val deviceOrientation = MainViewModel.deviceOrientation
+        val deviceOrientation = viewModel.deviceOrientation
 
         val inputImage = ImageConverter.imageProxyToBitmap(image)
         val rotatedInputImage = ImageConverter.rotateBitmap(inputImage, cameraOrientation)
 
         // if front camera provided the image, it needs to be mirrored before inference
-        if(MainViewModel.lensFacing == CameraSelector.LENS_FACING_FRONT){
+        if(viewModel.lensFacing == CameraSelector.LENS_FACING_FRONT){
             ImageConverter.mirrorHorizontallyBitmap(rotatedInputImage)
         }
 
@@ -82,7 +83,7 @@ class ObjectDetectionAnalyzerProcessor(listener: DetectionListener? = null) : Im
 
         // Compute results
         val recognitions = objectDetectionService.recognizeImage(requiredInputImage,
-            MainViewModel.MAXIMUM_RECOGNITIONS_TO_SHOW, MainViewModel.MINIMUM_PREDICTION_CERTAINTY_TO_SHOW)
+            CameraViewModel.maximumRecognitionsToShow, CameraViewModel.minimumPredictionCertaintyToShow)
 
         val templateBoundingBoxBitmap =
             ImageConverter.createSpecifiedBitmap(Size(rotatedInputImage.width, rotatedInputImage.height), Bitmap.Config.ARGB_8888)

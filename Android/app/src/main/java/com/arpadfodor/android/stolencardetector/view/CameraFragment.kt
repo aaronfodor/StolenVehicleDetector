@@ -31,16 +31,16 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import androidx.core.view.setPadding
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.Navigation
 import com.arpadfodor.android.stolencardetector.R
-import com.arpadfodor.android.stolencardetector.viewmodel.MainViewModel
-import com.arpadfodor.android.stolencardetector.viewmodel.analyzer.ObjectDetectionAnalyzerProcessor
+import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
+import com.arpadfodor.android.stolencardetector.viewmodel.analyzer.ObjectDetectionAnalyzer
 import com.arpadfodor.android.stolencardetector.view.utils.ANIMATION_FAST_MILLIS
 import com.arpadfodor.android.stolencardetector.view.utils.ANIMATION_SLOW_MILLIS
-import com.arpadfodor.android.stolencardetector.view.utils.CameraFragmentDirections
 import com.arpadfodor.android.stolencardetector.view.utils.simulateClick
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -64,6 +64,8 @@ class CameraFragment() : Fragment() {
     companion object{
         private const val TAG = "Camera fragment"
     }
+
+    private val viewModel: CameraViewModel by activityViewModels()
 
     private lateinit var container: ConstraintLayout
     private lateinit var viewFinder: PreviewView
@@ -92,7 +94,7 @@ class CameraFragment() : Fragment() {
 
         override fun onReceive(context: Context, intent: Intent) {
 
-            when(intent.getIntExtra(MainViewModel.KEY_EVENT_EXTRA, KeyEvent.KEYCODE_UNKNOWN)){
+            when(intent.getIntExtra(CameraViewModel.KEY_EVENT_EXTRA, KeyEvent.KEYCODE_UNKNOWN)){
                 // When the volume down button is pressed, simulate a shutter button click
                 KeyEvent.KEYCODE_VOLUME_DOWN -> {
                     val shutter = container.findViewById<ImageButton>(R.id.camera_capture_button)
@@ -119,36 +121,8 @@ class CameraFragment() : Fragment() {
 
     }
 
-    override fun onResume(){
-
-        super.onResume()
-
-        // Making sure that all permissions are still present, since the user could have removed them while the app was in paused state
-        if(!PermissionFragment.hasPermissions(
-                requireContext()
-            )
-        ){
-            Navigation.findNavController(requireActivity(), R.id.fragment_container)
-                .navigate(CameraFragmentDirections.actionCameraToPermissions())
-        }
-
-    }
-
-    override fun onDestroyView(){
-
-        super.onDestroyView()
-
-        // shuts down the background executor
-        cameraExecutor.shutdown()
-
-        // unregisters the broadcast receivers and listeners
-        broadcastManager.unregisterReceiver(volumeDownReceiver)
-        displayManager.unregisterDisplayListener(displayListener)
-
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.camera_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_camera, container, false)
     }
 
     private fun setGalleryThumbnail(uri: Uri){
@@ -186,7 +160,7 @@ class CameraFragment() : Fragment() {
         broadcastManager = LocalBroadcastManager.getInstance(view.context)
 
         // setting up the intent filter that receives main activity events
-        val filter = IntentFilter().apply { addAction(MainViewModel.KEY_EVENT_ACTION) }
+        val filter = IntentFilter().apply { addAction(CameraViewModel.KEY_EVENT_ACTION) }
         broadcastManager.registerReceiver(volumeDownReceiver, filter)
 
         // when device screen orientation changes, update rotation for use cases
@@ -208,6 +182,19 @@ class CameraFragment() : Fragment() {
 
     }
 
+    override fun onDestroyView(){
+
+        super.onDestroyView()
+
+        // shuts down the background executor
+        cameraExecutor.shutdown()
+
+        // unregisters the broadcast receivers and listeners
+        broadcastManager.unregisterReceiver(volumeDownReceiver)
+        displayManager.unregisterDisplayListener(displayListener)
+
+    }
+
     /**
      * Inflate camera controls and update the UI manually upon config changes to avoid removing
      * and re-adding the view finder from the view hierarchy; this provides a seamless rotation
@@ -226,7 +213,7 @@ class CameraFragment() : Fragment() {
      */
     private fun bindCameraUseCases(){
 
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        val viewModel = ViewModelProviders.of(this).get(CameraViewModel::class.java)
 
         // Get screen metrics used to setup camera for full screen resolution
         val metrics = DisplayMetrics().also{viewFinder.display.getRealMetrics(it)}
@@ -237,7 +224,7 @@ class CameraFragment() : Fragment() {
         Log.d(TAG, "Preview aspect ratio: $screenAspectRatio")
 
         // bind CameraProvider to the LifeCycleOwner
-        val cameraSelector = CameraSelector.Builder().requireLensFacing(MainViewModel.lensFacing).build()
+        val cameraSelector = CameraSelector.Builder().requireLensFacing(viewModel.lensFacing).build()
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         val cameraOrientation = viewFinder.display.rotation
@@ -281,7 +268,7 @@ class CameraFragment() : Fragment() {
                 // The analyzer can then be assigned to the instance
                 .also {
 
-                    it.setAnalyzer(cameraExecutor, ObjectDetectionAnalyzerProcessor { boundingBoxImage ->
+                    it.setAnalyzer(cameraExecutor, ObjectDetectionAnalyzer( { boundingBoxImage ->
 
                         if(viewFinder.isLaidOut){
 
@@ -291,7 +278,7 @@ class CameraFragment() : Fragment() {
 
                         }
 
-                    })
+                    }, viewModel))
 
                 }
 
@@ -320,7 +307,7 @@ class CameraFragment() : Fragment() {
             container.removeView(it)
         }
 
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        val viewModel = ViewModelProviders.of(this).get(CameraViewModel::class.java)
 
         // Inflate a new view containing all UI for controlling the camera
         val controls = View.inflate(requireContext(),
@@ -347,7 +334,7 @@ class CameraFragment() : Fragment() {
                 // Setup image capture metadata
                 val metadata = ImageCapture.Metadata().apply {
                     // Mirror the image when using the front camera
-                    isReversedHorizontal = (MainViewModel.lensFacing == CameraSelector.LENS_FACING_FRONT)
+                    isReversedHorizontal = (viewModel.lensFacing == CameraSelector.LENS_FACING_FRONT)
                 }
 
                 // Create output options object which contains file + metadata
@@ -412,7 +399,7 @@ class CameraFragment() : Fragment() {
 
         // Listener for button used to switch camera
         controls.findViewById<ImageButton>(R.id.camera_switch_button).setOnClickListener {
-            MainViewModel.lensFacing = if (CameraSelector.LENS_FACING_FRONT == MainViewModel.lensFacing) {
+            viewModel.lensFacing = if (CameraSelector.LENS_FACING_FRONT == viewModel.lensFacing) {
                 CameraSelector.LENS_FACING_BACK
             }
             else {
@@ -426,8 +413,8 @@ class CameraFragment() : Fragment() {
         controls.findViewById<ImageButton>(R.id.photo_view_button).setOnClickListener {
             // Only navigate when the gallery has photos
             if (true == viewModel.getOutputDirectory().listFiles()?.isNotEmpty()) {
-                Navigation.findNavController(requireActivity(), R.id.fragment_container)
-                    .navigate(CameraFragmentDirections.actionCameraToGallery(viewModel.getOutputDirectory().absolutePath))
+                //Navigation.findNavController(requireActivity(), R.id.camera_container)
+                    //.navigate(CameraFragmentDirections.actionCameraToGallery(viewModel.getOutputDirectory().absolutePath))
             }
         }
 

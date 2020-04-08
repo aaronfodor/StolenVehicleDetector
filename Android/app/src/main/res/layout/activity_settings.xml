@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-app:layout_behavior="@string/appbar_scrolling_view_behavior"
-android:background="@color/colorPrimaryDark">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/AppTheme.AppBarOverlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="@color/colorPrimaryDark">
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/mainActivityDrawerLayout"
+        android:id="@+id/settingsActivityDrawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparentToolbar"
@@ -20,7 +21,7 @@ android:background="@color/colorPrimaryDark">
         tools:openDrawer="start">
 
         <com.google.android.material.navigation.NavigationView
-            android:id="@+id/menu_navigation"
+            android:id="@+id/settings_navigation"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
@@ -33,18 +34,17 @@ android:background="@color/colorPrimaryDark">
             app:menu="@menu/dashboard_menu" />
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragment_container"
+            android:id="@+id/settings_container"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:keepScreenOn="true"
             app:defaultNavHost="true"
-            app:navGraph="@navigation/navigation_graph"
-            tools:context=".view.MainActivity"/>
+            tools:context=".view.CameraActivity"/>
 
         <include
             layout="@layout/camera_toolbar"
-            android:id="@+id/main_toolbar"
+            android:id="@+id/settings_toolbar"
             app:layout_constraintBottom_toTopOf="parent"/>
 
     </androidx.drawerlayout.widget.DrawerLayout>

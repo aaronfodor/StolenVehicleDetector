@@ -60,7 +60,7 @@
     <string name="further">Further apps from the developer</string>
     <string name="detector_settings">Detector settings</string>
     <string name="setting_max_recognition">Recognitions per image</string>
-    <string name="setting_summary_max_recognition">The maximum number of recognitions that can appear at the same time.</string>
+    <string name="setting_summary_max_recognition">The maximum number of recognitions that appear at the same time.</string>
     <string name="setting_min_certainty">Minimum certainty %</string>
     <string name="setting_summary_min_certainty">Only recognitions with greater or equal certainty than the selected percentage are displayed.</string>
 

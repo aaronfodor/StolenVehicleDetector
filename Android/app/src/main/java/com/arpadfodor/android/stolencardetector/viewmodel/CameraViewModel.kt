@@ -10,27 +10,36 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class MainViewModel() : ViewModel(){
+class CameraViewModel : ViewModel(){
 
     companion object{
 
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0
 
-        const val MINIMUM_PREDICTION_CERTAINTY_TO_SHOW = 0.5f
-        const val MAXIMUM_RECOGNITIONS_TO_SHOW = 10
+        /**
+         * An arbitrary number to keep track of the permission request
+         * Where an app has multiple context for requesting permission, this can help differentiate the different contexts
+         **/
+        const val REQUEST_CODE_PERMISSIONS = 1
 
         var KEY_EVENT_ACTION = ""
         var KEY_EVENT_EXTRA = ""
 
-        var screenDimensions = Size(0, 0)
-        var imageRatio = 0f
-
-        var deviceOrientation: Int = 0
-
-        var lensFacing: Int = CameraSelector.LENS_FACING_BACK
+        var maximumRecognitionsToShow = 10
+        var minimumPredictionCertaintyToShow = 0.5f
+            set(value) {
+                field = value/100f
+            }
 
     }
+
+    var screenDimensions = Size(0, 0)
+    var imageRatio = 0f
+
+    var deviceOrientation: Int = 0
+
+    var lensFacing: Int = CameraSelector.LENS_FACING_BACK
 
     /**
      *  [androidx.camera.core.ImageAnalysisConfig] requires enum value of [androidx.camera.core.AspectRatio].
@@ -43,7 +52,7 @@ class MainViewModel() : ViewModel(){
      *  @param height - preview height
      *
      *  @return suitable aspect ratio
-     */
+     **/
     fun aspectRatio(width: Int, height: Int): Int {
 
         val previewRatio = max(width, height).toDouble() / min(width, height)
