@@ -10,7 +10,7 @@
     android:background="@color/colorPrimaryDark">
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/mainActivityDrawerLayout"
+        android:id="@+id/loadActivityDrawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparentToolbar"
@@ -20,7 +20,7 @@
         tools:openDrawer="start">
 
         <com.google.android.material.navigation.NavigationView
-            android:id="@+id/camera_navigation"
+            android:id="@+id/load_navigation"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
@@ -32,18 +32,14 @@
             app:itemTextColor="@color/colorText"
             app:menu="@menu/dashboard_menu" />
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/camera_container"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:keepScreenOn="true"
-            app:defaultNavHost="true"
-            tools:context=".view.CameraActivity"/>
+        <include
+            layout="@layout/load_ui_container"
+            android:id="@+id/loaded_image_container"
+            app:layout_constraintBottom_toTopOf="parent"/>
 
         <include
             layout="@layout/camera_toolbar"
-            android:id="@+id/main_toolbar"
+            android:id="@+id/load_toolbar"
             app:layout_constraintBottom_toTopOf="parent"/>
 
     </androidx.drawerlayout.widget.DrawerLayout>

@@ -154,22 +154,7 @@ object BoundingBoxDrawer {
         var top = 0f
         var bottom = 0f
 
-        var currentOrientation = 0
-
-        if(315 < deviceOrientation || deviceOrientation <= 45){
-            currentOrientation = 0
-        }
-        else if(deviceOrientation in 46..135){
-            currentOrientation = 90
-        }
-        else if(deviceOrientation in 136..225){
-            currentOrientation = 180
-        }
-        else if(deviceOrientation in 226..315){
-            currentOrientation = 270
-        }
-
-        when (currentOrientation) {
+        when (deviceOrientation) {
             0 -> {
                 left = rect.left*scale
                 right = rect.right*scale

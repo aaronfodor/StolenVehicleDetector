@@ -35,12 +35,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.navigation.Navigation
 import com.arpadfodor.android.stolencardetector.R
 import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
 import com.arpadfodor.android.stolencardetector.viewmodel.analyzer.ObjectDetectionAnalyzer
-import com.arpadfodor.android.stolencardetector.view.utils.ANIMATION_FAST_MILLIS
-import com.arpadfodor.android.stolencardetector.view.utils.ANIMATION_SLOW_MILLIS
 import com.arpadfodor.android.stolencardetector.view.utils.simulateClick
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -213,15 +210,17 @@ class CameraFragment() : Fragment() {
      */
     private fun bindCameraUseCases(){
 
-        val viewModel = ViewModelProviders.of(this).get(CameraViewModel::class.java)
-
         // Get screen metrics used to setup camera for full screen resolution
         val metrics = DisplayMetrics().also{viewFinder.display.getRealMetrics(it)}
         Log.d(TAG, "Screen metrics: ${metrics.widthPixels} x ${metrics.heightPixels}")
 
         val screenAspectRatio = viewModel.aspectRatio(metrics.widthPixels, metrics.heightPixels)
-        viewModel.setScreenProperties(metrics.widthPixels, metrics.heightPixels)
         Log.d(TAG, "Preview aspect ratio: $screenAspectRatio")
+
+        // Get screen metrics used to setup optimal bounding box image size
+        val screenMetrics = DisplayMetrics()
+        requireActivity().windowManager.defaultDisplay.getMetrics(screenMetrics)
+        viewModel.setScreenProperties(metrics.widthPixels, metrics.heightPixels)
 
         // bind CameraProvider to the LifeCycleOwner
         val cameraSelector = CameraSelector.Builder().requireLensFacing(viewModel.lensFacing).build()
@@ -307,8 +306,6 @@ class CameraFragment() : Fragment() {
             container.removeView(it)
         }
 
-        val viewModel = ViewModelProviders.of(this).get(CameraViewModel::class.java)
-
         // Inflate a new view containing all UI for controlling the camera
         val controls = View.inflate(requireContext(),
             R.layout.camera_ui_container, container)
@@ -388,8 +385,8 @@ class CameraFragment() : Fragment() {
                     container.postDelayed({
                         container.foreground = ColorDrawable(Color.WHITE)
                         container.postDelayed(
-                            { container.foreground = null }, ANIMATION_FAST_MILLIS)
-                    }, ANIMATION_SLOW_MILLIS)
+                            { container.foreground = null }, resources.getInteger(R.integer.ANIMATION_FAST_MILLIS).toLong())
+                    }, resources.getInteger(R.integer.ANIMATION_SLOW_MILLIS).toLong())
 
                 }
 

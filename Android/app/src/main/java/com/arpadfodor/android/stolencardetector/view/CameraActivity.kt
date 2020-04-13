@@ -1,7 +1,6 @@
 package com.arpadfodor.android.stolencardetector.view
 
 import android.app.ActivityOptions
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.SensorManager
@@ -27,8 +26,6 @@ import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_camera.*
 
-private const val IMMERSIVE_FLAG_TIMEOUT = 500L
-
 class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var viewModel: CameraViewModel
@@ -49,7 +46,7 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             SensorManager.SENSOR_DELAY_NORMAL) {
 
             override fun onOrientationChanged(orientation: Int) {
-                viewModel.deviceOrientation = orientation
+                CameraViewModel.deviceOrientation = orientation
             }
 
         }
@@ -97,7 +94,7 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
          */
         container.postDelayed({
             container.systemUiVisibility = (SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN and SYSTEM_UI_FLAG_LAYOUT_STABLE)
-        }, IMMERSIVE_FLAG_TIMEOUT)
+        }, ApplicationRoot.IMMERSIVE_FLAG_TIMEOUT)
 
         deviceOrientationListener.enable()
 
@@ -153,6 +150,8 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             R.id.navigation_live -> {
             }
             R.id.navigation_load -> {
+                val intent = Intent(this, LoadActivity::class.java)
+                startActivity(intent)
             }
             R.id.navigation_gallery -> {
             }

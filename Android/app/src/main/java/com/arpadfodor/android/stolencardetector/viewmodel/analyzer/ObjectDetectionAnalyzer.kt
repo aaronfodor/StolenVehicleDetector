@@ -11,6 +11,7 @@ import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
 import com.arpadfodor.android.stolencardetector.view.DetectionListener
 import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
 import java.util.*
+import kotlin.math.min
 
 class ObjectDetectionAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewModel) : ImageAnalysis.Analyzer{
 
@@ -68,7 +69,7 @@ class ObjectDetectionAnalyzer(listener: DetectionListener? = null, viewModel_: C
         lastAnalyzedTimestamp = frameTimestamps.first
 
         val cameraOrientation = image.imageInfo.rotationDegrees
-        val deviceOrientation = viewModel.deviceOrientation
+        val deviceOrientation = CameraViewModel.deviceOrientation
 
         val inputImage = ImageConverter.imageProxyToBitmap(image)
         val rotatedInputImage = ImageConverter.rotateBitmap(inputImage, cameraOrientation)
@@ -85,10 +86,11 @@ class ObjectDetectionAnalyzer(listener: DetectionListener? = null, viewModel_: C
         val recognitions = objectDetectionService.recognizeImage(requiredInputImage,
             CameraViewModel.maximumRecognitionsToShow, CameraViewModel.minimumPredictionCertaintyToShow)
 
-        val templateBoundingBoxBitmap =
-            ImageConverter.createSpecifiedBitmap(Size(rotatedInputImage.width, rotatedInputImage.height), Bitmap.Config.ARGB_8888)
+        val screenSize = CameraViewModel.screenDimensions
+        val smallerScreenDimension = min(screenSize.width, screenSize.height)
+        val optimalBoundingBoxImageSize = ImageConverter.resizeBitmap(requiredInputImage, Size(smallerScreenDimension, smallerScreenDimension))
 
-        val boundingBoxBitmap = BoundingBoxDrawer.drawBoundingBoxes(templateBoundingBoxBitmap,
+        val boundingBoxBitmap = BoundingBoxDrawer.drawBoundingBoxes(optimalBoundingBoxImageSize,
             deviceOrientation, objectDetectionService.getModelInputSize(), recognitions)
 
         // Call all listeners with new image with bounding boxes

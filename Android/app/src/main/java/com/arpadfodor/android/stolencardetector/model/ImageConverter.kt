@@ -1,6 +1,9 @@
 package com.arpadfodor.android.stolencardetector.model
 
+import android.content.Context
 import android.graphics.*
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.Size
 import androidx.camera.core.ImageProxy
 import java.io.ByteArrayOutputStream

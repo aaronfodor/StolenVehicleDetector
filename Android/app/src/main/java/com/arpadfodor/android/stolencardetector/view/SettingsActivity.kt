@@ -56,6 +56,8 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 startActivity(intent)
             }
             R.id.navigation_load -> {
+                val intent = Intent(this, LoadActivity::class.java)
+                startActivity(intent)
             }
             R.id.navigation_gallery -> {
             }

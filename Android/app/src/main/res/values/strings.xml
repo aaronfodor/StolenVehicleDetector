@@ -2,10 +2,8 @@
 
 <!DOCTYPE resources [
     <!ENTITY appName "Stolen Car Detector">
-    <!ENTITY appId "">
-    <!ENTITY appVersion "v0.3">
-    <!ENTITY appDate "01/04/2020">
-    <!ENTITY appCreator "Arpad Fodor">
+    <!ENTITY appId ""><!ENTITY appVersion "v0.3">
+    <!ENTITY appDate "01/04/2020"><!ENTITY appCreator "Arpad Fodor">
     <!ENTITY adMobAppId "ca-app-pub-3940256099942544~3347511713">
     <!ENTITY adMobBannerId "ca-app-pub-3940256099942544/6300978111">
     <!--test adMobAppId "ca-app-pub-3940256099942544~3347511713"-->
@@ -25,9 +23,12 @@
 
     <string name="permission_granted">Permission request granted</string>
     <string name="permission_denied">Permission request denied</string>
+
     <string name="switch_camera">Switch camera</string>
     <string name="capture">Capture</string>
     <string name="gallery">Gallery</string>
+    <string name="load_image">Load image</string>
+    <string name="details">Details</string>
     <string name="back">Back</string>
     <string name="share">Share</string>
     <string name="share_hint">Share using</string>
@@ -36,6 +37,7 @@
     <string name="capture_mode_hdr">HDR</string>
     <string name="capture_mode_night">Night</string>
 
+    <string name="loaded_image_description">The loaded image</string>
     <string name="ivBoundingBoxes_description">Image to draw the bounding boxes on</string>
 
     <string name="positive_button">OK</string>
@@ -58,7 +60,7 @@
 
     <string name="about">About</string>
     <string name="further">Further apps from the developer</string>
-    <string name="detector_settings">Detector settings</string>
+    <string name="detector_settings">Detection settings</string>
     <string name="setting_max_recognition">Recognitions per image</string>
     <string name="setting_summary_max_recognition">The maximum number of recognitions that appear at the same time.</string>
     <string name="setting_min_certainty">Minimum certainty %</string>

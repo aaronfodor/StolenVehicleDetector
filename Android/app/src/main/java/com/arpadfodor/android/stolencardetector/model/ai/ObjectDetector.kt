@@ -262,7 +262,7 @@ abstract class ObjectDetector(
 
         // Pre-process image
         Trace.beginSection("pre-processing image")
-        val startPreprocessTime = SystemClock.uptimeMillis()
+        val startPreProcessTime = SystemClock.uptimeMillis()
 
         image.getPixels(intValues, 0, image.width, 0, 0, image.width, image.height)
 
@@ -289,8 +289,8 @@ abstract class ObjectDetector(
             }
         }
 
-        val preprocessDuration = SystemClock.uptimeMillis() - startPreprocessTime
-        log("Image pre-processing duration: $preprocessDuration")
+        val preProcessDuration = SystemClock.uptimeMillis() - startPreProcessTime
+        log("Image pre-processing duration: $preProcessDuration")
         Trace.endSection()
 
         return imgData

@@ -32,12 +32,30 @@ class CameraViewModel : ViewModel(){
                 field = value/100f
             }
 
+        var deviceOrientation: Int = 0
+            // clustered device orientation - value can be 0, 90, 180, 270
+            get() {
+                var roundedOrientation = 0
+
+                if(315 < field || field <= 45){
+                    roundedOrientation = 0
+                }
+                else if(field in 46..135){
+                    roundedOrientation = 90
+                }
+                else if(field in 136..225){
+                    roundedOrientation = 180
+                }
+                else if(field in 226..315){
+                    roundedOrientation = 270
+                }
+
+                return roundedOrientation
+            }
+
+        var screenDimensions = Size(0, 0)
+
     }
-
-    var screenDimensions = Size(0, 0)
-    var imageRatio = 0f
-
-    var deviceOrientation: Int = 0
 
     var lensFacing: Int = CameraSelector.LENS_FACING_BACK
 
@@ -66,27 +84,8 @@ class CameraViewModel : ViewModel(){
 
     }
 
-    private fun aspectRatioInFloat(width: Int, height: Int) : Float {
-
-        val aspectRatio = aspectRatio(width, height)
-        var aspectRatioFloat = 0.0
-
-        when (aspectRatio) {
-            AspectRatio.RATIO_4_3 -> {
-                aspectRatioFloat = RATIO_4_3_VALUE
-            }
-            AspectRatio.RATIO_16_9 -> {
-                aspectRatioFloat = RATIO_16_9_VALUE
-            }
-        }
-
-        return aspectRatioFloat.toFloat()
-
-    }
-
     fun setScreenProperties(width: Int, height: Int){
         screenDimensions = Size(width, height)
-        imageRatio = aspectRatioInFloat(width, height)
     }
 
     fun getOutputDirectory(): File{

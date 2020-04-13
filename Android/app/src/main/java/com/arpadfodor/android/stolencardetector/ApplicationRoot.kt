@@ -11,10 +11,17 @@ import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
 class ApplicationRoot : Application() {
 
     companion object{
+
         private const val TAG = "Application Root"
         private const val NUM_THREADS = 4
 
-        val requiredPermissions = arrayOf(Manifest.permission.CAMERA)
+        const val IMMERSIVE_FLAG_TIMEOUT = 500L
+
+        val requiredPermissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
     }
 
     /**
