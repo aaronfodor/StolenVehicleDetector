@@ -47,7 +47,13 @@
     <dimen name="card_corner_radius">10dp</dimen>
     <dimen name="card_padding">8dp</dimen>
 
+    <dimen name="receptive_field_marker_radius">4dp</dimen>
+    <dimen name="receptive_field_marker_thickness">2dp</dimen>
+
     <dimen name="app_toolbar_height">50dp</dimen>
     <dimen name="fade_effect">100dp</dimen>
+
+    <dimen name="snackbar_margin_horizontal">32dp</dimen>
+    <dimen name="snackbar_margin_vertical">8dp</dimen>
 
 </resources>

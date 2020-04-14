@@ -6,5 +6,6 @@
 
     <string name="SETTINGS_MAXIMUM_RECOGNITIONS">maximum_recognitions_to_show</string>
     <string name="SETTINGS_MINIMUM_PREDICTION_CERTAINTY">minimum_prediction_certainty_to_show</string>
+    <string name="SETTINGS_SHOW_RECEPTIVE_FIELD">show_receptive_field</string>
 
 </resources>

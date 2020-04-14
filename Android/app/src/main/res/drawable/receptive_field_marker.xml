@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <stroke
+        android:color="@color/colorReceptiveFieldMarker"
+        android:width="@dimen/receptive_field_marker_thickness"
+        android:dashWidth="@dimen/receptive_field_marker_radius"
+        android:dashGap="@dimen/receptive_field_marker_radius"/>
+
+    <solid android:color="@color/colorTransparent" />
+    <corners android:radius="@dimen/receptive_field_marker_radius" />
+
+</shape>

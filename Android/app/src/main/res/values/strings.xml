@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!DOCTYPE resources [
-    <!ENTITY appName "Stolen Car Detector">
-    <!ENTITY appId ""><!ENTITY appVersion "v0.3">
-    <!ENTITY appDate "01/04/2020"><!ENTITY appCreator "Arpad Fodor">
-    <!ENTITY adMobAppId "ca-app-pub-3940256099942544~3347511713">
-    <!ENTITY adMobBannerId "ca-app-pub-3940256099942544/6300978111">
-    <!--test adMobAppId "ca-app-pub-3940256099942544~3347511713"-->
+<!DOCTYPE resources [<!ENTITY appName "Stolen Car Detector"><!ENTITY appId ""><!ENTITY appVersion "v0.3"><!ENTITY appDate "01/04/2020"><!ENTITY appCreator "Arpad Fodor"><!ENTITY adMobAppId "ca-app-pub-3940256099942544~3347511713"><!ENTITY adMobBannerId "ca-app-pub-3940256099942544/6300978111"><!--test adMobAppId "ca-app-pub-3940256099942544~3347511713"-->
     <!--test adMobBannerId "ca-app-pub-3940256099942544/6300978111"-->
     ]>
 
@@ -65,5 +59,8 @@
     <string name="setting_summary_max_recognition">The maximum number of recognitions that appear at the same time.</string>
     <string name="setting_min_certainty">Minimum certainty %</string>
     <string name="setting_summary_min_certainty">Only recognitions with greater or equal certainty than the selected percentage are displayed.</string>
+    <string name="setting_receptive_field">Show receptive field on camera image</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
 
 </resources>

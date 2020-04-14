@@ -3,6 +3,7 @@ package com.arpadfodor.android.stolencardetector.viewmodel
 import android.util.Size
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.CameraSelector
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arpadfodor.android.stolencardetector.model.MediaHandler
 import java.io.File
@@ -17,12 +18,6 @@ class CameraViewModel : ViewModel(){
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0
 
-        /**
-         * An arbitrary number to keep track of the permission request
-         * Where an app has multiple context for requesting permission, this can help differentiate the different contexts
-         **/
-        const val REQUEST_CODE_PERMISSIONS = 1
-
         var KEY_EVENT_ACTION = ""
         var KEY_EVENT_EXTRA = ""
 
@@ -31,6 +26,7 @@ class CameraViewModel : ViewModel(){
             set(value) {
                 field = value/100f
             }
+        var settingsShowReceptiveField = true
 
         var deviceOrientation: Int = 0
             // clustered device orientation - value can be 0, 90, 180, 270
@@ -58,6 +54,13 @@ class CameraViewModel : ViewModel(){
     }
 
     var lensFacing: Int = CameraSelector.LENS_FACING_BACK
+
+    /**
+     * Whether the permission has been granted
+     **/
+    val hasPermissionsGranted: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
 
     /**
      *  [androidx.camera.core.ImageAnalysisConfig] requires enum value of [androidx.camera.core.AspectRatio].

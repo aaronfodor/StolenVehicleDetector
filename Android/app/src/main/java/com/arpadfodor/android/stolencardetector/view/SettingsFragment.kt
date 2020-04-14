@@ -9,6 +9,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private var settingsMaximumRecognitions = ""
     private var settingsMinimumPredictionCertainty = ""
+    private var settingsShowReceptiveField = ""
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -18,6 +19,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         super.onResume()
         settingsMaximumRecognitions = getString(R.string.SETTINGS_MAXIMUM_RECOGNITIONS)
         settingsMinimumPredictionCertainty = getString(R.string.SETTINGS_MINIMUM_PREDICTION_CERTAINTY)
+        settingsShowReceptiveField = getString(R.string.SETTINGS_SHOW_RECEPTIVE_FIELD)
         preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
@@ -53,6 +55,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             remove(settingsMinimumPredictionCertainty)
             putInt(settingsMinimumPredictionCertainty, sharedPreferences.getInt(settingsMinimumPredictionCertainty,
                 resources.getInteger(R.integer.settings_minimum_prediction_certainty_default)
+            ))
+
+            remove(settingsShowReceptiveField)
+            putBoolean(settingsShowReceptiveField, sharedPreferences.getBoolean(settingsShowReceptiveField,
+                resources.getBoolean(R.bool.settings_receptive_field_default)
             ))
 
             apply()

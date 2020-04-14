@@ -1,6 +1,8 @@
 package com.arpadfodor.android.stolencardetector.model
 
 import android.content.Context
+import android.os.Environment
+import android.os.Environment.DIRECTORY_PICTURES
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,7 +27,9 @@ object MediaHandler {
 
         val appContext = appContext
         val mediaDir = appContext.externalMediaDirs?.firstOrNull()?.let {
-            File(it, appName).apply { mkdirs() }
+            File(it, appName).apply {
+                mkdirs()
+            }
         }
 
         return if(mediaDir != null && mediaDir.exists()){

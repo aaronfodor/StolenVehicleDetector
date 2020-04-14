@@ -5,15 +5,21 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#03DAC5</color>
 
+    <color name="colorTransparent">#00000000</color>
+
     <color name="colorText">#DFFFFF</color>
     <color name="optionsBackground">#33333D</color>
     <color name="colorDialogBackground">#B3000000</color>
+    <color name="colorNavigationBar">#000000</color>
+    <color name="colorReceptiveFieldMarker">#80FFFFFF</color>
+
+    <color name="colorAppSnackBarBackground">#B333333D</color>
+    <color name="colorSuccessSnackBarBackground">#B300FF00</color>
+    <color name="colorAlertSnackBarBackground">#B3FF0000</color>
+    <color name="colorAppSnackBarText">#DFFFFF</color>
 
     <color name="colorNormalButton">#03DAC5</color>
     <color name="colorNormalButtonPressed">#AAFFFFFF</color>
-
-    <color name="navigationBar">#000000</color>
-    <color name="transparentToolbar">#00000000</color>
 
     <color name="icActive">#FFFFFFFF</color>
     <color name="icFocused">#DDFFFFFF</color>

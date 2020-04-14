@@ -32,7 +32,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import androidx.core.view.setPadding
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.arpadfodor.android.stolencardetector.R
@@ -221,6 +220,13 @@ class CameraFragment() : Fragment() {
         val screenMetrics = DisplayMetrics()
         requireActivity().windowManager.defaultDisplay.getMetrics(screenMetrics)
         viewModel.setScreenProperties(metrics.widthPixels, metrics.heightPixels)
+
+        if(CameraViewModel.settingsShowReceptiveField){
+            boundingBoxesImageView.background = resources.getDrawable(R.drawable.receptive_field_marker)
+        }
+        else{
+            boundingBoxesImageView.background = null
+        }
 
         // bind CameraProvider to the LifeCycleOwner
         val cameraSelector = CameraSelector.Builder().requireLensFacing(viewModel.lensFacing).build()

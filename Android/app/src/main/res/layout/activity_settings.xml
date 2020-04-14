@@ -14,7 +14,7 @@
         android:id="@+id/settingsActivityDrawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparentToolbar"
+        android:background="@color/colorTransparent"
         app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

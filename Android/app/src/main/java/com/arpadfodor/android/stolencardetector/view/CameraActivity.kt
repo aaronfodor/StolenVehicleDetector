@@ -2,7 +2,6 @@ package com.arpadfodor.android.stolencardetector.view
 
 import android.app.ActivityOptions
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.KeyEvent
@@ -13,17 +12,18 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import com.arpadfodor.android.stolencardetector.ApplicationRoot
 import com.arpadfodor.android.stolencardetector.R
 import com.arpadfodor.android.stolencardetector.view.utils.AppDialog
+import com.arpadfodor.android.stolencardetector.view.utils.AppSnackBarBuilder
 import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_camera.*
 
 class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -68,21 +68,8 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         camera_navigation.bringToFront()
         camera_navigation.parent.requestLayout()
 
-        // Request camera permissions
-        if (allPermissionsGranted()) {
-            activateCamera()
-        }
-        else{
-            requestPermission()
-        }
+        activatePermissionFragment()
 
-    }
-
-    private fun activateCamera(){
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.camera_container, CameraFragment())
-            .commit()
     }
 
     override fun onResume() {
@@ -100,18 +87,52 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
         // read settings from preferences
         val settings = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val settingsMaximumRecognitions = getString(R.string.SETTINGS_MAXIMUM_RECOGNITIONS)
-        val settingsMinimumPredictionCertainty = getString(R.string.SETTINGS_MINIMUM_PREDICTION_CERTAINTY)
-        val maximumRecognitionsToShow = settings.getInt(settingsMaximumRecognitions, resources.getInteger(R.integer.settings_maximum_recognitions_default))
-        val minimumPredictionCertaintyToShow = settings.getInt(settingsMinimumPredictionCertainty, resources.getInteger(R.integer.settings_minimum_prediction_certainty_default))
+
+        val settingsMaximumRecognitionsKey = getString(R.string.SETTINGS_MAXIMUM_RECOGNITIONS)
+        val settingsMinimumPredictionCertaintyKey = getString(R.string.SETTINGS_MINIMUM_PREDICTION_CERTAINTY)
+        val settingsShowReceptiveFieldKey = getString(R.string.SETTINGS_SHOW_RECEPTIVE_FIELD)
+
+        val maximumRecognitionsToShow = settings.getInt(settingsMaximumRecognitionsKey, resources.getInteger(R.integer.settings_maximum_recognitions_default))
+        val minimumPredictionCertaintyToShow = settings.getInt(settingsMinimumPredictionCertaintyKey, resources.getInteger(R.integer.settings_minimum_prediction_certainty_default))
+        val settingsShowReceptiveField = settings.getBoolean(settingsShowReceptiveFieldKey, resources.getBoolean(R.bool.settings_receptive_field_default))
+
         CameraViewModel.maximumRecognitionsToShow = maximumRecognitionsToShow
         CameraViewModel.minimumPredictionCertaintyToShow = minimumPredictionCertaintyToShow.toFloat()
+        CameraViewModel.settingsShowReceptiveField = settingsShowReceptiveField
+
+        subscribeToViewModel()
+
+    }
+
+    private fun subscribeToViewModel() {
+
+        // Create the observer which updates the UI in case of value change
+        val hasPermissionsGranted = Observer<Boolean> { permissionGranted ->
+
+            if(permissionGranted == true){
+                AppSnackBarBuilder.buildSuccessSnackBar(resources, container, getString(R.string.permission_granted), Snackbar.LENGTH_SHORT).show()
+            }
+            else{
+                AppSnackBarBuilder.buildAlertSnackBar(resources, container, getString(R.string.permission_denied), Snackbar.LENGTH_INDEFINITE).show()
+            }
+
+        }
+
+        // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
+        viewModel.hasPermissionsGranted.observe(this, hasPermissionsGranted)
 
     }
 
     override fun onPause() {
         deviceOrientationListener.disable()
         super.onPause()
+    }
+
+    private fun activatePermissionFragment(){
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.camera_container, PermissionsFragment())
+            .commit()
     }
 
     /**
@@ -199,18 +220,6 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         }
         exitDialog.show()
 
-    }
-
-    /**
-     * Check if all permission specified in the manifest have been granted
-     */
-    private fun allPermissionsGranted() = ApplicationRoot.requiredPermissions.all {
-        ContextCompat.checkSelfPermission(
-            baseContext, it) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun requestPermission(){
-        ActivityCompat.requestPermissions(this, ApplicationRoot.requiredPermissions, CameraViewModel.REQUEST_CODE_PERMISSIONS)
     }
 
 }

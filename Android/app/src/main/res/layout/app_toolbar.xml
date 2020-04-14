@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/app_toolbar_height"
     android:theme="@style/AppTheme.AppBarOverlay"
-    android:background="@color/transparentToolbar"
+    android:background="@color/colorTransparent"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -40,7 +40,7 @@
             android:id="@+id/app_toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/app_toolbar_height"
-            android:background="@color/transparentToolbar"
+            android:background="@color/colorTransparent"
             app:layout_collapseMode="pin"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 

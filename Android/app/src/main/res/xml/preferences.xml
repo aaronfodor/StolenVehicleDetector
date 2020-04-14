@@ -30,6 +30,15 @@
             app:min="@integer/settings_minimum_prediction_certainty_min"
             android:defaultValue="@integer/settings_minimum_prediction_certainty_default"/>
 
+        <SwitchPreference
+            app:key="@string/SETTINGS_SHOW_RECEPTIVE_FIELD"
+            android:title="@string/setting_receptive_field"
+            android:summaryOn="@string/enabled"
+            android:summaryOff="@string/disabled"
+            android:enabled="true"
+            android:selectable="true"
+            android:defaultValue="@bool/settings_receptive_field_default"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory
