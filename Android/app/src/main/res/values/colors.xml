@@ -14,7 +14,7 @@
     <color name="colorReceptiveFieldMarker">#80FFFFFF</color>
 
     <color name="colorAppSnackBarBackground">#B333333D</color>
-    <color name="colorSuccessSnackBarBackground">#B300FF00</color>
+    <color name="colorSuccessSnackBarBackground">#B333333D</color>
     <color name="colorAlertSnackBarBackground">#B3FF0000</color>
     <color name="colorAppSnackBarText">#DFFFFF</color>
 

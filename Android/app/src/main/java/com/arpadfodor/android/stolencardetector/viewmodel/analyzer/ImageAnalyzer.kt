@@ -1,19 +1,18 @@
 package com.arpadfodor.android.stolencardetector.viewmodel.analyzer
 
-import android.graphics.Bitmap
 import android.util.Size
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
 import com.arpadfodor.android.stolencardetector.model.ImageConverter
-import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
+import com.arpadfodor.android.stolencardetector.model.ai.LicensePlateReaderService
 import com.arpadfodor.android.stolencardetector.view.DetectionListener
 import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.min
 
-class ObjectDetectionAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewModel) : ImageAnalysis.Analyzer{
+class ImageAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewModel) : ImageAnalysis.Analyzer{
 
     private val frameRateWindow = 8
     private val frameTimestamps = ArrayDeque<Long>(5)
@@ -22,7 +21,7 @@ class ObjectDetectionAnalyzer(listener: DetectionListener? = null, viewModel_: C
     private var framesPerSecond: Double = -1.0
 
     private val viewModel: CameraViewModel = viewModel_
-    private val objectDetectionService = ObjectDetectionService()
+    private val licensePlateReaderService = LicensePlateReaderService()
 
     /**
      * Used to add listeners that will be called with each detection computed
@@ -79,22 +78,17 @@ class ObjectDetectionAnalyzer(listener: DetectionListener? = null, viewModel_: C
             ImageConverter.mirrorHorizontallyBitmap(rotatedInputImage)
         }
 
-        val bitmapNxN = ImageConverter.bitmapToCroppedNxNImage(rotatedInputImage)
-        val requiredInputImage = ImageConverter.resizeBitmap(bitmapNxN, objectDetectionService.getModelInputSize())
-
-        // Compute results
-        val recognitions = objectDetectionService.recognizeImage(requiredInputImage,
-            CameraViewModel.maximumRecognitionsToShow, CameraViewModel.minimumPredictionCertaintyToShow)
-
         val screenSize = CameraViewModel.screenDimensions
         val smallerScreenDimension = min(screenSize.width, screenSize.height)
-        val optimalBoundingBoxImageSize = ImageConverter.resizeBitmap(requiredInputImage, Size(smallerScreenDimension, smallerScreenDimension))
+        val requiredOutputImageSize = Size(smallerScreenDimension, smallerScreenDimension)
 
-        val boundingBoxBitmap = BoundingBoxDrawer.drawBoundingBoxes(optimalBoundingBoxImageSize,
-            deviceOrientation, objectDetectionService.getModelInputSize(), recognitions)
+        // Use the service to produce the image to show
+        val resultImage = licensePlateReaderService.recognize(rotatedInputImage, requiredOutputImageSize, deviceOrientation,
+            CameraViewModel.maximumRecognitionsToShow, CameraViewModel.minimumPredictionCertaintyToShow)
+
 
         // Call all listeners with new image with bounding boxes
-        listeners.forEach { it(boundingBoxBitmap) }
+        listeners.forEach { it(resultImage) }
 
         image.close()
 

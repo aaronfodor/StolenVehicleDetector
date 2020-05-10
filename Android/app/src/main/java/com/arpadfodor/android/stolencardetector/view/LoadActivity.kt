@@ -15,7 +15,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.arpadfodor.android.stolencardetector.ApplicationRoot
 import com.arpadfodor.android.stolencardetector.R
@@ -38,7 +38,7 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_load)
         container = findViewById(R.id.loaded_image_container)
 
-        viewModel = ViewModelProviders.of(this).get(LoadViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(LoadViewModel::class.java)
 
         val toolbar = findViewById<Toolbar>(R.id.camera_toolbar)
         setSupportActionBar(toolbar)

@@ -2,7 +2,7 @@ package com.arpadfodor.android.stolencardetector.model
 
 import android.graphics.*
 import android.util.Size
-import com.arpadfodor.android.stolencardetector.model.ai.Recognition
+import com.arpadfodor.android.stolencardetector.model.ai.RecognizedObject
 import kotlin.math.max
 import kotlin.math.min
 
@@ -33,11 +33,13 @@ object BoundingBoxDrawer {
      * Returns a bitmap with bounding boxes on it
      *
      * @param inputBitmap           Input bitmap which dimensions are used to create the output bitmap
+     * @param deviceOrientation     Used to scale bounding boxes on the image correctly
+     * @param modelInputSize        Base resolution of the RectF relevant image to scale from
      * @param recognitions          List of recognitions to draw
      *
      * @return Bitmap               Bitmap with bounding boxes
      */
-    fun drawBoundingBoxes(inputBitmap: Bitmap, deviceOrientation: Int, modelInputSize: Size, recognitions: List<Recognition>): Bitmap{
+    fun drawBoundingBoxes(inputBitmap: Bitmap, deviceOrientation: Int, modelInputSize: Size, recognitions: List<RecognizedObject>): Bitmap{
 
         val bitmapToDrawOn = Bitmap.createBitmap(inputBitmap.width, inputBitmap.height, Bitmap.Config.ARGB_8888)
 
@@ -65,7 +67,7 @@ object BoundingBoxDrawer {
             names.add(recognition.title)
         }
 
-        // update the color according to recognition id
+        // update the color according to the recognition id
         updateColorsMap(names)
 
         for (recognition in recognitions) {
@@ -84,7 +86,7 @@ object BoundingBoxDrawer {
      *
      * @param bitmapToDrawOn           Input bitmap on which the function draws
      */
-    private fun drawBoundingBox(bitmapToDrawOn: Bitmap, deviceOrientation: Int, modelInputSize: Size, recognition: Recognition,
+    private fun drawBoundingBox(bitmapToDrawOn: Bitmap, deviceOrientation: Int, modelInputSize: Size, recognition: RecognizedObject,
                                 boxPaint: Paint, textBackgroundPaint: Paint, textPaint: Paint){
 
         val toDrawOnCanvas = Canvas(bitmapToDrawOn)
@@ -97,14 +99,13 @@ object BoundingBoxDrawer {
         val verticalScale = bitmapToDrawOn.height.toFloat() / modelInputSize.height.toFloat()
         val scale = min(horizontalScale, verticalScale)
         val padding = (max(bitmapToDrawOn.width, bitmapToDrawOn.height).toFloat() - min(bitmapToDrawOn.width, bitmapToDrawOn.height).toFloat()) / 2f
-        val smallerDimension = min(bitmapToDrawOn.width, bitmapToDrawOn.height)
 
         val rect = recognition.location
         val scaledRect = getScaledRect(rect, scale, padding, deviceOrientation)
 
         toDrawOnCanvas.drawRoundRect(scaledRect, boxRadius, boxRadius, boxPaint)
 
-        val textToShow = recognition.getStringShortData()
+        val textToShow = recognition.getShortStringWithExtra()
         val textWidth: Float = textPaint.measureText(textToShow)
         val textHeight: Float = textPaint.textSize
 
@@ -114,7 +115,7 @@ object BoundingBoxDrawer {
         toDrawOnCanvas.drawRoundRect(textRect, textBoxRadius, textBoxRadius, textBackgroundPaint)
         toDrawOnCanvas.drawText(textToShow, scaledRect.left + (textWidth/2), scaledRect.top + textHeight ,textPaint)
 
-        bitmapToDrawOn?.let { Canvas(it) }.apply {
+        Canvas(bitmapToDrawOn).apply {
             toDrawOnCanvas
         }
 

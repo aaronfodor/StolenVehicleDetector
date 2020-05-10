@@ -1,9 +1,7 @@
 package com.arpadfodor.android.stolencardetector.model
 
-import android.content.Context
 import android.graphics.*
-import android.net.Uri
-import android.provider.MediaStore
+import android.util.Log
 import android.util.Size
 import androidx.camera.core.ImageProxy
 import java.io.ByteArrayOutputStream
@@ -181,6 +179,25 @@ object ImageConverter {
     }
 
     /**
+     * Returns the piece from the image defined by the input RectF
+     *
+     * @param bitmap        Image to cut from
+     * @param location      Bounding-box defining coordinates of the sub-image
+     *
+     * @return The image part from the original image defined by the RectF
+     */
+    fun cutPieceFromImage(bitmap: Bitmap, location: RectF): Bitmap{
+
+        val left = location.left.toInt()
+        val right = location.right.toInt()
+        val top = location.top.toInt()
+        val bottom = location.bottom.toInt()
+
+        return Bitmap.createBitmap(bitmap, left, top, right-left, bottom-top)
+
+    }
+
+    /**
      * Returns a transformation matrix from one reference frame into another
      * Handles cropping (if maintaining aspect ratio is desired) and rotation
      *
@@ -200,6 +217,7 @@ object ImageConverter {
         if (applyRotation != 0) {
 
             if (applyRotation % 90 != 0) {
+                Log.w("Image Conveter", "Input 'applyRotation' should be a multiple of 90")
             }
 
             // Translate so center of image is at origin

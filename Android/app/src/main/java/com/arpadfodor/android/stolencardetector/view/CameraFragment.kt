@@ -15,11 +15,8 @@ import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.KeyEvent
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -36,7 +33,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.arpadfodor.android.stolencardetector.R
 import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
-import com.arpadfodor.android.stolencardetector.viewmodel.analyzer.ObjectDetectionAnalyzer
+import com.arpadfodor.android.stolencardetector.viewmodel.analyzer.ImageAnalyzer
 import com.arpadfodor.android.stolencardetector.view.utils.simulateClick
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -207,6 +204,7 @@ class CameraFragment() : Fragment() {
     /**
      * Declares and binds preview, runs capture and analyse use cases
      */
+    @SuppressLint("ClickableViewAccessibility")
     private fun bindCameraUseCases(){
 
         // Get screen metrics used to setup camera for full screen resolution
@@ -273,7 +271,7 @@ class CameraFragment() : Fragment() {
                 // The analyzer can then be assigned to the instance
                 .also {
 
-                    it.setAnalyzer(cameraExecutor, ObjectDetectionAnalyzer( { boundingBoxImage ->
+                    it.setAnalyzer(cameraExecutor, ImageAnalyzer( { boundingBoxImage ->
 
                         if(viewFinder.isLaidOut){
 
@@ -299,6 +297,35 @@ class CameraFragment() : Fragment() {
             }
 
         }, ContextCompat.getMainExecutor(requireContext()))
+
+        /**
+         * Add listeners to detect zooming and tap to focus
+         **/
+        val zoomListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            override fun onScale(detector: ScaleGestureDetector): Boolean {
+                val currentZoomRatio: Float = camera?.cameraInfo?.zoomState?.value?.zoomRatio ?: 0F
+                val delta = detector.scaleFactor
+                camera?.cameraControl?.setZoomRatio(currentZoomRatio * delta)
+                return true
+            }
+        }
+        val zoomDetector = ScaleGestureDetector(context, zoomListener)
+
+        viewFinder.setOnTouchListener{ _, event ->
+
+            zoomDetector.onTouchEvent(event)
+
+            if (event.action == MotionEvent.ACTION_UP) {
+                val factory = viewFinder.createMeteringPointFactory(cameraSelector)
+                val point = factory.createPoint(event.x, event.y)
+                val actionBuilder = FocusMeteringAction.Builder(point)
+                val action = actionBuilder.build()
+                camera?.cameraControl?.startFocusAndMetering(action)
+            }
+
+            return@setOnTouchListener true
+
+        }
 
     }
 

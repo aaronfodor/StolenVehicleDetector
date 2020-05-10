@@ -2,10 +2,12 @@ package com.arpadfodor.android.stolencardetector
 
 import android.Manifest
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
 import com.arpadfodor.android.stolencardetector.model.MediaHandler
 import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
+import com.arpadfodor.android.stolencardetector.model.ai.TextRecognitionService
 import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
 
 class ApplicationRoot : Application() {
@@ -40,6 +42,7 @@ class ApplicationRoot : Application() {
         Log.i(TAG, "onCreate fired")
 
         ObjectDetectionService.initialize(assets, NUM_THREADS)
+        TextRecognitionService.initialize(applicationContext)
 
         val radius = resources.getDimension(R.dimen.bounding_box_radius)
         val width = resources.getDimension(R.dimen.bounding_box_line_width)

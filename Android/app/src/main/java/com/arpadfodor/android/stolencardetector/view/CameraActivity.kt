@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import com.arpadfodor.android.stolencardetector.ApplicationRoot
@@ -40,7 +40,7 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         setContentView(R.layout.activity_camera)
         container = findViewById(R.id.camera_container)
 
-        viewModel = ViewModelProviders.of(this).get(CameraViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(CameraViewModel::class.java)
 
         deviceOrientationListener = object : OrientationEventListener(this,
             SensorManager.SENSOR_DELAY_NORMAL) {
@@ -113,7 +113,7 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 AppSnackBarBuilder.buildSuccessSnackBar(resources, container, getString(R.string.permission_granted), Snackbar.LENGTH_SHORT).show()
             }
             else{
-                AppSnackBarBuilder.buildAlertSnackBar(resources, container, getString(R.string.permission_denied), Snackbar.LENGTH_INDEFINITE).show()
+                AppSnackBarBuilder.buildAlertSnackBar(resources, container, getString(R.string.permission_denied), Snackbar.LENGTH_SHORT).show()
             }
 
         }

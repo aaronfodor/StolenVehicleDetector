@@ -13,11 +13,12 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
+import kotlin.math.max
 import kotlin.math.min
 
 /**
- * Interface for interacting with different object detector models similarly.
- */
+ * Abstract class for interacting with different object detector models similarly.
+ **/
 abstract class ObjectDetector(
     assets: AssetManager,
     threads: Int,
@@ -25,7 +26,9 @@ abstract class ObjectDetector(
     val BASE_PATH: String,
     val MODEL_PATH: String,
     val LABEL_PATH: String,
-    // float model
+    // Whether the model quantized or not
+    val IS_QUANTIZED: Boolean,
+    // image properties
     val IMAGE_MEAN: Float,
     val IMAGE_STD: Float,
     // Input image size required by the model
@@ -133,8 +136,12 @@ abstract class ObjectDetector(
 
     private fun buildModel(mappedByteBuffer: MappedByteBuffer, numThreads: Int): Interpreter{
 
-        gpuDelegate = GpuDelegate()
-        val options = Interpreter.Options().addDelegate(gpuDelegate)
+        val options = Interpreter.Options()
+
+        if(IS_QUANTIZED){
+            gpuDelegate = GpuDelegate()
+            options.addDelegate(gpuDelegate)
+        }
         options.setNumThreads(numThreads)
         val model = Interpreter(mappedByteBuffer, options)
 
@@ -161,7 +168,7 @@ abstract class ObjectDetector(
 
     }
 
-    fun recognizeImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<Recognition>{
+    fun recognizeImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<RecognizedObject>{
 
         // Recognize image
         Trace.beginSection("Recognize image")
@@ -196,7 +203,7 @@ abstract class ObjectDetector(
             // return an empty list if the model is not ready
             ?: run {
             log("INFERENCE FAILURE: Model has not been loaded")
-            return ArrayList<Recognition>(0)
+            return ArrayList<RecognizedObject>(0)
             }
 
         val inferenceDuration = SystemClock.uptimeMillis() - startInferenceTime
@@ -206,7 +213,7 @@ abstract class ObjectDetector(
         val recognitionsSize = min(NUM_DETECTIONS, maximumRecognitionsToShow)
 
         // Show the top detections after scaling them back to the input size
-        val recognitions: ArrayList<Recognition> = ArrayList<Recognition>(recognitionsSize)
+        val recognitions: ArrayList<RecognizedObject> = ArrayList<RecognizedObject>(recognitionsSize)
 
         for (i in 0 until recognitionsSize){
 
@@ -214,16 +221,17 @@ abstract class ObjectDetector(
 
             if(certainty >= minimumPredictionCertainty){
 
+                //if one coordinate is out of the image size range, adjust it
+                val left = max(0f, outputLocations[0][i][1] * IMAGE_SIZE_X)
+                val top = max(0f, outputLocations[0][i][0] * IMAGE_SIZE_Y)
+                val right = min(image.width.toFloat(), outputLocations[0][i][3] * IMAGE_SIZE_X)
+                val bottom = min(image.height.toFloat(), outputLocations[0][i][2] * IMAGE_SIZE_Y)
+
                 // one bounding box coordinates
-                val detection = RectF(
-                    outputLocations[0][i][1] * IMAGE_SIZE_X,
-                    outputLocations[0][i][0] * IMAGE_SIZE_Y,
-                    outputLocations[0][i][3] * IMAGE_SIZE_X,
-                    outputLocations[0][i][2] * IMAGE_SIZE_Y
-                )
+                val detection = RectF(left, top, right, bottom)
 
                 /**
-                 * SSD Mobilenet V1 assumes class 0 is the background class in label file and class
+                 * The detector assumes class 0 is the background class in label file and class
                  * labels start from 1 to number_of_classes+1
                  * outputClasses correspond to class index from 0 to number_of_classes
                  */
@@ -234,16 +242,11 @@ abstract class ObjectDetector(
                 // return an empty list if the labels are not ready
                     ?: run{
                         log("INFERENCE FAILURE: Labels list is empty")
-                        return ArrayList<Recognition>(0)
+                        return ArrayList<RecognizedObject>(0)
                     }
 
                 recognitions.add(
-                    Recognition(
-                        "" + i,
-                        title,
-                        certainty,
-                        detection
-                    )
+                    RecognizedObject("" + i, title, certainty, detection)
                 )
 
             }

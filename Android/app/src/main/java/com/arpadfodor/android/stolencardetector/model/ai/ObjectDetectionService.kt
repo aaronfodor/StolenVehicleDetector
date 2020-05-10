@@ -11,7 +11,8 @@ class ObjectDetectionService {
         var model: ObjectDetector? = null
 
         fun initialize(assets: AssetManager, numThreads: Int){
-            model = MobileNetV1Coco(assets, numThreads)
+            //model = MobileNetV1Coco(assets, numThreads)
+            model = MobileNetV3OID(assets, numThreads)
         }
 
         fun close(){
@@ -20,9 +21,9 @@ class ObjectDetectionService {
 
     }
 
-    fun recognizeImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<Recognition>{
+    fun recognizeImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<RecognizedObject>{
         val results = model?.recognizeImage(image, maximumRecognitionsToShow, minimumPredictionCertainty)
-        return results ?: emptyList<Recognition>()
+        return results ?: emptyList<RecognizedObject>()
     }
 
     fun getModelInputSize(): Size {
