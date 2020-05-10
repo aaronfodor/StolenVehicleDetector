@@ -2,6 +2,7 @@ package com.arpadfodor.android.stolencardetector.model
 
 import android.graphics.*
 import android.util.Size
+import androidx.core.graphics.ColorUtils
 import com.arpadfodor.android.stolencardetector.model.ai.RecognizedObject
 import kotlin.math.max
 import kotlin.math.min
@@ -12,9 +13,12 @@ object BoundingBoxDrawer {
     private var textBoxRadius = 5f
     private var lineWidth = 5f
     private var bbTextSize = 40f
-    private val fallbackColor = Color.parseColor("#B3FF0000")
+
+    private val fallbackColor = Color.parseColor("#FF0000")
     private val colorsList = mutableListOf<Int>()
     private var colorsMap: MutableMap<String, Int> = HashMap()
+    val lowTransparency = 179       //hex: B3
+    val highTransparency = 77       //hex: 4D
 
     fun initialize(boxRadius_: Float, lineWidth_: Float, bbTextSize_: Float, colorsList_: Array<String>){
 
@@ -35,19 +39,24 @@ object BoundingBoxDrawer {
      * @param inputBitmap           Input bitmap which dimensions are used to create the output bitmap
      * @param deviceOrientation     Used to scale bounding boxes on the image correctly
      * @param modelInputSize        Base resolution of the RectF relevant image to scale from
-     * @param recognitions          List of recognitions to draw
+     * @param recognitions          List of RecognizedObjects to draw
      *
      * @return Bitmap               Bitmap with bounding boxes
      */
     fun drawBoundingBoxes(inputBitmap: Bitmap, deviceOrientation: Int, modelInputSize: Size, recognitions: List<RecognizedObject>): Bitmap{
 
-        val bitmapToDrawOn = Bitmap.createBitmap(inputBitmap.width, inputBitmap.height, Bitmap.Config.ARGB_8888)
+        var bitmapToDrawOn = Bitmap.createBitmap(inputBitmap.width, inputBitmap.height, Bitmap.Config.ARGB_8888)
 
         val boxPaint = Paint().apply {
             isAntiAlias = true
             style = Paint.Style.STROKE
             color = fallbackColor
             strokeWidth = lineWidth
+        }
+
+        val backgroundPaint = Paint().apply {
+            style = Paint.Style.FILL
+            color = fallbackColor
         }
 
         val textBackgroundPaint = Paint().apply {
@@ -71,10 +80,8 @@ object BoundingBoxDrawer {
         updateColorsMap(names)
 
         for (recognition in recognitions) {
-
-            drawBoundingBox(bitmapToDrawOn, deviceOrientation, modelInputSize, recognition,
-                boxPaint, textBackgroundPaint, textPaint)
-
+            bitmapToDrawOn = drawBoundingBox(bitmapToDrawOn, deviceOrientation, modelInputSize,
+                recognition, boxPaint, backgroundPaint, textBackgroundPaint, textPaint)
         }
 
         return bitmapToDrawOn
@@ -84,24 +91,31 @@ object BoundingBoxDrawer {
     /**
      * Does not return a value, draws on the input Bitmap
      *
-     * @param bitmapToDrawOn           Input bitmap on which the function draws
+     * @param image           Input bitmap on which the function draws
      */
-    private fun drawBoundingBox(bitmapToDrawOn: Bitmap, deviceOrientation: Int, modelInputSize: Size, recognition: RecognizedObject,
-                                boxPaint: Paint, textBackgroundPaint: Paint, textPaint: Paint){
+    private fun drawBoundingBox(image: Bitmap, deviceOrientation: Int, modelInputSize: Size, recognition: RecognizedObject,
+                                boxPaint: Paint, backgroundPaint: Paint, textBackgroundPaint: Paint, textPaint: Paint) : Bitmap{
 
-        val toDrawOnCanvas = Canvas(bitmapToDrawOn)
+        val toDrawOnCanvas = Canvas(image)
 
+        // setting of color and transparency
         val boxColor = colorsMap[recognition.title] ?: fallbackColor
-        boxPaint.color = boxColor
-        textBackgroundPaint.color = boxColor
 
-        val horizontalScale = bitmapToDrawOn.width.toFloat() / modelInputSize.width.toFloat()
-        val verticalScale = bitmapToDrawOn.height.toFloat() / modelInputSize.height.toFloat()
+        boxPaint.color = ColorUtils.setAlphaComponent(boxColor,  lowTransparency)
+        backgroundPaint.color = ColorUtils.setAlphaComponent(boxColor,  highTransparency)
+        textBackgroundPaint.color = ColorUtils.setAlphaComponent(boxColor,  lowTransparency)
+
+        val horizontalScale = image.width.toFloat() / modelInputSize.width.toFloat()
+        val verticalScale = image.height.toFloat() / modelInputSize.height.toFloat()
         val scale = min(horizontalScale, verticalScale)
-        val padding = (max(bitmapToDrawOn.width, bitmapToDrawOn.height).toFloat() - min(bitmapToDrawOn.width, bitmapToDrawOn.height).toFloat()) / 2f
+        val padding = (max(image.width, image.height).toFloat() - min(image.width, image.height).toFloat()) / 2f
 
         val rect = recognition.location
         val scaledRect = getScaledRect(rect, scale, padding, deviceOrientation)
+
+        if(recognition.extra.isNotBlank()){
+            toDrawOnCanvas.drawRoundRect(scaledRect, boxRadius, boxRadius, backgroundPaint)
+        }
 
         toDrawOnCanvas.drawRoundRect(scaledRect, boxRadius, boxRadius, boxPaint)
 
@@ -115,9 +129,7 @@ object BoundingBoxDrawer {
         toDrawOnCanvas.drawRoundRect(textRect, textBoxRadius, textBoxRadius, textBackgroundPaint)
         toDrawOnCanvas.drawText(textToShow, scaledRect.left + (textWidth/2), scaledRect.top + textHeight ,textPaint)
 
-        Canvas(bitmapToDrawOn).apply {
-            toDrawOnCanvas
-        }
+        return image
 
     }
 

@@ -8,6 +8,7 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.OrientationEventListener
 import android.view.View.*
+import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -51,6 +52,8 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
         }
 
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
         val toolbar = findViewById<Toolbar>(R.id.camera_toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -75,6 +78,7 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     override fun onResume() {
 
         super.onResume()
+
         /**
          * Before hiding the status bar, a wait is needed to let the UI settle.
          * Trying to set app to immersive mode before it's ready causes the flags not sticking.

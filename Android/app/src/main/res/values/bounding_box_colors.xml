@@ -2,14 +2,14 @@
 <resources>
 
     <string-array name="bounding_box_colors">
-        <item>#B326282F</item>
-        <item>#B3459389</item>
-        <item>#B35F2600</item>
-        <item>#B3045D56</item>
-        <item>#B3FF6859</item>
-        <item>#B3FFCF44</item>
-        <item>#B3B15DFF</item>
-        <item>#B31EB980</item>
+        <item>#26282F</item>
+        <item>#459389</item>
+        <item>#5F2600</item>
+        <item>#045D56</item>
+        <item>#FF6859</item>
+        <item>#FFCF44</item>
+        <item>#B15DFF</item>
+        <item>#1EB980</item>
 
     </string-array>
 
