@@ -2,7 +2,7 @@ package com.arpadfodor.android.stolencardetector.model.ai
 
 import android.content.res.AssetManager
 
-class MobileNetV3OID(assets: AssetManager, threads: Int) : ObjectDetector(
+class MobileNetV3Coco(assets: AssetManager, threads: Int) : ObjectDetector(
     assets,
     threads,
 
@@ -12,7 +12,7 @@ class MobileNetV3OID(assets: AssetManager, threads: Int) : ObjectDetector(
      */
 
     // Model and label paths
-    BASE_PATH = "detector/MobileNetV3OID/",
+    BASE_PATH = "detector/MobileNetV3Coco/",
     MODEL_PATH = "model.tflite",
     LABEL_PATH = "labelmap.txt",
 

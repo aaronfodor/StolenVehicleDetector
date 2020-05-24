@@ -5,8 +5,22 @@ import android.graphics.RectF
 import android.util.Size
 import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
 import com.arpadfodor.android.stolencardetector.model.ImageConverter
+import com.arpadfodor.android.stolencardetector.model.db.DatabaseService
+import java.util.*
 
-class LicensePlateReaderService {
+class StolenVehicleRecognizerService {
+
+    companion object{
+
+        private var stolenVehicleLicenses = listOf<String>()
+
+        fun initialize(){
+            DatabaseService.getStolenVehicleLicenses {
+                stolenVehicleLicenses = it
+            }
+        }
+
+    }
 
     private val objectDetectionService = ObjectDetectionService()
     private val textRecognitionService = TextRecognitionService()
@@ -33,6 +47,10 @@ class LicensePlateReaderService {
                 val recognizedText = textRecognitionService.recognizeText(textImage)
                 recognition.extra = recognizedText.getShortStringWithExtra()
 
+                if(isIdSuspicious(recognizedText.text)){
+                    recognition.alertNeeded = true
+                }
+
             }
 
         }
@@ -43,6 +61,15 @@ class LicensePlateReaderService {
             deviceOrientation, objectDetectionService.getModelInputSize(), recognitions)
         return boundingBoxBitmap
 
+    }
+
+    private fun isIdSuspicious(licenseId: String) : Boolean{
+        val clearedLicenseId = licenseId.replace("-", "")
+            .replace("_", "").toUpperCase(Locale.ROOT)
+        if(stolenVehicleLicenses.contains(clearedLicenseId)){
+            return true
+        }
+        return false
     }
 
 }

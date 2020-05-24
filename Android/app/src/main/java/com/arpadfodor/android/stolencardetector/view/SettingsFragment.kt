@@ -2,25 +2,70 @@ package com.arpadfodor.android.stolencardetector.view
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import com.arpadfodor.android.stolencardetector.R
+import com.arpadfodor.android.stolencardetector.model.ai.StolenVehicleRecognizerService
+import com.arpadfodor.android.stolencardetector.model.db.DatabaseService
+import com.arpadfodor.android.stolencardetector.view.utils.AppSnackBarBuilder
+import com.google.android.material.snackbar.Snackbar
+import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var settingsMaximumRecognitions = ""
     private var settingsMinimumPredictionCertainty = ""
     private var settingsShowReceptiveField = ""
+    private var settingsAutoSync = ""
+    private var settingsLastSynced = ""
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
     }
 
     override fun onResume() {
+
         super.onResume()
-        settingsMaximumRecognitions = getString(R.string.SETTINGS_MAXIMUM_RECOGNITIONS)
+
+        settingsMaximumRecognitions = getString(R.string.SETTINGS_NUM_RECOGNITIONS)
         settingsMinimumPredictionCertainty = getString(R.string.SETTINGS_MINIMUM_PREDICTION_CERTAINTY)
         settingsShowReceptiveField = getString(R.string.SETTINGS_SHOW_RECEPTIVE_FIELD)
+        settingsAutoSync = getString(R.string.SETTINGS_AUTO_SYNC)
+        settingsLastSynced = getString(R.string.LAST_SYNCED)
         preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this.requireContext())
+
+        val syncButton: Preference? = findPreference(getString(R.string.SETTINGS_SYNC_NOW))
+
+        syncButton?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+
+            DatabaseService.updateFromApi{ isSuccess ->
+
+                if(isSuccess){
+
+                    StolenVehicleRecognizerService.initialize()
+
+                    val currentTime = Calendar.getInstance().time.toString()
+
+                    preferences.edit().putString(getString(R.string.LAST_SYNCED), currentTime)
+                        .apply()
+
+                    AppSnackBarBuilder.buildSuccessSnackBar(resources, this.requireView(),
+                        getString(R.string.updated_database), Snackbar.LENGTH_SHORT).show()
+
+                }
+                else{
+                    AppSnackBarBuilder.buildAlertSnackBar(resources, this.requireView(),
+                        getString(R.string.updating_failed), Snackbar.LENGTH_SHORT).show()
+                }
+
+            }
+            true
+
+        }
+
     }
 
     override fun onPause() {
@@ -49,7 +94,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
             remove(settingsMaximumRecognitions)
             putInt(settingsMaximumRecognitions, sharedPreferences.getInt(settingsMaximumRecognitions,
-                resources.getInteger(R.integer.settings_maximum_recognitions_default)
+                resources.getInteger(R.integer.settings_num_recognitions_default)
             ))
 
             remove(settingsMinimumPredictionCertainty)
@@ -60,6 +105,16 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             remove(settingsShowReceptiveField)
             putBoolean(settingsShowReceptiveField, sharedPreferences.getBoolean(settingsShowReceptiveField,
                 resources.getBoolean(R.bool.settings_receptive_field_default)
+            ))
+
+            remove(settingsAutoSync)
+            putBoolean(settingsAutoSync, sharedPreferences.getBoolean(settingsAutoSync,
+                resources.getBoolean(R.bool.settings_auto_sync_default)
+            ))
+
+            remove(settingsLastSynced)
+            putString(settingsLastSynced, sharedPreferences.getString(settingsLastSynced,
+                resources.getString(R.string.settings_last_synced_default)
             ))
 
             apply()

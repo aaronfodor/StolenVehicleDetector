@@ -359,7 +359,7 @@ class CameraFragment() : Fragment() {
             imageCapture?.let { imageCapture ->
 
                 // Create output file to hold the image
-                val photoFile = viewModel.createFile(viewModel.getOutputDirectory())
+                val photoFile = viewModel.createFile()
 
                 // Setup image capture metadata
                 val metadata = ImageCapture.Metadata().apply {

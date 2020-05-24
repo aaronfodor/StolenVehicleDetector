@@ -4,9 +4,8 @@ import android.graphics.Bitmap
 import android.util.Size
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
 import com.arpadfodor.android.stolencardetector.model.ImageConverter
-import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
+import com.arpadfodor.android.stolencardetector.model.ai.StolenVehicleRecognizerService
 import kotlin.math.min
 
 class LoadViewModel : ViewModel(){
@@ -15,7 +14,7 @@ class LoadViewModel : ViewModel(){
 
         const val GALLERY_REQUEST_CODE = 2
 
-        var maximumRecognitionsToShow = 10
+        var numRecognitionsToShow = 10
         var minimumPredictionCertaintyToShow = 0.5f
             set(value) {
                 field = value/100f
@@ -25,7 +24,7 @@ class LoadViewModel : ViewModel(){
 
     }
 
-    private val objectDetectionService = ObjectDetectionService()
+    private val licensePlateReaderService = StolenVehicleRecognizerService()
 
     val imageMimeTypes = arrayListOf("image/jpeg", "image/png")
 
@@ -50,20 +49,14 @@ class LoadViewModel : ViewModel(){
 
         Thread(Runnable {
 
-            val bitmapNxN = ImageConverter.bitmapToCroppedNxNImage(bitmap)
-            val rotatedBitmap = ImageConverter.rotateBitmap(bitmapNxN, imageOrientation)
+            val rotatedBitmap = ImageConverter.rotateBitmap(bitmap, imageOrientation)
             loadedImage.postValue(rotatedBitmap)
 
-            val requiredInputImage = ImageConverter.resizeBitmap(rotatedBitmap, objectDetectionService.getModelInputSize())
-
-            val recognitions = objectDetectionService.recognizeImage(requiredInputImage,
-                maximumRecognitionsToShow, minimumPredictionCertaintyToShow)
-
             val smallerScreenDimension = min(screenDimensions.width, screenDimensions.height)
-            val optimalBoundingBoxImageSize = ImageConverter.resizeBitmap(rotatedBitmap, Size(smallerScreenDimension, smallerScreenDimension))
+            val requiredOutputImageSize = Size(smallerScreenDimension, smallerScreenDimension)
 
-            val boundingBoxBitmap = BoundingBoxDrawer.drawBoundingBoxes(optimalBoundingBoxImageSize,
-                0, objectDetectionService.getModelInputSize(), recognitions)
+            val boundingBoxBitmap = licensePlateReaderService.recognize(rotatedBitmap,
+                requiredOutputImageSize, 0, numRecognitionsToShow, minimumPredictionCertaintyToShow)
 
             boundingBoxImage.postValue(boundingBoxBitmap)
 

@@ -14,18 +14,21 @@ object BoundingBoxDrawer {
     private var lineWidth = 5f
     private var bbTextSize = 40f
 
-    private val fallbackColor = Color.parseColor("#FF0000")
+    private val fallbackColor = Color.parseColor("#00FF00")
+    private var alertColor = Color.parseColor("#FF0000")
     private val colorsList = mutableListOf<Int>()
     private var colorsMap: MutableMap<String, Int> = HashMap()
     val lowTransparency = 179       //hex: B3
     val highTransparency = 77       //hex: 4D
 
-    fun initialize(boxRadius_: Float, lineWidth_: Float, bbTextSize_: Float, colorsList_: Array<String>){
+    fun initialize(boxRadius_: Float, lineWidth_: Float, bbTextSize_: Float,
+                   colorsList_: Array<String>, alertColor_: Int){
 
         boxRadius = boxRadius_
         textBoxRadius = boxRadius_/2
         lineWidth = lineWidth_
         bbTextSize = bbTextSize_
+        alertColor = alertColor_
 
         for(color in colorsList_){
             colorsList.add(Color.parseColor(color))
@@ -88,18 +91,17 @@ object BoundingBoxDrawer {
 
     }
 
-    /**
-     * Does not return a value, draws on the input Bitmap
-     *
-     * @param image           Input bitmap on which the function draws
-     */
     private fun drawBoundingBox(image: Bitmap, deviceOrientation: Int, modelInputSize: Size, recognition: RecognizedObject,
                                 boxPaint: Paint, backgroundPaint: Paint, textBackgroundPaint: Paint, textPaint: Paint) : Bitmap{
 
         val toDrawOnCanvas = Canvas(image)
 
         // setting of color and transparency
-        val boxColor = colorsMap[recognition.title] ?: fallbackColor
+        var boxColor = colorsMap[recognition.title] ?: fallbackColor
+
+        if(recognition.alertNeeded){
+            boxColor = alertColor
+        }
 
         boxPaint.color = ColorUtils.setAlphaComponent(boxColor,  lowTransparency)
         backgroundPaint.color = ColorUtils.setAlphaComponent(boxColor,  highTransparency)

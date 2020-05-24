@@ -15,7 +15,7 @@
 
     <color name="colorAppSnackBarBackground">#B333333D</color>
     <color name="colorSuccessSnackBarBackground">#B333333D</color>
-    <color name="colorAlertSnackBarBackground">#B3FF0000</color>
+    <color name="colorAlertSnackBarBackground">#B333333D</color>
     <color name="colorAppSnackBarText">#DFFFFF</color>
 
     <color name="colorNormalButton">#03DAC5</color>
@@ -24,5 +24,7 @@
     <color name="icActive">#FFFFFFFF</color>
     <color name="icFocused">#DDFFFFFF</color>
     <color name="icPressed">#AAFFFFFF</color>
+
+    <color name="colorAlertBoundingBox">#FF0000</color>
 
 </resources>

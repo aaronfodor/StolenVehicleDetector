@@ -1,7 +1,7 @@
 package com.arpadfodor.android.stolencardetector.model
 
 import android.content.Context
-import android.os.Environment
+import android.media.MediaScannerConnection
 import android.os.Environment.DIRECTORY_PICTURES
 import java.io.File
 import java.text.SimpleDateFormat
@@ -25,12 +25,13 @@ object MediaHandler {
      */
     fun getOutputDirectory(): File {
 
-        val appContext = appContext
-        val mediaDir = appContext.externalMediaDirs?.firstOrNull()?.let {
+        val mediaDir = appContext.getExternalFilesDirs(DIRECTORY_PICTURES).firstOrNull()?.let {
             File(it, appName).apply {
                 mkdirs()
             }
         }
+
+        MediaScannerConnection.scanFile(appContext, arrayOf(mediaDir.toString()), null, null)
 
         return if(mediaDir != null && mediaDir.exists()){
             mediaDir

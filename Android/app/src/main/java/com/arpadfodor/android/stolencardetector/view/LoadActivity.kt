@@ -87,13 +87,13 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // read settings from preferences
         val settings = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
-        val settingsMaximumRecognitionsKey = getString(R.string.SETTINGS_MAXIMUM_RECOGNITIONS)
+        val settingsNumRecognitionsKey = getString(R.string.SETTINGS_NUM_RECOGNITIONS)
         val settingsMinimumPredictionCertaintyKey = getString(R.string.SETTINGS_MINIMUM_PREDICTION_CERTAINTY)
 
-        val maximumRecognitionsToShow = settings.getInt(settingsMaximumRecognitionsKey, resources.getInteger(R.integer.settings_maximum_recognitions_default))
+        val numRecognitionsToShow = settings.getInt(settingsNumRecognitionsKey, resources.getInteger(R.integer.settings_num_recognitions_default))
         val minimumPredictionCertaintyToShow = settings.getInt(settingsMinimumPredictionCertaintyKey, resources.getInteger(R.integer.settings_minimum_prediction_certainty_default))
 
-        LoadViewModel.maximumRecognitionsToShow = maximumRecognitionsToShow
+        LoadViewModel.numRecognitionsToShow = numRecognitionsToShow
         LoadViewModel.minimumPredictionCertaintyToShow = minimumPredictionCertaintyToShow.toFloat()
 
         subscribeToViewModel()

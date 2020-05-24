@@ -2,13 +2,19 @@ package com.arpadfodor.android.stolencardetector
 
 import android.Manifest
 import android.app.Application
-import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
+import android.widget.Toast
+import androidx.preference.PreferenceManager
 import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
 import com.arpadfodor.android.stolencardetector.model.MediaHandler
 import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
+import com.arpadfodor.android.stolencardetector.model.ai.StolenVehicleRecognizerService
 import com.arpadfodor.android.stolencardetector.model.ai.TextRecognitionService
+import com.arpadfodor.android.stolencardetector.model.api.ApiService
+import com.arpadfodor.android.stolencardetector.model.db.DatabaseService
 import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
+import java.util.*
 
 class ApplicationRoot : Application() {
 
@@ -41,6 +47,9 @@ class ApplicationRoot : Application() {
         super.onCreate()
         Log.i(TAG, "onCreate fired")
 
+        DatabaseService.initialize(applicationContext)
+        ApiService.initialize()
+
         ObjectDetectionService.initialize(assets, NUM_THREADS)
         TextRecognitionService.initialize(applicationContext)
 
@@ -48,15 +57,29 @@ class ApplicationRoot : Application() {
         val width = resources.getDimension(R.dimen.bounding_box_line_width)
         val textSize = resources.getDimension(R.dimen.bounding_box_text_size)
         val colors = resources.getStringArray(R.array.bounding_box_colors)
-
-        BoundingBoxDrawer.initialize(radius, width, textSize, colors)
+        val alertColor = resources.getColor(R.color.colorAlertBoundingBox, null)
+        BoundingBoxDrawer.initialize(radius, width, textSize, colors, alertColor)
 
         val appName = getString(R.string.app_name)
-
         MediaHandler.initialize(applicationContext, appName)
 
         CameraViewModel.KEY_EVENT_ACTION = getString(R.string.KEY_EVENT_ACTION)
         CameraViewModel.KEY_EVENT_EXTRA = getString(R.string.KEY_EVENT_EXTRA)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val isAutoSyncEnabled = preferences.getBoolean(getString(R.string.SETTINGS_AUTO_SYNC),
+            resources.getBoolean(R.bool.settings_auto_sync_default))
+
+        if(isAutoSyncEnabled){
+            DatabaseService.updateFromApi{isSuccess ->
+                if(isSuccess){
+                    StolenVehicleRecognizerService.initialize()
+                    val currentTime = Calendar.getInstance().time.toString()
+                    preferences.edit().putString(getString(R.string.LAST_SYNCED), currentTime)
+                        .apply()
+                }
+            }
+        }
 
     }
 

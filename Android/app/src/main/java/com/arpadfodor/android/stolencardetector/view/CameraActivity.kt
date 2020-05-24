@@ -92,15 +92,15 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         // read settings from preferences
         val settings = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
-        val settingsMaximumRecognitionsKey = getString(R.string.SETTINGS_MAXIMUM_RECOGNITIONS)
+        val settingsNumRecognitionsKey = getString(R.string.SETTINGS_NUM_RECOGNITIONS)
         val settingsMinimumPredictionCertaintyKey = getString(R.string.SETTINGS_MINIMUM_PREDICTION_CERTAINTY)
         val settingsShowReceptiveFieldKey = getString(R.string.SETTINGS_SHOW_RECEPTIVE_FIELD)
 
-        val maximumRecognitionsToShow = settings.getInt(settingsMaximumRecognitionsKey, resources.getInteger(R.integer.settings_maximum_recognitions_default))
+        val numRecognitionsToShow = settings.getInt(settingsNumRecognitionsKey, resources.getInteger(R.integer.settings_num_recognitions_default))
         val minimumPredictionCertaintyToShow = settings.getInt(settingsMinimumPredictionCertaintyKey, resources.getInteger(R.integer.settings_minimum_prediction_certainty_default))
         val settingsShowReceptiveField = settings.getBoolean(settingsShowReceptiveFieldKey, resources.getBoolean(R.bool.settings_receptive_field_default))
 
-        CameraViewModel.maximumRecognitionsToShow = maximumRecognitionsToShow
+        CameraViewModel.numRecognitionsToShow = numRecognitionsToShow
         CameraViewModel.minimumPredictionCertaintyToShow = minimumPredictionCertaintyToShow.toFloat()
         CameraViewModel.settingsShowReceptiveField = settingsShowReceptiveField
 

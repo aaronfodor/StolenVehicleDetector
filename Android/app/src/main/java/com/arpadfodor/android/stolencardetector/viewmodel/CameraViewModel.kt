@@ -21,7 +21,7 @@ class CameraViewModel : ViewModel(){
         var KEY_EVENT_ACTION = ""
         var KEY_EVENT_EXTRA = ""
 
-        var maximumRecognitionsToShow = 10
+        var numRecognitionsToShow = 10
         var minimumPredictionCertaintyToShow = 0.5f
             set(value) {
                 field = value/100f
@@ -91,12 +91,12 @@ class CameraViewModel : ViewModel(){
         screenDimensions = Size(width, height)
     }
 
-    fun getOutputDirectory(): File{
+    fun getOutputDirectory(): File {
         return MediaHandler.getOutputDirectory()
     }
 
-    fun createFile(baseFolder: File) : File{
-        return MediaHandler.createFile(baseFolder)
+    fun createFile() : File{
+        return MediaHandler.createFile(getOutputDirectory())
     }
 
 }

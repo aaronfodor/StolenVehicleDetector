@@ -5,7 +5,7 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.arpadfodor.android.stolencardetector.model.ImageConverter
-import com.arpadfodor.android.stolencardetector.model.ai.LicensePlateReaderService
+import com.arpadfodor.android.stolencardetector.model.ai.StolenVehicleRecognizerService
 import com.arpadfodor.android.stolencardetector.view.DetectionListener
 import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
 import java.util.*
@@ -21,7 +21,7 @@ class ImageAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewM
     private var framesPerSecond: Double = -1.0
 
     private val viewModel: CameraViewModel = viewModel_
-    private val licensePlateReaderService = LicensePlateReaderService()
+    private val licensePlateReaderService = StolenVehicleRecognizerService()
 
     /**
      * Used to add listeners that will be called with each detection computed
@@ -84,7 +84,7 @@ class ImageAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewM
 
         // Use the service to produce the image to show
         val resultImage = licensePlateReaderService.recognize(rotatedInputImage, requiredOutputImageSize, deviceOrientation,
-            CameraViewModel.maximumRecognitionsToShow, CameraViewModel.minimumPredictionCertaintyToShow)
+            CameraViewModel.numRecognitionsToShow, CameraViewModel.minimumPredictionCertaintyToShow)
 
 
         // Call all listeners with new image with bounding boxes

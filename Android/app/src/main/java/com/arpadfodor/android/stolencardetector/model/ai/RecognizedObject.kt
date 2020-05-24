@@ -10,7 +10,8 @@ data class RecognizedObject(
     val title: String,
     val confidence: Float,
     val location: RectF = RectF(),
-    var extra: String = ""
+    var extra: String = "",
+    var alertNeeded: Boolean = false
 ){
 
     fun getShortString(): String {

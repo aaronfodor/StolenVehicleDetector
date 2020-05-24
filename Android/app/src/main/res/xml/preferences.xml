@@ -9,15 +9,15 @@
         android:title="@string/detector_settings">
 
         <SeekBarPreference
-            app:key="@string/SETTINGS_MAXIMUM_RECOGNITIONS"
-            android:title="@string/setting_max_recognition"
-            android:summary="@string/setting_summary_max_recognition"
+            app:key="@string/SETTINGS_NUM_RECOGNITIONS"
+            android:title="@string/setting_num_recognitions"
+            android:summary="@string/setting_summary_num_recognitions"
             android:enabled="true"
             android:selectable="true"
             app:showSeekBarValue="true"
-            android:max="@integer/settings_maximum_recognitions_max"
-            app:min="@integer/settings_maximum_recognitions_min"
-            android:defaultValue="@integer/settings_maximum_recognitions_default"/>
+            android:max="@integer/settings_num_recognitions_max"
+            app:min="@integer/settings_num_recognitions_min"
+            android:defaultValue="@integer/settings_num_recognitions_default"/>
 
         <SeekBarPreference
             app:key="@string/SETTINGS_MINIMUM_PREDICTION_CERTAINTY"
@@ -38,6 +38,31 @@
             android:enabled="true"
             android:selectable="true"
             android:defaultValue="@bool/settings_receptive_field_default"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/sync_settings">
+
+        <SwitchPreference
+            android:key="@string/SETTINGS_AUTO_SYNC"
+            android:title="@string/setting_auto_sync"
+            android:summaryOn="@string/enabled"
+            android:summaryOff="@string/disabled"
+            android:defaultValue="@bool/settings_auto_sync_default"/>
+
+        <Preference
+            android:key="@string/SETTINGS_SYNC_NOW"
+            android:title="@string/force_update_db"
+            android:summary="@string/force_update_db_summary"
+            android:selectable="true" />
+
+        <Preference
+            android:key="@string/SETTINGS_SYNC_NOW"
+            android:title="@string/last_synced"
+            android:summary="@string/settings_last_synced_default"
+            app:useSimpleSummaryProvider="true">
+        </Preference>
 
     </PreferenceCategory>
 
