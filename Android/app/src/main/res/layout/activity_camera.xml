@@ -34,15 +34,13 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/camera_container"
-            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:keepScreenOn="true"
-            app:defaultNavHost="true"
             tools:context=".view.CameraActivity"/>
 
         <include
-            layout="@layout/camera_toolbar"
+            layout="@layout/custom_toolbar"
             android:id="@+id/main_toolbar"
             app:layout_constraintBottom_toTopOf="parent"/>
 

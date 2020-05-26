@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/report_item_padding"
+    android:layout_margin="@dimen/report_item_margin"
+    android:background="@drawable/card_background">
+
+    <TextView
+        android:id="@+id/reportId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/report_sub_item_margin"
+        android:layout_marginTop="@dimen/report_sub_item_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/reportTitleItem" />
+
+    <TextView
+        android:id="@+id/reportDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/report_sub_item_margin"
+        android:layout_marginTop="@dimen/report_sub_item_margin"
+        android:layout_marginBottom="@dimen/report_sub_item_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reportId"
+        app:layout_constraintBottom_toTopOf="@+id/reportLocation"
+        style="@style/reportItem" />
+
+    <TextView
+        android:id="@+id/reportLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/report_sub_item_margin"
+        android:layout_marginBottom="@dimen/report_sub_item_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/reportItem" />
+
+    <ImageButton
+        android:id="@+id/report_action_button"
+        android:layout_width="@dimen/round_button_small"
+        android:layout_height="@dimen/round_button_small"
+        android:layout_marginEnd="@dimen/report_sub_item_margin"
+        android:padding="@dimen/spacing_small"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@android:color/transparent"
+        app:srcCompat="@android:drawable/ic_menu_send"
+        android:contentDescription="@string/send_alert" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

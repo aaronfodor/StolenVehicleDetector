@@ -26,7 +26,8 @@ class StolenVehicleRecognizerService {
     private val textRecognitionService = TextRecognitionService()
 
     fun recognize(inputImage: Bitmap, outputImageSize: Size, deviceOrientation: Int,
-                  maximumRecognitionsToShow: Int, minimumPredictionCertaintyToShow: Float) : Bitmap{
+                  maximumRecognitionsToShow: Int, minimumPredictionCertaintyToShow: Float,
+                  callback: (Array<String>) -> Unit) : Bitmap{
 
         val bitmapNxN = ImageConverter.bitmapToCroppedNxNImage(inputImage)
         val requiredInputImage = ImageConverter.resizeBitmap(bitmapNxN, objectDetectionService.getModelInputSize())
@@ -34,6 +35,8 @@ class StolenVehicleRecognizerService {
         // Compute results
         val recognitions = objectDetectionService.recognizeImage(requiredInputImage,
             maximumRecognitionsToShow, minimumPredictionCertaintyToShow)
+
+        val suspiciousTexts = arrayListOf<String>()
 
         for(recognition in recognitions){
 
@@ -49,6 +52,7 @@ class StolenVehicleRecognizerService {
 
                 if(isIdSuspicious(recognizedText.text)){
                     recognition.alertNeeded = true
+                    suspiciousTexts.add(recognizedText.text)
                 }
 
             }
@@ -56,9 +60,11 @@ class StolenVehicleRecognizerService {
         }
 
         val optimalBoundingBoxImageSize = ImageConverter.resizeBitmap(requiredInputImage, outputImageSize)
-
         val boundingBoxBitmap = BoundingBoxDrawer.drawBoundingBoxes(optimalBoundingBoxImageSize,
             deviceOrientation, objectDetectionService.getModelInputSize(), recognitions)
+
+        callback(suspiciousTexts.toTypedArray())
+
         return boundingBoxBitmap
 
     }

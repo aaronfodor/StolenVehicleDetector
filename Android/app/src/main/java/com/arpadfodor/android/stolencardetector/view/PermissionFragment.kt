@@ -3,14 +3,12 @@ package com.arpadfodor.android.stolencardetector.view
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.arpadfodor.android.stolencardetector.ApplicationRoot
 import com.arpadfodor.android.stolencardetector.R
 import com.arpadfodor.android.stolencardetector.viewmodel.CameraViewModel
-
 
 private const val PERMISSIONS_REQUEST_CODE = 10
 private val PERMISSIONS_REQUIRED = ApplicationRoot.requiredPermissions

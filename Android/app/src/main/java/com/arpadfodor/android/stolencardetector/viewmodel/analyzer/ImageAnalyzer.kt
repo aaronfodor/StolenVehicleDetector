@@ -84,7 +84,9 @@ class ImageAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewM
 
         // Use the service to produce the image to show
         val resultImage = licensePlateReaderService.recognize(rotatedInputImage, requiredOutputImageSize, deviceOrientation,
-            CameraViewModel.numRecognitionsToShow, CameraViewModel.minimumPredictionCertaintyToShow)
+            CameraViewModel.numRecognitionsToShow, CameraViewModel.minimumPredictionCertaintyToShow) { suspiciousIds ->
+            viewModel.suspiciousElementIds.postValue(suspiciousIds)
+        }
 
 
         // Call all listeners with new image with bounding boxes

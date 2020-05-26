@@ -32,7 +32,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         settingsMinimumPredictionCertainty = getString(R.string.SETTINGS_MINIMUM_PREDICTION_CERTAINTY)
         settingsShowReceptiveField = getString(R.string.SETTINGS_SHOW_RECEPTIVE_FIELD)
         settingsAutoSync = getString(R.string.SETTINGS_AUTO_SYNC)
-        settingsLastSynced = getString(R.string.LAST_SYNCED)
+        settingsLastSynced = getString(R.string.LAST_SYNCED_DB)
         preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this.requireContext())
@@ -45,11 +45,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
                 if(isSuccess){
 
-                    StolenVehicleRecognizerService.initialize()
-
                     val currentTime = Calendar.getInstance().time.toString()
-
-                    preferences.edit().putString(getString(R.string.LAST_SYNCED), currentTime)
+                    preferences.edit().putString(getString(R.string.LAST_SYNCED_DB), currentTime)
                         .apply()
 
                     AppSnackBarBuilder.buildSuccessSnackBar(resources, this.requireView(),
@@ -60,6 +57,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                     AppSnackBarBuilder.buildAlertSnackBar(resources, this.requireView(),
                         getString(R.string.updating_failed), Snackbar.LENGTH_SHORT).show()
                 }
+
+                StolenVehicleRecognizerService.initialize()
 
             }
             true

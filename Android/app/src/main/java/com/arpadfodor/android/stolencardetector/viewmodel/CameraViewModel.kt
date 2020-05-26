@@ -5,6 +5,7 @@ import androidx.camera.core.AspectRatio
 import androidx.camera.core.CameraSelector
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.arpadfodor.android.stolencardetector.model.LocationService
 import com.arpadfodor.android.stolencardetector.model.MediaHandler
 import java.io.File
 import kotlin.math.abs
@@ -63,6 +64,13 @@ class CameraViewModel : ViewModel(){
     }
 
     /**
+     * List of suspicious element Ids from the last inference
+     **/
+    val suspiciousElementIds: MutableLiveData<Array<String>> by lazy {
+        MutableLiveData<Array<String>>()
+    }
+
+    /**
      *  [androidx.camera.core.ImageAnalysisConfig] requires enum value of [androidx.camera.core.AspectRatio].
      *  Currently it has values of 4:3 & 16:9.
      *
@@ -95,7 +103,7 @@ class CameraViewModel : ViewModel(){
         return MediaHandler.getOutputDirectory()
     }
 
-    fun createFile() : File{
+    fun createFile(): File{
         return MediaHandler.createFile(getOutputDirectory())
     }
 

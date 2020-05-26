@@ -3,27 +3,27 @@
 
     <item
         android:id="@+id/navigation_live"
-        android:icon="@drawable/warning"
+        android:icon="@android:drawable/ic_menu_camera"
         android:title="@string/menu_live" />
 
     <item
         android:id="@+id/navigation_load"
-        android:icon="@drawable/warning"
+        android:icon="@android:drawable/ic_menu_search"
         android:title="@string/menu_load" />
 
     <item
         android:id="@+id/navigation_gallery"
-        android:icon="@drawable/warning"
+        android:icon="@android:drawable/ic_menu_gallery"
         android:title="@string/menu_gallery" />
 
     <item
         android:id="@+id/navigation_reports"
-        android:icon="@drawable/warning"
+        android:icon="@android:drawable/ic_menu_view"
         android:title="@string/menu_reports" />
 
     <item
         android:id="@+id/navigation_settings"
-        android:icon="@drawable/warning"
+        android:icon="@android:drawable/ic_menu_manage"
         android:title="@string/menu_settings" />
 
 </menu>

@@ -1,14 +1,17 @@
 package com.arpadfodor.android.stolencardetector.view
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
+import android.location.LocationManager
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
@@ -16,6 +19,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import android.webkit.MimeTypeMap
 import android.widget.ImageButton
@@ -25,6 +29,7 @@ import androidx.camera.core.Camera
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.camera.view.PreviewView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import androidx.core.view.setPadding
@@ -42,6 +47,9 @@ import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import androidx.lifecycle.Observer
+import com.arpadfodor.android.stolencardetector.model.LocationService
+import kotlin.math.log
 
 /** Helper type alias used for analysis use case callbacks */
 typealias DetectionListener = (recognition: Bitmap) -> Unit
@@ -340,8 +348,7 @@ class CameraFragment() : Fragment() {
         }
 
         // Inflate a new view containing all UI for controlling the camera
-        val controls = View.inflate(requireContext(),
-            R.layout.camera_ui_container, container)
+        val controls = View.inflate(requireContext(), R.layout.camera_ui_container, container)
 
         // In the background, load latest photo taken (if any) for gallery thumbnail
         lifecycleScope.launch(Dispatchers.IO) {
@@ -351,6 +358,13 @@ class CameraFragment() : Fragment() {
                 setGalleryThumbnail(Uri.fromFile(it))
             }
         }
+
+        setButtonListeners(controls)
+        subscribeToViewModel(controls)
+
+    }
+
+    private fun setButtonListeners(controls: View) {
 
         // Listener for button used to capture photo
         controls.findViewById<ImageButton>(R.id.camera_capture_button).setOnClickListener {
@@ -444,9 +458,58 @@ class CameraFragment() : Fragment() {
             // Only navigate when the gallery has photos
             if (true == viewModel.getOutputDirectory().listFiles()?.isNotEmpty()) {
                 //Navigation.findNavController(requireActivity(), R.id.camera_container)
-                    //.navigate(CameraFragmentDirections.actionCameraToGallery(viewModel.getOutputDirectory().absolutePath))
+                //.navigate(CameraFragmentDirections.actionCameraToGallery(viewModel.getOutputDirectory().absolutePath))
             }
         }
+
+    }
+
+    private fun subscribeToViewModel(controls: View) {
+
+        val alertButton = controls.findViewById<ImageButton>(R.id.alert_live_button)
+
+        // Create the suspicious Id observer which notifies when suspicious element has been recognized
+        val suspiciousIdsObserver = Observer<Array<String>> { suspiciousIdArray ->
+
+            if(suspiciousIdArray.isNotEmpty()){
+
+                alertButton.setOnClickListener {
+
+                    LocationService.updateLocation()
+                    val location = LocationService.getLocation()
+
+                    val intent = Intent(this.requireActivity(), AlertActivity::class.java)
+                    intent.putExtra("suspicious_ids", suspiciousIdArray)
+                    intent.putExtra("date", Calendar.getInstance().time.toString())
+                    intent.putExtra("latitude", location[0])
+                    intent.putExtra("longitude", location[1])
+                    startActivity(intent)
+
+                }
+
+                if(alertButton.visibility == View.GONE){
+                    val animation = AnimationUtils.loadAnimation(this.requireContext(), android.R.anim.fade_in)
+                    alertButton.visibility = View.VISIBLE
+                    alertButton.animation = animation
+                    alertButton.animation.start()
+                }
+
+            }
+            else{
+
+                if(alertButton.visibility == View.VISIBLE){
+                    val animation = AnimationUtils.loadAnimation(this.requireContext(), android.R.anim.fade_out)
+                    alertButton.animation = animation
+                    alertButton.animation.start()
+                    alertButton.visibility = View.GONE
+                }
+
+            }
+
+        }
+
+        // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
+        viewModel.suspiciousElementIds.observe(this.viewLifecycleOwner, suspiciousIdsObserver)
 
     }
 

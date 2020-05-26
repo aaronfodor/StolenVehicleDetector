@@ -4,21 +4,24 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
+import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.arpadfodor.android.stolencardetector.ApplicationRoot
 import com.arpadfodor.android.stolencardetector.R
+import com.arpadfodor.android.stolencardetector.model.MediaHandler
 import com.arpadfodor.android.stolencardetector.view.utils.AppDialog
 import com.arpadfodor.android.stolencardetector.viewmodel.LoadViewModel
 import com.bumptech.glide.Glide
@@ -40,7 +43,7 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         viewModel = ViewModelProvider(this).get(LoadViewModel::class.java)
 
-        val toolbar = findViewById<Toolbar>(R.id.camera_toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.custom_toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -129,14 +132,51 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .into(ivLoadedImageBoundingBoxes)
         }
 
+        // Create the suspicious Id observer which notifies when suspicious element has been recognized
+        val suspiciousIdsObserver = Observer<Array<String>> { suspiciousIdArray ->
+
+            val alertButton = alert_loaded_button
+
+            if(suspiciousIdArray.isNotEmpty()){
+
+                alertButton.setOnClickListener {
+                    val intent = Intent(this, AlertActivity::class.java)
+                    intent.putExtra("suspicious_ids", suspiciousIdArray)
+                    intent.putExtra("date", viewModel.imageMetaData.value?.get(0) ?: "")
+                    intent.putExtra("latitude", viewModel.imageMetaData.value?.get(1)?.toDouble() ?: 0.0)
+                    intent.putExtra("longitude", viewModel.imageMetaData.value?.get(2)?.toDouble() ?: 0.0)
+                    startActivity(intent)
+                }
+
+                if(alertButton.visibility == View.GONE){
+                    val animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in)
+                    alertButton.visibility = View.VISIBLE
+                    alertButton.animation = animation
+                    alertButton.animation.start()
+                }
+
+            }
+            else{
+
+                if(alertButton.visibility == View.VISIBLE){
+                    val animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_out)
+                    alertButton.animation = animation
+                    alertButton.animation.start()
+                    alertButton.visibility = View.GONE
+                }
+
+            }
+
+        }
+
         // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
         viewModel.loadedImage.observe(this, imageObserver)
         viewModel.boundingBoxImage.observe(this, boundingBoxImageObserver)
+        viewModel.suspiciousElementIds.observe(this, suspiciousIdsObserver)
 
     }
 
     private fun loadImage(){
-
         // Create an Intent with action as ACTION_PICK
         val intent = Intent(Intent.ACTION_PICK)
         // Sets the type as image/*. This ensures only components of type image are selected
@@ -145,57 +185,25 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         intent.putExtra(Intent.EXTRA_MIME_TYPES, viewModel.imageMimeTypes)
         // Launch the Intent
         startActivityForResult(intent, LoadViewModel.GALLERY_REQUEST_CODE)
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
         super.onActivityResult(requestCode, resultCode, data)
 
         // Result code is RESULT_OK only if the user has selected an Image
         if (resultCode == RESULT_OK) {
-
             when (requestCode) {
-                LoadViewModel.GALLERY_REQUEST_CODE -> {
 
+                LoadViewModel.GALLERY_REQUEST_CODE -> {
                     //data.getData returns the content URI for the selected Image
                     val selectedImageUri = data?.data?:return
-                    val imageOrientation = getPhotoOrientation(selectedImageUri)
+                    val imageOrientation = MediaHandler.getPhotoOrientation(selectedImageUri)
+                    val imageMetadata = MediaHandler.getImageMetaData(selectedImageUri)
                     val sourceBitmap = MediaStore.Images.Media.getBitmap(application.contentResolver, selectedImageUri)
-                    viewModel.setLoadedImage(sourceBitmap, imageOrientation)
-
+                    viewModel.setLoadedImage(sourceBitmap, imageOrientation, imageMetadata)
                 }
             }
-
         }
-
-    }
-
-    /**
-     * Returns the orientation of the inspected image from MediaStore
-     *
-     * @param photoUri      URI of the image to get the orientation information for
-     * @return Int          Orientation of the image
-     **/
-    private fun getPhotoOrientation(photoUri: Uri): Int {
-
-        val cursor = applicationContext.contentResolver.query(photoUri,
-            arrayOf(MediaStore.Images.ImageColumns.ORIENTATION), null, null, null
-        )
-
-        cursor?: return 0
-
-        if (cursor.count != 1) {
-            cursor.close()
-            return 0
-        }
-
-        cursor.moveToFirst()
-        val orientation = cursor.getInt(0)
-        cursor.close()
-
-        return orientation
-
     }
 
     private fun setButtonListeners() {
@@ -208,8 +216,10 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             loadImage()
         }
 
-        loaded_image_details_button.setOnClickListener {
+        loaded_image_rotate_button.setOnClickListener {
+            viewModel.rotateImage()
         }
+
     }
 
     /**

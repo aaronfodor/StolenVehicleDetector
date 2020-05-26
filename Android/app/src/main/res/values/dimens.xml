@@ -15,7 +15,7 @@
     <dimen name="stroke_medium">8dp</dimen>
     <dimen name="stroke_large">12dp</dimen>
 
-    <dimen name="round_button_small">32dp</dimen>
+    <dimen name="round_button_small">48dp</dimen>
     <dimen name="round_button_medium">64dp</dimen>
     <dimen name="round_button_large">92dp</dimen>
 
@@ -28,7 +28,7 @@
     <dimen name="bounding_box_radius">4dp</dimen>
     <dimen name="bounding_box_text_size">14sp</dimen>
 
-    <dimen name="subtitle_text_size">16sp</dimen>
+    <dimen name="subtitle_text_size">24sp</dimen>
     <dimen name="subtitle_padding">8dp</dimen>
 
     <dimen name="paragraph_text_size">12sp</dimen>
@@ -38,6 +38,7 @@
 
     <dimen name="navigation_menu_height">180dp</dimen>
     <dimen name="navigation_menu_vertical_spacing">8dp</dimen>
+    <dimen name="navigation_menu_icon_vertical_spacing">36dp</dimen>
 
     <dimen name="dialog_corner_radius">10dp</dimen>
     <dimen name="dialog_horizontal_padding">40dp</dimen>
@@ -55,5 +56,11 @@
 
     <dimen name="snackbar_margin_horizontal">32dp</dimen>
     <dimen name="snackbar_margin_vertical">8dp</dimen>
+
+    <dimen name="report_item_padding">6dp</dimen>
+    <dimen name="report_item_margin">12dp</dimen>
+    <dimen name="report_sub_item_margin">4dp</dimen>
+    <dimen name="report_title_item_text_size">16sp</dimen>
+    <dimen name="report_item_text_size">12sp</dimen>
 
 </resources>

@@ -9,6 +9,6 @@
     <string name="SETTINGS_SHOW_RECEPTIVE_FIELD">show_receptive_field</string>
     <string name="SETTINGS_AUTO_SYNC">enable_auto_sync</string>
     <string name="SETTINGS_SYNC_NOW">sync_now</string>
-    <string name="LAST_SYNCED">last_synced</string>
+    <string name="LAST_SYNCED_DB">last_synced_db</string>
 
 </resources>

@@ -12,9 +12,11 @@
 
     <!-- Declare permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".ApplicationRoot"
@@ -57,6 +59,17 @@
 
         <activity
             android:name=".view.LoadActivity"
+            android:clearTaskOnLaunch="true"
+            android:icon="@mipmap/ic_launcher"
+            android:rotationAnimation="seamless"
+            android:screenOrientation="fullUser"
+            android:theme="@style/AppTheme"
+            tools:targetApi="O">
+        </activity>
+
+        <activity
+            android:name=".view.AlertActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:clearTaskOnLaunch="true"
             android:icon="@mipmap/ic_launcher"
             android:rotationAnimation="seamless"

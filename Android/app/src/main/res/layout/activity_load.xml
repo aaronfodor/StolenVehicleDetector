@@ -38,7 +38,7 @@
             app:layout_constraintBottom_toTopOf="parent"/>
 
         <include
-            layout="@layout/camera_toolbar"
+            layout="@layout/custom_toolbar"
             android:id="@+id/load_toolbar"
             app:layout_constraintBottom_toTopOf="parent"/>
 

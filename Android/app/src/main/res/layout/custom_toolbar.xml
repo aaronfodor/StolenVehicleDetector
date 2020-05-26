@@ -3,7 +3,7 @@
 <com.google.android.material.appbar.AppBarLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/camera_bar"
+    android:id="@+id/custom_bar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/app_toolbar_height"
     android:theme="@style/AppTheme.AppBarOverlay"
@@ -11,7 +11,7 @@
     app:elevation="0dp">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/camera_toolbar"
+        android:id="@+id/custom_toolbar"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/app_toolbar_height"
         android:background="@color/colorTransparent"

@@ -25,7 +25,7 @@ object DatabaseService {
                     stolenVehicleDB.dbInteraction().insert(element)
                 }
                 //just for testing
-                stolenVehicleDB.dbInteraction().insert(StolenVehicle(69, "SAMSUNG", "telefon", "Samsung", "fekete"))
+                stolenVehicleDB.dbInteraction().insert(StolenVehicle(69, "SAMSUNG", "phone", "Samsung", "black"))
                 stolenVehicleDB.close()
             }
             catch (e: Exception) {
@@ -78,6 +78,7 @@ object DatabaseService {
     }
 
     fun updateFromApi(callback: (isSuccess: Boolean) -> Unit){
+
         ApiService.getStolenVehicleData {
 
             if(it.isNotEmpty()){
@@ -89,6 +90,7 @@ object DatabaseService {
             }
 
         }
+
     }
 
 }

@@ -2,11 +2,10 @@ package com.arpadfodor.android.stolencardetector
 
 import android.Manifest
 import android.app.Application
-import android.content.SharedPreferences
 import android.util.Log
-import android.widget.Toast
 import androidx.preference.PreferenceManager
 import com.arpadfodor.android.stolencardetector.model.BoundingBoxDrawer
+import com.arpadfodor.android.stolencardetector.model.LocationService
 import com.arpadfodor.android.stolencardetector.model.MediaHandler
 import com.arpadfodor.android.stolencardetector.model.ai.ObjectDetectionService
 import com.arpadfodor.android.stolencardetector.model.ai.StolenVehicleRecognizerService
@@ -27,8 +26,11 @@ class ApplicationRoot : Application() {
 
         val requiredPermissions = arrayOf(
             Manifest.permission.CAMERA,
+            Manifest.permission.INTERNET,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION)
 
     }
 
@@ -62,6 +64,7 @@ class ApplicationRoot : Application() {
 
         val appName = getString(R.string.app_name)
         MediaHandler.initialize(applicationContext, appName)
+        LocationService.initialize(applicationContext)
 
         CameraViewModel.KEY_EVENT_ACTION = getString(R.string.KEY_EVENT_ACTION)
         CameraViewModel.KEY_EVENT_EXTRA = getString(R.string.KEY_EVENT_EXTRA)
@@ -73,11 +76,11 @@ class ApplicationRoot : Application() {
         if(isAutoSyncEnabled){
             DatabaseService.updateFromApi{isSuccess ->
                 if(isSuccess){
-                    StolenVehicleRecognizerService.initialize()
                     val currentTime = Calendar.getInstance().time.toString()
-                    preferences.edit().putString(getString(R.string.LAST_SYNCED), currentTime)
+                    preferences.edit().putString(getString(R.string.LAST_SYNCED_DB), currentTime)
                         .apply()
                 }
+                StolenVehicleRecognizerService.initialize()
             }
         }
 

@@ -54,7 +54,7 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        val toolbar = findViewById<Toolbar>(R.id.camera_toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.custom_toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -114,7 +114,7 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         val hasPermissionsGranted = Observer<Boolean> { permissionGranted ->
 
             if(permissionGranted == true){
-                AppSnackBarBuilder.buildSuccessSnackBar(resources, container, getString(R.string.permission_granted), Snackbar.LENGTH_SHORT).show()
+                //AppSnackBarBuilder.buildSuccessSnackBar(resources, container, getString(R.string.permission_granted), Snackbar.LENGTH_SHORT).show()
             }
             else{
                 AppSnackBarBuilder.buildAlertSnackBar(resources, container, getString(R.string.permission_denied), Snackbar.LENGTH_SHORT).show()

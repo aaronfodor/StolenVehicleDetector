@@ -35,7 +35,7 @@
         android:visibility="visible"
         android:scaleType="center" />
 
-    <!-- Load and details buttons -->
+    <!-- Load and rotate buttons -->
 
     <ImageButton
         android:id="@+id/load_image_button"
@@ -44,25 +44,41 @@
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
         android:background="@android:color/transparent"
+        app:srcCompat="@drawable/load_image_placeholder"
         android:contentDescription="@string/load_image"
         android:padding="@dimen/spacing_small"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:srcCompat="@drawable/ic_switch" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <ImageButton
-        android:id="@+id/loaded_image_details_button"
+        android:id="@+id/loaded_image_rotate_button"
         android:layout_width="@dimen/round_button_medium"
         android:layout_height="@dimen/round_button_medium"
         android:layout_marginEnd="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
         android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_switch"
         android:contentDescription="@string/details"
         android:padding="@dimen/spacing_small"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/ic_switch" />
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageButton
+        android:id="@+id/alert_loaded_button"
+        android:layout_width="@dimen/round_button_medium"
+        android:layout_height="@dimen/round_button_medium"
+        android:layout_marginTop="@dimen/margin_xsmall"
+        android:layout_marginStart="@dimen/margin_xsmall"
+        android:layout_marginEnd="@dimen/margin_xsmall"
+        android:background="@drawable/alert_button"
+        app:srcCompat="@android:drawable/ic_dialog_alert"
+        android:contentDescription="@string/report"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

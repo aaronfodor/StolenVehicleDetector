@@ -3,8 +3,8 @@
 <!DOCTYPE resources [
     <!ENTITY appName "Stolen Car Detector">
     <!ENTITY appId "">
-    <!ENTITY appVersion "v0.5">
-    <!ENTITY appDate "23/05/2020">
+    <!ENTITY appVersion "v0.6">
+    <!ENTITY appDate "26/05/2020">
     <!ENTITY appCreator "Arpad Fodor">
     <!ENTITY adMobAppId "ca-app-pub-3940256099942544~3347511713">
     <!ENTITY adMobBannerId "ca-app-pub-3940256099942544/6300978111">
@@ -30,6 +30,7 @@
     <string name="capture">Capture</string>
     <string name="gallery">Gallery</string>
     <string name="load_image">Load image</string>
+    <string name="report">Report</string>
     <string name="details">Details</string>
     <string name="back">Back</string>
     <string name="share">Share</string>
@@ -60,6 +61,8 @@
     <string name="menu_reports">Reports</string>
     <string name="menu_settings">Settings</string>
 
+    <string name="alert_subtitle">Pending alerts</string>
+
     <string name="about">About</string>
     <string name="further">Further apps from the developer</string>
     <string name="detector_settings">Detection settings</string>
@@ -78,5 +81,6 @@
     <string name="setting_auto_sync">Enable Auto Sync</string>
     <string name="last_synced">Last Synced</string>
     <string name="auto_sync_interval_summary">Select how often the app should update.</string>
+    <string name="send_alert">Send alert</string>
 
 </resources>

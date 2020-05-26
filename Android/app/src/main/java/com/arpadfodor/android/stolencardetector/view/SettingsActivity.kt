@@ -18,7 +18,7 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val toolbar = findViewById<Toolbar>(R.id.camera_toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.custom_toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -82,8 +82,7 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             settingsActivityDrawerLayout.closeDrawer(GravityCompat.START)
         }
         else{
-            val intent = Intent(this, CameraActivity::class.java)
-            startActivity(intent)
+            this.finish()
         }
     }
 

@@ -131,7 +131,7 @@ class GalleryFragment internal constructor() : Fragment() {
             mediaList.getOrNull(mediaViewPager.currentItem)?.let { mediaFile ->
 
                 val deleteDialog = AppDialog(this.requireContext(), getString(R.string.delete_title), getString(R.string.delete_dialog),
-                    resources.getDrawable(R.drawable.warning))
+                    resources.getDrawable(android.R.drawable.ic_dialog_alert))
                 deleteDialog.setPositiveButton {
 
                     // Delete current photo

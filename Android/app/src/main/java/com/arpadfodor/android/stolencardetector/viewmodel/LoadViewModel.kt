@@ -36,13 +36,33 @@ class LoadViewModel : ViewModel(){
     }
 
     /**
+     * Metadata of the loaded image
+     * [0]: date of image taking
+     * [1]: latitude of the photo origin
+     * [2]: longitude of the photo origin
+     **/
+    val imageMetaData: MutableLiveData<Array<String>> by lazy {
+        MutableLiveData<Array<String>>()
+    }
+
+    /**
      * The bounding box image
      **/
     val boundingBoxImage: MutableLiveData<Bitmap> by lazy {
         MutableLiveData<Bitmap>()
     }
 
-    fun setLoadedImage(bitmap: Bitmap, imageOrientation: Int){
+    /**
+     * List of suspicious element Ids from the last inference
+     **/
+    val suspiciousElementIds: MutableLiveData<Array<String>> by lazy {
+        MutableLiveData<Array<String>>()
+    }
+
+    fun setLoadedImage(bitmap: Bitmap, imageOrientation: Int, imageMetaData_: Array<String>){
+
+        // set image metadata
+        imageMetaData.value = imageMetaData_
 
         // remove the bounding boxes of the previous image
         boundingBoxImage.value = null
@@ -56,7 +76,35 @@ class LoadViewModel : ViewModel(){
             val requiredOutputImageSize = Size(smallerScreenDimension, smallerScreenDimension)
 
             val boundingBoxBitmap = licensePlateReaderService.recognize(rotatedBitmap,
-                requiredOutputImageSize, 0, numRecognitionsToShow, minimumPredictionCertaintyToShow)
+                requiredOutputImageSize, 0, numRecognitionsToShow, minimumPredictionCertaintyToShow) {suspiciousIds ->
+                suspiciousElementIds.postValue(suspiciousIds)
+            }
+
+            boundingBoxImage.postValue(boundingBoxBitmap)
+
+        }).start()
+
+    }
+
+    fun rotateImage(){
+
+        // remove the bounding boxes of the previous image
+        boundingBoxImage.value = null
+
+        val image = loadedImage.value ?: return
+
+        Thread(Runnable {
+
+            val rotatedBitmap = ImageConverter.rotateBitmap(image, 90)
+            loadedImage.postValue(rotatedBitmap)
+
+            val smallerScreenDimension = min(screenDimensions.width, screenDimensions.height)
+            val requiredOutputImageSize = Size(smallerScreenDimension, smallerScreenDimension)
+
+            val boundingBoxBitmap = licensePlateReaderService.recognize(rotatedBitmap,
+                requiredOutputImageSize, 0, numRecognitionsToShow, minimumPredictionCertaintyToShow) {suspiciousIds ->
+                suspiciousElementIds.postValue(suspiciousIds)
+            }
 
             boundingBoxImage.postValue(boundingBoxBitmap)
 

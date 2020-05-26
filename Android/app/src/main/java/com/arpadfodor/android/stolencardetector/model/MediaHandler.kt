@@ -1,11 +1,16 @@
 package com.arpadfodor.android.stolencardetector.model
 
+import android.content.ContentResolver
 import android.content.Context
 import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Environment.DIRECTORY_PICTURES
+import android.provider.MediaStore
+import androidx.exifinterface.media.ExifInterface
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.core.content.ContextCompat.getSystemService
 
 object MediaHandler {
 
@@ -47,6 +52,62 @@ object MediaHandler {
      * */
     fun createFile(baseFolder: File) : File{
         return File(baseFolder, SimpleDateFormat(FILENAME, Locale.US).format(System.currentTimeMillis()) + PHOTO_EXTENSION)
+    }
+
+    /**
+     * Returns the orientation of the inspected image from MediaStore
+     *
+     * @param photoUri      URI of the image to get the orientation information for
+     * @return Int          Orientation of the image
+     **/
+    fun getPhotoOrientation(photoUri: Uri): Int {
+
+        val cursor = appContext.contentResolver.query(photoUri,
+            arrayOf(MediaStore.Images.ImageColumns.ORIENTATION), null, null, null
+        )
+
+        cursor?: return 0
+
+        if (cursor.count != 1) {
+            cursor.close()
+            return 0
+        }
+
+        cursor.moveToFirst()
+        val orientation = cursor.getInt(0)
+        cursor.close()
+
+        return orientation
+
+    }
+
+    fun getImageMetaData(photoUri: Uri): Array<String> {
+
+        val contentResolver = appContext.contentResolver
+        val inputStream = contentResolver.openInputStream(photoUri)
+
+        var date = ""
+        var latitude = "0.0"
+        var longitude = "0.0"
+
+        if (inputStream != null) {
+
+            val exif = ExifInterface(inputStream)
+            date = exif.getAttribute(ExifInterface.TAG_DATETIME) ?: ""
+
+            val latLong = exif.latLong
+
+            if (latLong != null) {
+                if(latLong.isNotEmpty()){
+                    latitude = latLong[0].toString()
+                    longitude = latLong[1].toString()
+                }
+            }
+
+        }
+
+        return arrayOf(date, latitude, longitude)
+
     }
 
 }

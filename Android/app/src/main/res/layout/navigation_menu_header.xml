@@ -14,18 +14,18 @@
         android:id="@+id/kenBurnsView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_launcher_background" />
+        android:src="@drawable/road" />
 
     <ImageView
         android:id="@+id/ivLogo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/navigation_menu_vertical_spacing"
-        android:paddingBottom="@dimen/navigation_menu_vertical_spacing"
+        android:paddingTop="@dimen/navigation_menu_icon_vertical_spacing"
+        android:paddingBottom="@dimen/navigation_menu_icon_vertical_spacing"
         app:layout_constraintBottom_toBottomOf="@+id/kenBurnsView"
         app:layout_constraintStart_toStartOf="@+id/kenBurnsView"
         app:layout_constraintTop_toTopOf="@+id/kenBurnsView"
-        app:srcCompat="@drawable/ic_launcher_foreground" />
+        app:srcCompat="@drawable/icon_app" />
 
     <TextView
         android:layout_width="match_parent"
