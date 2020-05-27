@@ -1,8 +1,8 @@
-# Stolen Car Detector
+# Stolen Vehicle Detector
 
 ## License Plate Detection & Classification with Deep Learning and Android application
 
-This is the repository of the Stolen Car Detector Android application, which can detect license plates and decide whether they belong to stolen cars or not.
+This is the repository of the Stolen Vehicle Detector Android application, which can detect license plates and decide whether they belong to stolen cars or not.
 
 
 

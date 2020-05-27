@@ -26,6 +26,7 @@ object DatabaseService {
                 }
                 //just for testing
                 stolenVehicleDB.dbInteraction().insert(StolenVehicle(69, "SAMSUNG", "phone", "Samsung", "black"))
+                stolenVehicleDB.dbInteraction().insert(StolenVehicle(70, "HJC759", "car", "Opel", "black"))
                 stolenVehicleDB.close()
             }
             catch (e: Exception) {
