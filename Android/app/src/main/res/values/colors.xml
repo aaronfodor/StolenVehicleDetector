@@ -23,8 +23,8 @@
 
     <color name="colorNormalButton">#03DAC5</color>
     <color name="colorNormalButtonPressed">#AAFFFFFF</color>
-    <color name="colorAlertButton">#AAFF0000</color>
-    <color name="colorAlertButtonPressed">#AAFFFFFF</color>
+    <color name="colorAlertButton">#FF0000</color>
+    <color name="colorAlertButtonPressed">#AAFF0000</color>
 
     <color name="icActive">#FFFFFFFF</color>
     <color name="icFocused">#DDFFFFFF</color>
