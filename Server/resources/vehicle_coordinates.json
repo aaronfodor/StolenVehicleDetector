@@ -1,0 +1,20 @@
+{
+  "coordinates": [
+    {
+      "vehicleLicensePlate": "HDY189",
+      "latitude": 60.0,
+      "longitude": -20.0,
+      "detectionTimeStampUTC": "2020-06-26 23:39:32"
+    },
+    {
+      "vehicleLicensePlate": "BGW318",
+      "latitude": 45.0002,
+      "longitude": -76.443,
+      "detectionTimeStampUTC": "2020-06-27 18:43:33"
+    }
+  ],
+  "meta": {
+    "dataSize": 2,
+    "modificationTimeStampUTC": "2020-06-28 09:29:11"
+  }
+}
