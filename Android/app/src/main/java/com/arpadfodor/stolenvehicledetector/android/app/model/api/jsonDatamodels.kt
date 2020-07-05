@@ -1,7 +1,8 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model.api
 
-data class TimestampJson(
-    val timestampUTC: String
+data class MetaDataJson(
+    var dataSize: Int,
+    var modificationTimeStampUTC: String
 )
 
 data class StolenVehiclesJson(

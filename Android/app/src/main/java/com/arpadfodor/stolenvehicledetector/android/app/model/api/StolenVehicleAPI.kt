@@ -10,14 +10,14 @@ interface StolenVehicleAPI {
         const val API_KEY = "tmPCDRV0eK6e"
         const val API_TOKEN = "tSjKNzYReoFE"
         const val ENDPOINT_URL = "https://www.parsehub.com/api/v2/projects/${API_TOKEN}/"
-        const val GET_DATA = "${ENDPOINT_URL}last_ready_run/data"
-        const val GET_TIMESTAMP = "${GET_DATA}/timestamp"
+        const val GET_DATA = "${ENDPOINT_URL}last_ready_run/data/"
+        const val GET_META = "${GET_DATA}meta/"
     }
 
     @GET(GET_DATA)
     fun getData(@Query("api_key") key: String = API_KEY): Call<StolenVehiclesJson>
 
-    @GET(GET_TIMESTAMP)
-    fun getTimestamp(@Query("api_key") key: String = API_KEY): Call<TimestampJson>
+    @GET(GET_META)
+    fun getMetaData(@Query("api_key") key: String = API_KEY): Call<MetaDataJson>
 
 }

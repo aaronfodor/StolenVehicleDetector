@@ -45,10 +45,10 @@ object ApiService{
             //for testing, should be DateHandler.defaultDate()
             var timestampUTC = DateHandler.stringToDate("1980-01-01 01:01:01")
             try {
-                val timestampCall = stolenVehicleAPI.getTimestamp()
-                val timestampResponse = timestampCall.execute().body()
-                    ?: TimestampJson(DateHandler.dateToString(timestampUTC))
-                timestampUTC = DateHandler.stringToDate(timestampResponse.timestampUTC)
+                val metaDataCall = stolenVehicleAPI.getMetaData()
+                val metaDataResponse = metaDataCall.execute().body()
+                    ?: MetaDataJson(0, DateHandler.dateToString(timestampUTC))
+                timestampUTC = DateHandler.stringToDate(metaDataResponse.modificationTimeStampUTC)
             }
             catch (e: Exception) {
                 e.printStackTrace()
