@@ -52,7 +52,7 @@ object VehicleCoordinatesDatabase{
         if(isModified){
             content.meta.modificationTimeStampUTC = DataUtils.currentTimeUTC()
             content.meta.dataSize = content.coordinates.size
-            val dbContent = DataTransformer.transformObjectToString(content)
+            val dbContent = DataTransformer.objectToJsonString(content)
             File("${dbPath}${dbName}").writeText(dbContent)
         }
 

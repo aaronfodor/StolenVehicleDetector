@@ -22,7 +22,7 @@ object VehicleReportsDatabase{
         content.reports.add(vehicleReport)
         content.meta.modificationTimeStampUTC = DataUtils.currentTimeUTC()
         content.meta.dataSize = content.reports.size
-        val dbContent = DataTransformer.transformObjectToString(content)
+        val dbContent = DataTransformer.objectToJsonString(content)
         File("${dbPath}${dbName}").writeText(dbContent)
     }
 

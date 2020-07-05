@@ -113,11 +113,13 @@ fun Application.module(testing: Boolean = false) {
                         ul {
                             h2 { +"Get stolen vehicles" }
                             p { +"*/vehicles" }
+                            p { +"*/vehicles/meta" }
                             li { +"Response type: json" }
                             li { +"Last update (UTC): ${model.stolenVehiclesTimeStamp()}" }
                             li { +"Number of stolen vehicles: ${model.numStolenVehicles()}" }
                             h2 { +"Get vehicle coordinates" }
                             p { +"*/coordinates" }
+                            p { +"*/coordinates/meta" }
                             li { +"Response type: json" }
                             li { +"Last update (UTC): ${model.vehicleCoordinatesTimeStamp()}" }
                             li { +"Number of vehicles with coordinates: ${model.numVehicleCoordinates()}" }
@@ -135,7 +137,6 @@ fun Application.module(testing: Boolean = false) {
             route("/vehicles"){
 
                 get("") {
-
                     var jsonContent = ""
                     try {
                         jsonContent = model.getStolenVehiclesAsJson()
@@ -143,23 +144,19 @@ fun Application.module(testing: Boolean = false) {
                     catch (e: Exception){
                         throw InternalServerError()
                     }
-
                     call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
-
                 }
 
-                get("/timestamp") {
-
+                get("/meta") {
                     var jsonContent = ""
                     try {
-                        jsonContent = model.getStolenVehiclesAsJson()
+                        jsonContent = model.getStolenVehiclesMetaAsJson()
                     }
                     catch (e: Exception){
                         throw InternalServerError()
                     }
 
                     call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
-
                 }
 
             }
@@ -167,7 +164,6 @@ fun Application.module(testing: Boolean = false) {
             route("/coordinates"){
 
                 get("") {
-
                     var jsonContent = ""
                     try {
                         jsonContent =  model.getVehicleCoordinatesAsJson()
@@ -177,7 +173,18 @@ fun Application.module(testing: Boolean = false) {
                     }
 
                     call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
+                }
 
+                get("/meta") {
+                    var jsonContent = ""
+                    try {
+                        jsonContent = model.getVehicleCoordinatesMetaAsJson()
+                    }
+                    catch (e: Exception){
+                        throw InternalServerError()
+                    }
+
+                    call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
                 }
 
             }

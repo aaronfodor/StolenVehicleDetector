@@ -29,12 +29,23 @@ object StolenVehiclesDatabase{
         content.vehicles.add(stolenVehicle)
         content.meta.modificationTimeStampUTC = DataUtils.currentTimeUTC()
         content.meta.dataSize = content.vehicles.size
-        val dbContent = DataTransformer.transformObjectToString(content)
+        val dbContent = DataTransformer.objectToJsonString(content)
+        File("${dbPath}${dbName}").writeText(dbContent)
+    }
+
+    fun addMultiple(stolenVehicles: List<StolenVehicle>){
+        val content = read()
+        for(element in stolenVehicles){
+            content.vehicles.add(element)
+        }
+        content.meta.modificationTimeStampUTC = DataUtils.currentTimeUTC()
+        content.meta.dataSize = content.vehicles.size
+        val dbContent = DataTransformer.objectToJsonString(content)
         File("${dbPath}${dbName}").writeText(dbContent)
     }
 
     fun write(stolenVehicles: StolenVehicles){
-        val jsonContent = DataTransformer.transformObjectToString(stolenVehicles)
+        val jsonContent = DataTransformer.objectToJsonString(stolenVehicles)
         File("${dbPath}${dbName}").writeText(jsonContent)
     }
 

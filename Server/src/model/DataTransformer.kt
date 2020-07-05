@@ -25,7 +25,7 @@ object DataTransformer{
 
     }
 
-    fun transformObjectToString(source: Any) : String{
+    fun objectToJsonString(source: Any) : String{
         val gson = GsonBuilder().setPrettyPrinting().create()
         val jsonString = gson.toJson(source)
         return jsonString

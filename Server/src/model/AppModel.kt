@@ -42,11 +42,19 @@ class AppModel{
     }
 
     fun getStolenVehiclesAsJson(): String{
-        return DataTransformer.transformObjectToString(stolenVehicles)
+        return DataTransformer.objectToJsonString(stolenVehicles)
+    }
+
+    fun getStolenVehiclesMetaAsJson(): String{
+        return DataTransformer.objectToJsonString(stolenVehicles.meta)
     }
 
     fun getVehicleCoordinatesAsJson(): String{
-        return DataTransformer.transformObjectToString(vehicleCoordinates)
+        return DataTransformer.objectToJsonString(vehicleCoordinates)
+    }
+
+    fun getVehicleCoordinatesMetaAsJson(): String{
+        return DataTransformer.objectToJsonString(vehicleCoordinates.meta)
     }
 
     fun addReport(reportJson: String) : Boolean{
