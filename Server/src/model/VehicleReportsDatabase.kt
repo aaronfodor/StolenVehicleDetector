@@ -10,6 +10,12 @@ object VehicleReportsDatabase{
     val dbPath = "resources/"
     val dbName = "vehicle_reports.json"
 
+    var vehicleReports = read()
+
+    fun initialize(){
+        vehicleReports = read()
+    }
+
     fun read() : VehicleReports{
         val content = DataUtils.getFileContent("${dbPath}${dbName}")
         val reports: VehicleReports = Gson().fromJson(content, object : TypeToken<VehicleReports>() {}.type)
@@ -18,12 +24,28 @@ object VehicleReportsDatabase{
     }
 
     fun add(vehicleReport: VehicleReport){
-        val content = read()
-        content.reports.add(vehicleReport)
-        content.meta.modificationTimeStampUTC = DataUtils.currentTimeUTC()
-        content.meta.dataSize = content.reports.size
-        val dbContent = DataTransformer.objectToJsonString(content)
+        vehicleReports = read()
+        vehicleReports.reports.add(vehicleReport)
+        vehicleReports.meta = updateMeta(vehicleReports.reports)
+        write(vehicleReports)
+    }
+
+    fun erase(){
+        vehicleReports = read()
+        vehicleReports.reports.clear()
+        vehicleReports.meta = updateMeta(vehicleReports.reports)
+        write(vehicleReports)
+    }
+
+    private fun write(vehicleReports: VehicleReports){
+        val dbContent = DataTransformer.objectToJsonString(vehicleReports)
         File("${dbPath}${dbName}").writeText(dbContent)
+    }
+
+    private fun updateMeta(vehicleReports: MutableList<VehicleReport>) : MetaData{
+        val dataSize = vehicleReports.size
+        val modificationTimeStampUTC = DataUtils.currentTimeUTC()
+        return MetaData(dataSize, modificationTimeStampUTC)
     }
 
 }

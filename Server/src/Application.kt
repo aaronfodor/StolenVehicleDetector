@@ -28,7 +28,8 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 fun Application.module(testing: Boolean = false) {
 
     val serverName = "Stolen Vehicle Detector Server"
-    val apiName = "Stolen Vehicle Detector API v1"
+    val apiName = "API v1"
+    val adminName = "Administrator API v1"
 
     val model = AppModel()
 
@@ -38,7 +39,7 @@ fun Application.module(testing: Boolean = false) {
     install(Authentication) {
 
         basic(name = "Administrator") {
-            realm = serverName
+            realm = adminName
             validate {
 
                 if (model.validateAdmin(it.name, it.password)){
@@ -86,11 +87,6 @@ fun Application.module(testing: Boolean = false) {
         }
 
     }
-    /*install(ContentNegotiation) {
-        gson {
-            setPrettyPrinting()
-        }
-    }*/
 
     routing {
 
@@ -109,23 +105,24 @@ fun Application.module(testing: Boolean = false) {
 
                 call.respondHtml {
                     body {
+                        h1 { +serverName }
                         h1 { +apiName }
+                        p { +"HTTP Basic Auth is needed (as API user)." }
                         ul {
                             h2 { +"Get stolen vehicles" }
-                            p { +"*/vehicles" }
-                            p { +"*/vehicles/meta" }
+                            h3 { +"*/vehicles" }
+                            h3 { +"*/vehicles/meta" }
                             li { +"Response type: json" }
                             li { +"Last update (UTC): ${model.stolenVehiclesTimeStamp()}" }
                             li { +"Number of stolen vehicles: ${model.numStolenVehicles()}" }
                             h2 { +"Get vehicle coordinates" }
-                            p { +"*/coordinates" }
-                            p { +"*/coordinates/meta" }
+                            h3 { +"*/coordinates" }
+                            h3 { +"*/coordinates/meta" }
                             li { +"Response type: json" }
                             li { +"Last update (UTC): ${model.vehicleCoordinatesTimeStamp()}" }
                             li { +"Number of vehicles with coordinates: ${model.numVehicleCoordinates()}" }
                             h2 { +"Post vehicle report" }
-                            p { +"*/report" }
-                            li { +"HTTP Basic Auth needed" }
+                            h3 { +"*/report" }
                             li { +"Required payload: json" }
                             li { +"Last update (UTC): ${model.vehicleReportsTimeStamp()}" }
                             li { +"Number of reports: ${model.numVehicleReports()}" }
@@ -134,76 +131,74 @@ fun Application.module(testing: Boolean = false) {
                 }
             }
 
-            route("/vehicles"){
-
-                get("") {
-                    var jsonContent = ""
-                    try {
-                        jsonContent = model.getStolenVehiclesAsJson()
-                    }
-                    catch (e: Exception){
-                        throw InternalServerError()
-                    }
-                    call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
-                }
-
-                get("/meta") {
-                    var jsonContent = ""
-                    try {
-                        jsonContent = model.getStolenVehiclesMetaAsJson()
-                    }
-                    catch (e: Exception){
-                        throw InternalServerError()
-                    }
-
-                    call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
-                }
-
-            }
-
-            route("/coordinates"){
-
-                get("") {
-                    var jsonContent = ""
-                    try {
-                        jsonContent =  model.getVehicleCoordinatesAsJson()
-                    }
-                    catch (e: Exception){
-                        throw InternalServerError()
-                    }
-
-                    call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
-                }
-
-                get("/meta") {
-                    var jsonContent = ""
-                    try {
-                        jsonContent = model.getVehicleCoordinatesMetaAsJson()
-                    }
-                    catch (e: Exception){
-                        throw InternalServerError()
-                    }
-
-                    call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
-                }
-
-            }
-
             authenticate(configurations = *arrayOf("API User")) {
+
+                route("/vehicles"){
+
+                    get("") {
+                        var jsonContent = ""
+                        try {
+                            jsonContent = model.getStolenVehiclesAsJson()
+                        }
+                        catch (e: Exception){
+                            throw InternalServerError()
+                        }
+                        call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
+                    }
+
+                    get("/meta") {
+                        var jsonContent = ""
+                        try {
+                            jsonContent = model.getStolenVehiclesMetaAsJson()
+                        }
+                        catch (e: Exception){
+                            throw InternalServerError()
+                        }
+
+                        call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
+                    }
+
+                }
+
+                route("/coordinates"){
+
+                    get("") {
+                        var jsonContent = ""
+                        try {
+                            jsonContent =  model.getVehicleCoordinatesAsJson()
+                        }
+                        catch (e: Exception){
+                            throw InternalServerError()
+                        }
+
+                        call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
+                    }
+
+                    get("/meta") {
+                        var jsonContent = ""
+                        try {
+                            jsonContent = model.getVehicleCoordinatesMetaAsJson()
+                        }
+                        catch (e: Exception){
+                            throw InternalServerError()
+                        }
+
+                        call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
+                    }
+
+                }
 
                 post("/report"){
 
                     try{
-
                         val stringPayload = call.receive<String>()
 
                         if(model.addReport(stringPayload)){
-                            call.respond(HttpStatusCode.Created, "OK")
+                            call.respond(HttpStatusCode.Created, "CREATED")
                         }
                         else{
                             throw BadRequest()
                         }
-
                     }
                     catch (e: Exception){
                         throw BadRequest()
@@ -215,17 +210,142 @@ fun Application.module(testing: Boolean = false) {
 
         }
 
-        route("/admin") {
+        route("/admin-api/v1") {
+
+            get("") {
+
+                call.respondHtml {
+                    body {
+                        h1 { +serverName }
+                        h1 { +adminName }
+                        p { +"HTTP Basic Auth is needed (as administrator)." }
+                        ul {
+                            h2 { +"Put stolen vehicles list" }
+                            h3 { +"*/vehicles" }
+                            li { +"Rewrites existing stolen vehicles database." }
+                            li { +"Required payload: json" }
+                            li { +"Last update (UTC): ${model.stolenVehiclesTimeStamp()}" }
+                            li { +"Number of stolen vehicles: ${model.numStolenVehicles()}" }
+                            h2 { +"Delete stolen vehicles" }
+                            h3 { +"*/vehicles" }
+                            li { +"Deletes existing stolen vehicles, reports and coordinates "
+                                    + "(because reports & coordinates requires stolen vehicles data)." }
+                            h2 { +"Delete vehicle reports" }
+                            h3{ +"*/reports" }
+                            li { +"Deletes existing reports and coordinates "
+                                    + "(because coordinates requires reports data)." }
+                            h2 { +"Get users" }
+                            h3{ +"*/users" }
+                            h2 { +"Delete user" }
+                            h3{ +"*/user?name={username_to_delete}" }
+                            li { +"Removes a user by its name." }
+                            h2 { +"Post user" }
+                            h3{ +"*/user" }
+                            li { +"Adds a new user if its name is not occupied." }
+                        }
+                    }
+                }
+            }
 
             authenticate(configurations = *arrayOf("Administrator")) {
 
-                get("") {
+                put("/vehicles"){
 
-                    call.respondHtml {
-                        body {
-                            h1 { +"Administrator page" }
+                    try{
+                        val stringPayload = call.receive<String>()
+
+                        if(model.rawStolenVehiclesToDatabase(stringPayload)){
+                            call.respond(HttpStatusCode.Created, "CREATED")
+                        }
+                        else{
+                            throw BadRequest()
                         }
                     }
+                    catch (e: Exception){
+                        throw BadRequest()
+                    }
+
+                }
+
+                delete("/vehicles"){
+
+                    try{
+                        if(model.deleteVehicles() && model.deleteCoordinates() && model.deleteReports()){
+                            call.respond(HttpStatusCode.OK, "OK")
+                        }
+                        else{
+                            throw InternalServerError()
+                        }
+                    }
+                    catch (e: Exception){
+                        throw InternalServerError()
+                    }
+
+                }
+
+                delete("/reports"){
+
+                    try{
+                        if(model.deleteReports() && model.deleteCoordinates()){
+                            call.respond(HttpStatusCode.OK, "OK")
+                        }
+                        else{
+                            throw InternalServerError()
+                        }
+                    }
+                    catch (e: Exception){
+                        throw InternalServerError()
+                    }
+
+                }
+
+                get("/users"){
+                    var jsonContent = ""
+                    try {
+                        jsonContent =  model.getUsers()
+                    }
+                    catch (e: Exception){
+                        throw InternalServerError()
+                    }
+
+                    call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
+                }
+
+                post("/user"){
+
+                    try{
+                        val stringPayload = call.receive<String>()
+
+                        if(model.addUser(stringPayload)){
+                            call.respond(HttpStatusCode.Created, "CREATED")
+                        }
+                        else{
+                            throw BadRequest()
+                        }
+                    }
+                    catch (e: Exception){
+                        throw BadRequest()
+                    }
+
+                }
+
+                delete("/user"){
+
+                    val queryParameters: Parameters = call.parameters
+                    val nameToDelete: String = queryParameters["name"] ?: ""
+
+                    try{
+                        if(model.deleteUser(nameToDelete)){
+                            call.respond(HttpStatusCode.OK, "OK")
+                        }
+                        else{
+                            throw BadRequest()
+                        }
+                    }
+                    catch (e: Exception){
+                        throw BadRequest()
+                    }
+
                 }
 
             }

@@ -3,5 +3,5 @@ package com.arpadfodor.ktor.model.dataclasses
 data class User(
     var name: String,
     var password: String,
-    var type: UserType
+    var types:  MutableList<UserType>
 )

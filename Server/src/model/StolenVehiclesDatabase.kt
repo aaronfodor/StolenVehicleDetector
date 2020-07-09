@@ -10,11 +10,10 @@ object StolenVehiclesDatabase{
     val dbPath = "resources/"
     val dbName = "stolen_vehicles.json"
 
-    fun readRawListFrom(rawFilePath: String) : MutableList<StolenVehicle>{
-        val content = DataUtils.getFileContent("${dbPath}${rawFilePath}")
-        val stolenVehiclesList: MutableList<StolenVehicle> = Gson().fromJson(content, object : TypeToken<MutableList<StolenVehicle>>() {}.type)
-                ?: mutableListOf()
-        return stolenVehiclesList
+    var stolenVehicles = read()
+
+    fun initialize(){
+        stolenVehicles = read()
     }
 
     fun read() : StolenVehicles{
@@ -25,28 +24,44 @@ object StolenVehiclesDatabase{
     }
 
     fun add(stolenVehicle: StolenVehicle){
-        val content = read()
-        content.vehicles.add(stolenVehicle)
-        content.meta.modificationTimeStampUTC = DataUtils.currentTimeUTC()
-        content.meta.dataSize = content.vehicles.size
-        val dbContent = DataTransformer.objectToJsonString(content)
-        File("${dbPath}${dbName}").writeText(dbContent)
+        stolenVehicles = read()
+        stolenVehicles.vehicles.add(stolenVehicle)
+        stolenVehicles.meta = updateMeta(stolenVehicles.vehicles)
+        write(stolenVehicles)
     }
 
-    fun addMultiple(stolenVehicles: List<StolenVehicle>){
-        val content = read()
-        for(element in stolenVehicles){
-            content.vehicles.add(element)
+    private fun addMultiple(vehicles: List<StolenVehicle>){
+        stolenVehicles = read()
+        for(element in vehicles){
+            stolenVehicles.vehicles.add(element)
         }
-        content.meta.modificationTimeStampUTC = DataUtils.currentTimeUTC()
-        content.meta.dataSize = content.vehicles.size
-        val dbContent = DataTransformer.objectToJsonString(content)
-        File("${dbPath}${dbName}").writeText(dbContent)
+        stolenVehicles.meta = updateMeta(stolenVehicles.vehicles)
+        write(stolenVehicles)
     }
 
-    fun write(stolenVehicles: StolenVehicles){
+    fun erase(){
+        stolenVehicles = read()
+        stolenVehicles.vehicles.clear()
+        stolenVehicles.meta = updateMeta(stolenVehicles.vehicles)
+        write(stolenVehicles)
+    }
+
+    fun rewrite(stolenVehiclesList: MutableList<StolenVehicle>){
+        erase()
+        val meta = updateMeta(stolenVehiclesList)
+        stolenVehicles = StolenVehicles(stolenVehiclesList, meta)
+        write(stolenVehicles)
+    }
+
+    private fun write(stolenVehicles: StolenVehicles){
         val jsonContent = DataTransformer.objectToJsonString(stolenVehicles)
         File("${dbPath}${dbName}").writeText(jsonContent)
+    }
+
+    private fun updateMeta(stolenVehicles: MutableList<StolenVehicle>) : MetaData{
+        val dataSize = stolenVehicles.size
+        val modificationTimeStampUTC = DataUtils.currentTimeUTC()
+        return MetaData(dataSize, modificationTimeStampUTC)
     }
 
 }

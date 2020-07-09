@@ -10,6 +10,12 @@ object VehicleCoordinatesDatabase{
     val dbPath = "resources/"
     val dbName = "vehicle_coordinates.json"
 
+    var vehicleCoordinates = read()
+
+    fun initialize(){
+        vehicleCoordinates = read()
+    }
+
     fun read() : VehicleCoordinates{
         val content = DataUtils.getFileContent("${dbPath}${dbName}")
         val vehicleCoordinates: VehicleCoordinates = Gson().fromJson(content, object : TypeToken<VehicleCoordinates>() {}.type)
@@ -19,12 +25,12 @@ object VehicleCoordinatesDatabase{
 
     fun add(vehicleCoordinate: VehicleCoordinate) : Boolean{
 
-        val content = read()
+        vehicleCoordinates = read()
 
         var isVehicleAlreadyInDatabase = false
         var isModified = false
 
-        for(element in content.coordinates){
+        for(element in vehicleCoordinates.coordinates){
 
             if(element.vehicleLicensePlate == vehicleCoordinate.vehicleLicensePlate){
 
@@ -45,19 +51,35 @@ object VehicleCoordinatesDatabase{
         }
 
         if(!isVehicleAlreadyInDatabase){
-            content.coordinates.add(vehicleCoordinate)
+            vehicleCoordinates.coordinates.add(vehicleCoordinate)
             isModified = true
         }
 
         if(isModified){
-            content.meta.modificationTimeStampUTC = DataUtils.currentTimeUTC()
-            content.meta.dataSize = content.coordinates.size
-            val dbContent = DataTransformer.objectToJsonString(content)
-            File("${dbPath}${dbName}").writeText(dbContent)
+            vehicleCoordinates.meta = updateMeta(vehicleCoordinates.coordinates)
+            write(vehicleCoordinates)
         }
 
         return isModified
 
+    }
+
+    fun erase(){
+        vehicleCoordinates = read()
+        vehicleCoordinates.coordinates.clear()
+        vehicleCoordinates.meta = updateMeta(vehicleCoordinates.coordinates)
+        write(vehicleCoordinates)
+    }
+
+    private fun write(vehicleCoordinates: VehicleCoordinates){
+        val dbContent = DataTransformer.objectToJsonString(vehicleCoordinates)
+        File("${dbPath}${dbName}").writeText(dbContent)
+    }
+
+    private fun updateMeta(vehicleCoordinates: MutableList<VehicleCoordinate>) : MetaData{
+        val dataSize = vehicleCoordinates.size
+        val modificationTimeStampUTC = DataUtils.currentTimeUTC()
+        return MetaData(dataSize, modificationTimeStampUTC)
     }
 
 }

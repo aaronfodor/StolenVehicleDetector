@@ -4,7 +4,7 @@
       "vehicleLicensePlate": "HDY189",
       "latitude": 60.0,
       "longitude": -20.0,
-      "detectionTimeStampUTC": "2020-06-26 23:39:32"
+      "detectionTimeStampUTC": "2020-06-28 23:39:32"
     },
     {
       "vehicleLicensePlate": "BGW318",
@@ -15,6 +15,6 @@
   ],
   "meta": {
     "dataSize": 2,
-    "modificationTimeStampUTC": "2020-06-28 09:29:11"
+    "modificationTimeStampUTC": "2020-07-09 15:32:13"
   }
 }

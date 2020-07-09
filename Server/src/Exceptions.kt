@@ -19,4 +19,4 @@ class InvalidCredentialsException(message: String = "User has not been authorize
  * Indicates that the provided key is missing on the server.
  * For example, thrown when an Id/payload has not been found on the server.
  */
-class NotFoundException(message: String = "Invalid Id has been provided or not found on the server.") : BadRequest(message)
+class NotFoundException(message: String = "Invalid Id has been provided / Id not found on the server.") : BadRequest(message)

@@ -97,10 +97,17 @@
       "longitude": -76.443,
       "detectionTimeStampUTC": "2020-06-27 18:43:33",
       "message": "Wow!"
+    },
+    {
+      "vehicleLicensePlate": "HDY189",
+      "latitude": 60.0,
+      "longitude": -20.0,
+      "detectionTimeStampUTC": "2020-06-28 23:39:32",
+      "message": "Wow!"
     }
   ],
   "meta": {
-    "dataSize": 14,
-    "modificationTimeStampUTC": "2020-06-28 09:29:11"
+    "dataSize": 15,
+    "modificationTimeStampUTC": "2020-07-09 15:32:13"
   }
 }
