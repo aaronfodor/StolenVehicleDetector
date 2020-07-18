@@ -191,7 +191,7 @@ class AppModel{
         return usersDAO.validateCredentials(userToValidate)
     }
 
-    fun updateReportsAndCurrentsBasedOnUsers() : Int{
+    private fun updateReportsAndCurrentsBasedOnUsers() : Int{
         val validUserKeys = usersDAO.read().filter { it.active }.map { it.email }
         reportsDAO.updateValidReporters(validUserKeys)
         val validReports = reportsDAO.read()
