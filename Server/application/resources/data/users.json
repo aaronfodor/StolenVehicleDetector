@@ -1,0 +1,29 @@
+[
+  {
+    "email": "abc@123.com",
+    "name": "administrator",
+    "password": "password",
+    "hint": "hint",
+    "active": true,
+    "permissions": [
+      "API_GET",
+      "API_POST",
+	  "MODIFY_SELF",
+      "REGISTER",
+      "ADMINISTRATOR"
+    ]
+  },
+  {
+    "email": "aaa@bbb.com",
+    "name": "api_user",
+    "password": "aaa",
+    "hint": "my username",
+    "active": false,
+    "permissions": [
+      "API_GET",
+      "API_POST",
+	  "MODIFY_SELF",
+      "REGISTER"
+    ]
+  }
+]
