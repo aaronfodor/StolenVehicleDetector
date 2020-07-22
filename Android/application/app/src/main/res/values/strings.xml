@@ -3,8 +3,8 @@
 <!DOCTYPE resources [
     <!ENTITY appName "Stolen Vehicle Detector">
     <!ENTITY appId "">
-    <!ENTITY appVersion "v0.8">
-    <!ENTITY appDate "05/07/2020">
+    <!ENTITY appVersion "v0.9">
+    <!ENTITY appDate "22/07/2020">
     <!ENTITY appCreator "Arpad Fodor">
     <!ENTITY adMobAppId "ca-app-pub-3940256099942544~3347511713">
     <!ENTITY adMobBannerId "ca-app-pub-3940256099942544/6300978111">

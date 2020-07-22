@@ -3,12 +3,12 @@ package com.arpadfodor.stolenvehicledetector.android.app.model.db
 import android.content.Context
 import com.arpadfodor.stolenvehicledetector.android.app.model.DateHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
-import java.util.*
+import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.MetaData
+import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Vehicle
 
 object DatabaseService {
 
-    private const val STOLEN_VEHICLES_TIMESTAMP_ID = 1L
-    private const val STOLEN_VEHICLES_TIMESTAMP_NAME = "stolen vehicles"
+    private const val VEHICLES_META_ID = "vehicles"
 
     private lateinit var context: Context
 
@@ -16,7 +16,7 @@ object DatabaseService {
         this.context = context
     }
 
-    private fun setDatabase(stolenVehicles : List<StolenVehicle>, stolenVehiclesTimestamp: Date,
+    private fun setDatabase(vehicles : List<Vehicle>, vehiclesMeta: MetaData,
                             callback: (Boolean) -> Unit){
 
         val database = ApplicationDB.getDatabase(context)
@@ -29,14 +29,11 @@ object DatabaseService {
             database.runInTransaction{
 
                 try {
-                    database.stolenVehicleTable().deleteAll()
-                    database.stolenVehicleTable().insert(stolenVehicles)
+                    database.vehicleTable().deleteAll()
+                    database.vehicleTable().insert(vehicles)
 
-                    val dateString = DateHandler.dateToString(stolenVehiclesTimestamp)
-                    val timestamp = Timestamp(STOLEN_VEHICLES_TIMESTAMP_ID,
-                        STOLEN_VEHICLES_TIMESTAMP_NAME, dateString)
-                    database.timestampTable().deleteByName(STOLEN_VEHICLES_TIMESTAMP_NAME)
-                    database.timestampTable().insert(timestamp)
+                    database.metaTable().deleteByKey(VEHICLES_META_ID)
+                    database.metaTable().insert(vehiclesMeta)
 
                     //update the local flag
                     isDbUpdated = true
@@ -62,7 +59,7 @@ object DatabaseService {
         Thread {
 
             try {
-                val dbContent = database.stolenVehicleTable().getAll()
+                val dbContent = database.vehicleTable().getAll() ?: listOf()
                 for(element in dbContent){
                     licenses.add(element.licenseId)
                 }
@@ -76,15 +73,15 @@ object DatabaseService {
 
     }
 
-    fun getByLicenseId(licenseId: String, callback: (List<StolenVehicle>) -> Unit){
+    fun getByLicenseId(licenseId: String, callback: (List<Vehicle>) -> Unit){
 
-        var rows : List<StolenVehicle>
+        var rows : List<Vehicle>
         val database = ApplicationDB.getDatabase(context)
 
         Thread {
 
             try {
-                rows = database.stolenVehicleTable().getByLicenseId(licenseId)
+                rows = database.vehicleTable().getByLicenseId(licenseId) ?: listOf()
                 callback(rows)
             }
             catch (e: Exception) {
@@ -95,22 +92,21 @@ object DatabaseService {
 
     }
 
-    private fun getStolenVehiclesTimestamp(callback: (Date) -> Unit){
+    private fun getVehiclesMeta(callback: (MetaData) -> Unit){
 
-        var timestamp = DateHandler.defaultDate()
+        var metaData = MetaData()
         val database = ApplicationDB.getDatabase(context)
 
         Thread {
 
             try {
-                val rawTimestamp = database.timestampTable().getByName(STOLEN_VEHICLES_TIMESTAMP_NAME)
-                timestamp = DateHandler.stringToDate(rawTimestamp.timestampUTC)
+                metaData = database.metaTable().getByKey(VEHICLES_META_ID) ?: MetaData()
             }
             catch (e: Exception) {
                 e.printStackTrace()
             }
             finally {
-                callback(timestamp)
+                callback(metaData)
             }
 
         }.start()
@@ -119,17 +115,18 @@ object DatabaseService {
 
     fun updateFromApi(callback: (isSuccess: Boolean) -> Unit){
 
-        ApiService.getStolenVehicleTimestamp { timestamp ->
+        ApiService.getStolenVehiclesMeta { size, timestamp ->
 
             isInputFreshTimestamp(timestamp){ isFreshTimestamp ->
 
                 //is the API data fresh compared to app DB content?
                 if(isFreshTimestamp){
                     //get content from API
-                    ApiService.getStolenVehicleData { data ->
+                    ApiService.getStolenVehicleData { vehicles ->
 
-                        if(data.isNotEmpty()){
-                            setDatabase(data, timestamp){ result ->
+                        if(vehicles.isNotEmpty()){
+                            val vehiclesMeta = MetaData(VEHICLES_META_ID, size, timestamp)
+                            setDatabase(vehicles, vehiclesMeta){ result ->
                                 callback(result)
                             }
                         }
@@ -152,13 +149,13 @@ object DatabaseService {
 
     }
 
-    private fun isInputFreshTimestamp(timestampUTC: Date, callback: (isFreshTimestamp: Boolean) -> Unit){
-
-        getStolenVehiclesTimestamp { stolenVehiclesUpdatedAt ->
-            val isAfterDbTimestamp = timestampUTC.after(stolenVehiclesUpdatedAt)
+    private fun isInputFreshTimestamp(currentTimestampUTC: String, callback: (isFreshTimestamp: Boolean) -> Unit){
+        getVehiclesMeta { meta ->
+            val currentDate = DateHandler.stringToDate(currentTimestampUTC)
+            val dbDate = DateHandler.stringToDate(meta.modificationTimestampUTC)
+            val isAfterDbTimestamp = currentDate.after(dbDate)
             callback(isAfterDbTimestamp)
         }
-
     }
 
 }

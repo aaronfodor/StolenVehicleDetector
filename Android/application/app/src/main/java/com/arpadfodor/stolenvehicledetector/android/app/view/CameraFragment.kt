@@ -393,17 +393,8 @@ class CameraFragment() : Fragment() {
                             val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
                             Log.d(TAG, "Photo captured: $savedUri")
 
-                            // Only changing the foreground Drawable using API level 23+ API is possible
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                // Update the gallery thumbnail with latest picture taken
-                                setGalleryThumbnail(savedUri)
-                            }
-
-                            // Implicit broadcasts will be ignored for devices running API level >= 24
-                            // If app is only target API level 24+, removing this statement is fine
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                                requireActivity().sendBroadcast(Intent(android.hardware.Camera.ACTION_NEW_PICTURE, savedUri))
-                            }
+                            // Update the gallery thumbnail with latest picture taken
+                            setGalleryThumbnail(savedUri)
 
                             // If the folder selected is an external media directory, this is
                             // unnecessary but otherwise other apps will not be able to access app
@@ -420,17 +411,12 @@ class CameraFragment() : Fragment() {
 
                     })
 
-                // Only changing the foreground Drawable using API level 23+ API is possible
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-                    // Display flash animation to indicate that photo was captured
-                    container.postDelayed({
-                        container.foreground = ColorDrawable(Color.WHITE)
-                        container.postDelayed(
-                            { container.foreground = null }, resources.getInteger(R.integer.ANIMATION_FAST_MILLIS).toLong())
-                    }, resources.getInteger(R.integer.ANIMATION_SLOW_MILLIS).toLong())
-
-                }
+                // Display flash animation to indicate that photo was captured
+                container.postDelayed({
+                    container.foreground = ColorDrawable(Color.WHITE)
+                    container.postDelayed(
+                        { container.foreground = null }, resources.getInteger(R.integer.ANIMATION_FAST_MILLIS).toLong())
+                }, resources.getInteger(R.integer.ANIMATION_SLOW_MILLIS).toLong())
 
             }
 
@@ -461,7 +447,7 @@ class CameraFragment() : Fragment() {
 
     private fun subscribeToViewModel(controls: View) {
 
-        val alertButton = controls.findViewById<ImageButton>(R.id.alert_live_button)
+        val alertButton = controls.findViewById<ConstraintLayout>(R.id.alert_live_button)
 
         // Create the suspicious Id observer which notifies when suspicious element has been recognized
         val suspiciousIdsObserver = Observer<Array<String>> { suspiciousIdArray ->

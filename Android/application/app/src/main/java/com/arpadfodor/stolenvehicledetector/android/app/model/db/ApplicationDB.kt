@@ -4,15 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.MetaData
+import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Vehicle
 
-@Database(entities = [StolenVehicle::class, Timestamp::class], version = 1, exportSchema = false)
+@Database(entities = [Vehicle::class, MetaData::class], version = 1, exportSchema = false)
 abstract class ApplicationDB : RoomDatabase() {
 
     companion object {
 
         private const val APPLICATION_DB_NAME = "application_database"
-        const val STOLEN_VEHICLES_TABLE_NAME = "stolen_vehicles_table"
-        const val TIMESTAMPS_TABLE_NAME = "timestamps_table"
+        const val VEHICLE_TABLE_NAME = "vehicle_table"
+        const val META_TABLE_NAME = "meta_table"
 
         // Singleton prevents multiple instances of database opening at the same time
         @Volatile
@@ -31,7 +33,7 @@ abstract class ApplicationDB : RoomDatabase() {
                     context.applicationContext,
                     ApplicationDB::class.java,
                     APPLICATION_DB_NAME
-                ).build()
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 return instance
             }
@@ -40,7 +42,7 @@ abstract class ApplicationDB : RoomDatabase() {
 
     }
 
-    abstract fun stolenVehicleTable(): StolenVehicleDAO
-    abstract fun timestampTable(): TimestampDAO
+    abstract fun vehicleTable(): VehicleDAO
+    abstract fun metaTable(): MetaDAO
 
 }

@@ -15,9 +15,9 @@ interface StolenVehicleAPI {
     }
 
     @GET(GET_DATA)
-    fun getData(@Query("api_key") key: String = API_KEY): Call<StolenVehiclesJson>
+    fun getData(@Query("api_key") key: String = API_KEY): Call<List<ApiVehicle>>
 
     @GET(GET_META)
-    fun getMetaData(@Query("api_key") key: String = API_KEY): Call<MetaDataJson>
+    fun getMetaData(@Query("api_key") key: String = API_KEY): Call<ApiMetaData>
 
 }
