@@ -6,5 +6,6 @@ data class User(
     var password: String,
     var hint: String,
     var active: Boolean,
+    var numReports: Int,
     var permissions:  MutableList<PermissionType>
 )

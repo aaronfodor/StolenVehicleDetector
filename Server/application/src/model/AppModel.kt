@@ -93,6 +93,7 @@ class AppModel{
                 report.latitude, report.longitude, report.message, report.timestampUTC)
 
         reportsDAO.add(validatedReport)
+        usersDAO.increaseReportCounterOfUser(reporterId)
         return currentsDAO.add(validatedReport)
 
     }
@@ -120,7 +121,11 @@ class AppModel{
     }
 
     fun deleteReports() : Int{
-        return reportsDAO.erase()
+        val resultCode = reportsDAO.erase()
+        if(resultCode == StatusCodes.SUCCESS){
+            usersDAO.clearReportCounters()
+        }
+        return resultCode
     }
 
     fun getUsers(): String{
@@ -187,7 +192,7 @@ class AppModel{
             PERMISSION_ADMIN -> PermissionType.ADMINISTRATOR
             else -> return StatusCodes.BAD_REQUEST
         }
-        val userToValidate = User(email, "", password, "", true, mutableListOf(permissionToValidate))
+        val userToValidate = User(email, "", password, "", true, 0, mutableListOf(permissionToValidate))
         return usersDAO.validateCredentials(userToValidate)
     }
 
@@ -195,7 +200,7 @@ class AppModel{
         val validUserKeys = usersDAO.read().filter { it.active }.map { it.email }
         reportsDAO.updateValidReporters(validUserKeys)
         val validReports = reportsDAO.read()
-        return currentsDAO.addMultiple(validReports)
+        return currentsDAO.rewrite(validReports)
     }
 
 }

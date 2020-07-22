@@ -12,7 +12,8 @@ class UsersDAO(name: String,  metaDAO: MetaDAO?) : DAO<User>(name, typeToken, me
         val content = records
         val displayedUsers = mutableListOf<User>()
         for(user in records){
-            displayedUsers.add(User(user.email, user.name, "******", "******", user.active, user.permissions))
+            displayedUsers.add(User(user.email, user.name, "******", "******", user.active,
+                    user.numReports, user.permissions))
         }
         return displayedUsers
     }
@@ -46,20 +47,13 @@ class UsersDAO(name: String,  metaDAO: MetaDAO?) : DAO<User>(name, typeToken, me
         return write(records)
     }
 
-    fun setUserActiveFlag(key: String, value: Boolean) : Int{
-        for(user in records){
-            if(user.email == key){
-                user.active = value
-                return write(records)
-            }
-        }
-        return StatusCodes.NOT_FOUND
-    }
-
     fun updateUser(userToUpdate: User) : Int{
         for(user in records){
             if(user.email == userToUpdate.email){
                 user.active = userToUpdate.active
+                if(!user.active){
+                    user.numReports = 0
+                }
                 user.permissions = userToUpdate.permissions
             }
         }
@@ -106,6 +100,23 @@ class UsersDAO(name: String,  metaDAO: MetaDAO?) : DAO<User>(name, typeToken, me
 
         return StatusCodes.UNAUTHORIZED
 
+    }
+
+    fun clearReportCounters() : Int{
+        for(user in records){
+            user.numReports = 0
+        }
+        return rewrite(records)
+    }
+
+    fun increaseReportCounterOfUser(key: String) : Int{
+        for(user in records){
+            if(user.email == key){
+                user.numReports += 1
+                break
+            }
+        }
+        return rewrite(records)
     }
 
 }
