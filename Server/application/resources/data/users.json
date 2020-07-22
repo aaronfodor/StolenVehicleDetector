@@ -5,6 +5,7 @@
     "password": "password",
     "hint": "hint",
     "active": true,
+	"numReports": 0,
     "permissions": [
       "API_GET",
       "API_POST",
@@ -19,6 +20,7 @@
     "password": "aaa",
     "hint": "my username",
     "active": false,
+	"numReports": 1,
     "permissions": [
       "API_GET",
       "API_POST",
