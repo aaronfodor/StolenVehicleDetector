@@ -1,6 +1,7 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment.DIRECTORY_PICTURES
@@ -17,6 +18,8 @@ object MediaHandler {
 
     private lateinit var appContext: Context
     private var appName = ""
+
+    private val exifFormatter = SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.ENGLISH)
 
     fun initialize(appContext_: Context, appName_: String){
         appContext = appContext_
@@ -53,6 +56,16 @@ object MediaHandler {
     }
 
     /**
+     * Returns the loaded image from MediaStore
+     *
+     * @param photoUri      URI of the image
+     * @return Bitmap       The loaded image
+     **/
+    fun getImage(photoUri: Uri): Bitmap {
+        return MediaStore.Images.Media.getBitmap(appContext.contentResolver, photoUri)
+    }
+
+    /**
      * Returns the orientation of the inspected image from MediaStore
      *
      * @param photoUri      URI of the image to get the orientation information for
@@ -79,32 +92,35 @@ object MediaHandler {
 
     }
 
-    fun getImageMetaData(photoUri: Uri): Array<String> {
+    fun getImageMeta(photoUri: Uri): Array<String> {
 
         val contentResolver = appContext.contentResolver
         val inputStream = contentResolver.openInputStream(photoUri)
 
-        var date = ""
-        var latitude = "0.0"
-        var longitude = "0.0"
+        var dateString = ""
+        var latitudeString = "0.0"
+        var longitudeString = "0.0"
 
         if (inputStream != null) {
 
             val exif = ExifInterface(inputStream)
-            date = exif.getAttribute(ExifInterface.TAG_DATETIME) ?: ""
+
+            val dateStringRaw = exif.getAttribute(ExifInterface.TAG_DATETIME) ?: ""
+            val date = exifFormatter.parse(dateStringRaw) ?: Date(0)
+            dateString = DateHandler.dateToString(date)
 
             val latLong = exif.latLong
 
             if (latLong != null) {
                 if(latLong.isNotEmpty()){
-                    latitude = latLong[0].toString()
-                    longitude = latLong[1].toString()
+                    latitudeString = latLong[0].toString()
+                    longitudeString = latLong[1].toString()
                 }
             }
 
         }
 
-        return arrayOf(date, latitude, longitude)
+        return arrayOf(dateString, latitudeString, longitudeString)
 
     }
 

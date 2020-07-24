@@ -1,10 +1,8 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model.api
 
-import com.arpadfodor.stolenvehicledetector.android.app.model.DateHandler
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Vehicle
-import java.util.*
 
 object ApiService{
 
@@ -42,8 +40,7 @@ object ApiService{
 
         Thread {
             var size = 0
-            //TODO
-            //for testing, should be DateHandler.defaultDate()
+            //TODO: for testing, should be DateHandler.defaultDate()
             var timestampUTC = "1980-01-01 01:01:01"
             try {
                 val metaDataCall = stolenVehicleAPI.getMetaData()
@@ -59,6 +56,8 @@ object ApiService{
         }.start()
 
     }
+
+    //TODO: report, user, self interactions
 
     private fun dataResponseTransform(content: List<ApiVehicle>) : List<Vehicle>{
 

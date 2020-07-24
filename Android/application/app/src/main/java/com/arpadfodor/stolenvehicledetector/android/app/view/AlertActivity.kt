@@ -7,20 +7,40 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AlertListAdapter
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Report
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AlertViewModel
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_alert.*
 
 class AlertActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var adapter: AlertListAdapter
+    companion object{
+
+        /**
+         * Use it to pass list parameter to an instance of this activity before starting it.
+         * Used because passing custom objects between activities can be problematic via intents.
+         **/
+        fun setActivityParameter(list: Array<Report>){
+            listParam = list
+        }
+
+        var listParam = arrayOf<Report>()
+
+    }
+
+    private lateinit var viewModel: AlertViewModel
+    private lateinit var adapter: ReportListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alert)
+
+        viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
 
         val toolbar = findViewById<Toolbar>(R.id.custom_toolbar)
         setSupportActionBar(toolbar)
@@ -39,16 +59,30 @@ class AlertActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         alert_navigation.bringToFront()
         alert_navigation.parent.requestLayout()
 
-        val suspiciousIds = intent.getSerializableExtra("suspicious_ids") as Array<String>
-        val date = intent.getStringExtra("date") ?: ""
-        val latitude = intent.getDoubleExtra("latitude", 0.0)
-        val longitude = intent.getDoubleExtra("longitude", 0.0)
+        adapter = ReportListAdapter(this, null)
+        alert_list.adapter = adapter
+        alert_list.layoutManager = LinearLayoutManager(this)
 
-        val locationString = "lat=${latitude} long=${longitude}"
+        subscribeToViewModel()
+        val alerts = listParam
+        viewModel.alerts.postValue(alerts.toList())
 
-        adapter = AlertListAdapter(this, suspiciousIds, date, locationString)
-        alert_recycleview.adapter = adapter
-        alert_recycleview.layoutManager = LinearLayoutManager(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        subscribeToViewModel()
+    }
+
+    private fun subscribeToViewModel() {
+
+        // Create the observer
+        val listObserver = Observer<List<Report>> { list ->
+            adapter.submitList(list)
+        }
+
+        // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
+        viewModel.alerts.observe(this, listObserver)
 
     }
 

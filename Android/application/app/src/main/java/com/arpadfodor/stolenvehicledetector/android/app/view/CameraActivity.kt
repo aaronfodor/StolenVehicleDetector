@@ -32,7 +32,6 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     private lateinit var viewModel: CameraViewModel
 
     private lateinit var container: FrameLayout
-
     lateinit var deviceOrientationListener: OrientationEventListener
 
     override fun onCreate(savedInstanceState: Bundle?) {

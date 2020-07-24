@@ -81,6 +81,13 @@
     <string name="setting_auto_sync">Enable Auto Sync</string>
     <string name="last_synced">Last Synced</string>
     <string name="auto_sync_interval_summary">Select how often the app should update.</string>
-    <string name="send_alert">Send alert</string>
+
+    <string name="send_report">Send report</string>
+    <string name="delete_report">Delete report</string>
+    <string name="edit_report">Edit report</string>
+
+    <string name="report_item_timestamp">Time (UTC): %1$s</string>
+    <string name="report_item_location">lat=%1$s, long=%2$s</string>
+    <string name="report_item_message">Message: %1$s</string>
 
 </resources>

@@ -41,6 +41,10 @@ android {
         abortOnError false
     }
 
+    dataBinding {
+        enabled = true
+    }
+
     apply plugin: 'kotlin-kapt'
 
 }

@@ -11,7 +11,6 @@ import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
 import android.media.MediaScannerConnection
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -40,11 +39,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.model.LocationService
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Report
 
 /** Helper type alias used for analysis use case callbacks */
 typealias DetectionListener = (recognition: Bitmap) -> Unit
@@ -302,7 +301,7 @@ class CameraFragment() : Fragment() {
         }, ContextCompat.getMainExecutor(requireContext()))
 
         /**
-         * Add listeners to detect zooming and tap to focus
+         * Add listeners to detect zooming and taping to focus
          **/
         val zoomListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
             override fun onScale(detector: ScaleGestureDetector): Boolean {
@@ -347,11 +346,7 @@ class CameraFragment() : Fragment() {
 
         // In the background, load latest photo taken (if any) for gallery thumbnail
         lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.getOutputDirectory().listFiles { file ->
-                EXTENSION_WHITELIST.contains(file.extension.toUpperCase(Locale.ROOT))
-            }?.max()?.let {
-                setGalleryThumbnail(Uri.fromFile(it))
-            }
+            //TODO: gallery thumbnail update
         }
 
         setButtonListeners(controls)
@@ -437,10 +432,7 @@ class CameraFragment() : Fragment() {
         // Listener for button used to view the most recent photo
         controls.findViewById<ImageButton>(R.id.photo_view_button).setOnClickListener {
             // Only navigate when the gallery has photos
-            if (true == viewModel.getOutputDirectory().listFiles()?.isNotEmpty()) {
-                //Navigation.findNavController(requireActivity(), R.id.camera_container)
-                //.navigate(CameraFragmentDirections.actionCameraToGallery(viewModel.getOutputDirectory().absolutePath))
-            }
+            if(true == viewModel.getOutputDirectory().listFiles()?.isNotEmpty()) { }
         }
 
     }
@@ -449,21 +441,18 @@ class CameraFragment() : Fragment() {
 
         val alertButton = controls.findViewById<ConstraintLayout>(R.id.alert_live_button)
 
-        // Create the suspicious Id observer which notifies when suspicious element has been recognized
-        val suspiciousIdsObserver = Observer<Array<String>> { suspiciousIdArray ->
+        // Create the recognitions observer which notifies when element has been recognized
+        val recognitionsObserver = Observer<Array<Report>> { recognitions ->
 
-            if(suspiciousIdArray.isNotEmpty()){
+            if(recognitions.isNotEmpty()){
 
                 alertButton.setOnClickListener {
 
                     LocationService.updateLocation()
                     val location = LocationService.getLocation()
 
+                    AlertActivity.setActivityParameter(recognitions)
                     val intent = Intent(this.requireActivity(), AlertActivity::class.java)
-                    intent.putExtra("suspicious_ids", suspiciousIdArray)
-                    intent.putExtra("date", Calendar.getInstance().time.toString())
-                    intent.putExtra("latitude", location[0])
-                    intent.putExtra("longitude", location[1])
                     startActivity(intent)
 
                 }
@@ -490,7 +479,7 @@ class CameraFragment() : Fragment() {
         }
 
         // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
-        viewModel.suspiciousElementIds.observe(this.viewLifecycleOwner, suspiciousIdsObserver)
+        viewModel.recognitions.observe(this.viewLifecycleOwner, recognitionsObserver)
 
     }
 

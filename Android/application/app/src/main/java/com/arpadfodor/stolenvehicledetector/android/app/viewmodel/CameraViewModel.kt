@@ -6,6 +6,7 @@ import androidx.camera.core.CameraSelector
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Report
 import java.io.File
 import kotlin.math.abs
 import kotlin.math.max
@@ -29,7 +30,7 @@ class CameraViewModel : ViewModel(){
         var settingsShowReceptiveField = true
 
         var deviceOrientation: Int = 0
-            // clustered device orientation - value can be 0, 90, 180, 270
+            // clustered device orientations - value can be 0, 90, 180, 270
             get() {
                 var roundedOrientation = 0
 
@@ -63,10 +64,10 @@ class CameraViewModel : ViewModel(){
     }
 
     /**
-     * List of suspicious element Ids from the last inference
+     * List of recognitions from the last inference
      **/
-    val suspiciousElementIds: MutableLiveData<Array<String>> by lazy {
-        MutableLiveData<Array<String>>()
+    val recognitions: MutableLiveData<Array<Report>> by lazy {
+        MutableLiveData<Array<Report>>()
     }
 
     /**

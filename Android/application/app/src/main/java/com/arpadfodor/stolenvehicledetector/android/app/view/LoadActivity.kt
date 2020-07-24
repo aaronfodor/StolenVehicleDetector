@@ -4,7 +4,6 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.view.MenuItem
 import android.view.View
@@ -19,9 +18,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppDialog
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.LoadViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Report
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_load.*
@@ -131,18 +130,15 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         // Create the suspicious Id observer which notifies when suspicious element has been recognized
-        val suspiciousIdsObserver = Observer<Array<String>> { suspiciousIdArray ->
+        val recognitionsObserver = Observer<Array<Report>> { recognitions ->
 
             val alertButton = alert_loaded_button
 
-            if(suspiciousIdArray.isNotEmpty()){
+            if(recognitions.isNotEmpty()){
 
                 alertButton.setOnClickListener {
+                    AlertActivity.setActivityParameter(recognitions)
                     val intent = Intent(this, AlertActivity::class.java)
-                    intent.putExtra("suspicious_ids", suspiciousIdArray)
-                    intent.putExtra("date", viewModel.imageMetaData.value?.get(0) ?: "")
-                    intent.putExtra("latitude", viewModel.imageMetaData.value?.get(1)?.toDouble() ?: 0.0)
-                    intent.putExtra("longitude", viewModel.imageMetaData.value?.get(2)?.toDouble() ?: 0.0)
                     startActivity(intent)
                 }
 
@@ -170,7 +166,7 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
         viewModel.loadedImage.observe(this, imageObserver)
         viewModel.boundingBoxImage.observe(this, boundingBoxImageObserver)
-        viewModel.suspiciousElementIds.observe(this, suspiciousIdsObserver)
+        viewModel.recognitions.observe(this, recognitionsObserver)
 
     }
 
@@ -194,11 +190,8 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 LoadViewModel.GALLERY_REQUEST_CODE -> {
                     //data.getData returns the content URI for the selected Image
-                    val selectedImageUri = data?.data?:return
-                    val imageOrientation = MediaHandler.getPhotoOrientation(selectedImageUri)
-                    val imageMetadata = MediaHandler.getImageMetaData(selectedImageUri)
-                    val sourceBitmap = MediaStore.Images.Media.getBitmap(application.contentResolver, selectedImageUri)
-                    viewModel.setLoadedImage(sourceBitmap, imageOrientation, imageMetadata)
+                    val selectedImageUri = data?.data ?: return
+                    viewModel.loadImage(selectedImageUri)
                 }
             }
         }
@@ -223,8 +216,8 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     /**
      * Called when an item in the navigation menu is selected.
      *
-     * @param item The selected item
-     * @return true to display the item as the selected item
+     * @param item      The selected item
+     * @return Boolean  True if a valid item has been selected
      **/
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
@@ -271,7 +264,8 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      **/
     private fun exitDialog(){
 
-        val exitDialog = AppDialog(this, getString(R.string.exit_title), getString(R.string.exit_dialog), resources.getDrawable(R.drawable.warning))
+        val exitDialog = AppDialog(this, getString(R.string.exit_title),
+            getString(R.string.exit_dialog), resources.getDrawable(R.drawable.warning))
         exitDialog.setPositiveButton {
             //showing the home screen - app is not visible but running
             val intent = Intent(Intent.ACTION_MAIN)

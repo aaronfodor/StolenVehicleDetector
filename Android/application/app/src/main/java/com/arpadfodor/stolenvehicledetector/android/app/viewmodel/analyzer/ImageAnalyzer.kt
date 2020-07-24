@@ -4,7 +4,9 @@ import android.util.Size
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Report
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
+import com.arpadfodor.stolenvehicledetector.android.app.model.MetaProvider
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.StolenVehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.view.DetectionListener
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.CameraViewModel
@@ -82,10 +84,24 @@ class ImageAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewM
         val smallerScreenDimension = min(screenSize.width, screenSize.height)
         val requiredOutputImageSize = Size(smallerScreenDimension, smallerScreenDimension)
 
+        val imageMeta = MetaProvider.getDeviceMetaData()
+
         // Use the service to produce the image to show
-        val resultImage = licensePlateReaderService.recognize(rotatedInputImage, requiredOutputImageSize, deviceOrientation,
-            CameraViewModel.numRecognitionsToShow, CameraViewModel.minimumPredictionCertaintyToShow) { suspiciousIds ->
-            viewModel.suspiciousElementIds.postValue(suspiciousIds)
+        val resultImage = licensePlateReaderService.recognize(rotatedInputImage,
+            requiredOutputImageSize, deviceOrientation, CameraViewModel.numRecognitionsToShow,
+            CameraViewModel.minimumPredictionCertaintyToShow) { arrayOfIdImagePairs ->
+
+            val recognitions = arrayListOf<Report>()
+            var i = 1
+            for(pair in arrayOfIdImagePairs){
+                recognitions.add(
+                    Report(i, pair.first, pair.second,
+                        imageMeta[0], imageMeta[1], imageMeta[2])
+                )
+                i++
+            }
+            viewModel.recognitions.postValue(recognitions.toTypedArray())
+
         }
         
         // Call all listeners with new image with bounding boxes

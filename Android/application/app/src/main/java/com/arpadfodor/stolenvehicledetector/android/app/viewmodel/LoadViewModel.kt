@@ -1,11 +1,15 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Size
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.StolenVehicleRecognizerService
+import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
+import com.arpadfodor.stolenvehicledetector.android.app.model.MetaProvider
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Report
 import kotlin.math.min
 
 class LoadViewModel : ViewModel(){
@@ -53,31 +57,44 @@ class LoadViewModel : ViewModel(){
     }
 
     /**
-     * List of suspicious element Ids from the last inference
+     * List of recognitions from the last inference
      **/
-    val suspiciousElementIds: MutableLiveData<Array<String>> by lazy {
-        MutableLiveData<Array<String>>()
+    val recognitions: MutableLiveData<Array<Report>> by lazy {
+        MutableLiveData<Array<Report>>()
     }
 
-    fun setLoadedImage(bitmap: Bitmap, imageOrientation: Int, imageMetaData_: Array<String>){
+    fun loadImage(selectedImageUri: Uri){
 
-        // set image metadata
-        imageMetaData.value = imageMetaData_
+        val sourceBitmap = MediaHandler.getImage(selectedImageUri)
+        val imageOrientation = MediaHandler.getPhotoOrientation(selectedImageUri)
+        val imageMeta = MetaProvider.getImageMetaData(selectedImageUri)
 
         // remove the bounding boxes of the previous image
         boundingBoxImage.value = null
 
         Thread(Runnable {
 
-            val rotatedBitmap = ImageConverter.rotateBitmap(bitmap, imageOrientation)
+            val rotatedBitmap = ImageConverter.rotateBitmap(sourceBitmap, imageOrientation)
             loadedImage.postValue(rotatedBitmap)
+            imageMetaData.postValue(imageMeta)
 
             val smallerScreenDimension = min(screenDimensions.width, screenDimensions.height)
             val requiredOutputImageSize = Size(smallerScreenDimension, smallerScreenDimension)
 
             val boundingBoxBitmap = licensePlateReaderService.recognize(rotatedBitmap,
-                requiredOutputImageSize, 0, numRecognitionsToShow, minimumPredictionCertaintyToShow) {suspiciousIds ->
-                suspiciousElementIds.postValue(suspiciousIds)
+                requiredOutputImageSize, 0,
+                numRecognitionsToShow, minimumPredictionCertaintyToShow) {arrayOfIdImagePairs ->
+
+                val recognitions = arrayListOf<Report>()
+                var i = 1
+                for(pair in arrayOfIdImagePairs){
+                    recognitions.add(
+                        Report(i, pair.first, pair.second,
+                            imageMeta[0], imageMeta[1], imageMeta[2])
+                    )
+                    i++
+                }
+                this.recognitions.postValue(recognitions.toTypedArray())
             }
 
             boundingBoxImage.postValue(boundingBoxBitmap)
@@ -97,13 +114,26 @@ class LoadViewModel : ViewModel(){
 
             val rotatedBitmap = ImageConverter.rotateBitmap(image, 90)
             loadedImage.postValue(rotatedBitmap)
+            val imageMeta = imageMetaData.value ?: arrayOf("", "", "")
 
             val smallerScreenDimension = min(screenDimensions.width, screenDimensions.height)
             val requiredOutputImageSize = Size(smallerScreenDimension, smallerScreenDimension)
 
             val boundingBoxBitmap = licensePlateReaderService.recognize(rotatedBitmap,
-                requiredOutputImageSize, 0, numRecognitionsToShow, minimumPredictionCertaintyToShow) {suspiciousIds ->
-                suspiciousElementIds.postValue(suspiciousIds)
+                requiredOutputImageSize, 0,
+                numRecognitionsToShow, minimumPredictionCertaintyToShow) {arrayOfIdImagePairs ->
+
+                val recognitions = arrayListOf<Report>()
+                var i = 1
+                for(pair in arrayOfIdImagePairs){
+                    recognitions.add(
+                        Report(i, pair.first, pair.second,
+                            imageMeta[0], imageMeta[1], imageMeta[2])
+                    )
+                    i++
+                }
+                this.recognitions.postValue(recognitions.toTypedArray())
+
             }
 
             boundingBoxImage.postValue(boundingBoxBitmap)
