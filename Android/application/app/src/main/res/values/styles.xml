@@ -41,15 +41,15 @@
         <item name="android:padding">@dimen/subtitle_padding</item>
     </style>
 
-    <style name="reportItem">
+    <style name="recognitionItem">
         <item name="android:textColor">@color/colorCardText</item>
-        <item name="android:textSize">@dimen/report_item_text_size</item>
+        <item name="android:textSize">@dimen/recognition_item_text_size</item>
         <item name="android:textStyle">normal</item>
         <item name="android:fontFamily">@font/paragraph</item>
     </style>
 
-    <style name="reportTitleItem" parent="reportItem">
-        <item name="android:textSize">@dimen/report_title_item_text_size</item>
+    <style name="recognitionTitleItem" parent="recognitionItem">
+        <item name="android:textSize">@dimen/recognition_title_item_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
 

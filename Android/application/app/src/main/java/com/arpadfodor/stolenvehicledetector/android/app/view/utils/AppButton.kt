@@ -22,8 +22,8 @@ open class AppButton : AppCompatButton {
 
     init {
 
-        this.background = resources.getDrawable(R.drawable.app_button)
-        this.setTextColor(resources.getColor(R.color.colorText))
+        this.background = context.getDrawable(R.drawable.app_button)
+        this.setTextColor(context.getColor(R.color.colorText))
         this.isAllCaps = true
         this.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
         this.setPadding(15,25,15,25)

@@ -6,7 +6,7 @@ import androidx.camera.core.CameraSelector
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Report
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 import java.io.File
 import kotlin.math.abs
 import kotlin.math.max
@@ -66,8 +66,8 @@ class CameraViewModel : ViewModel(){
     /**
      * List of recognitions from the last inference
      **/
-    val recognitions: MutableLiveData<Array<Report>> by lazy {
-        MutableLiveData<Array<Report>>()
+    val recognitions: MutableLiveData<Array<Recognition>> by lazy {
+        MutableLiveData<Array<Recognition>>()
     }
 
     /**
@@ -105,6 +105,10 @@ class CameraViewModel : ViewModel(){
 
     fun createFile(): File{
         return MediaHandler.createFile(getOutputDirectory())
+    }
+
+    fun setAlertActivityParams(){
+        AlertViewModel.setParameter(recognitions.value?.toList() ?: listOf())
     }
 
 }

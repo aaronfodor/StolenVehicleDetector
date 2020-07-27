@@ -1,28 +1,31 @@
 package com.arpadfodor.stolenvehicledetector.android.app.view.utils
 
+import android.text.SpannableStringBuilder
 import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Report
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 
-@BindingAdapter("reportId")
-fun TextView.setReportId(item: Report) {
+@BindingAdapter("recognitionId")
+fun TextView.setRecognitionId(item: Recognition) {
     text = item.licenseId
 }
 
-@BindingAdapter("reportDate")
-fun TextView.setReportDate(item: Report) {
-    text = context.getString(R.string.report_item_timestamp, item.date)
+@BindingAdapter("recognitionDate")
+fun TextView.setRecognitionDate(item: Recognition) {
+    text = context.getString(R.string.recognition_item_timestamp, item.date)
 }
 
-@BindingAdapter("reportLocation")
-fun TextView.setReportLocation(item: Report) {
-    text = context.getString(R.string.report_item_location, item.longitude, item.latitude)
+@BindingAdapter("recognitionLocation")
+fun TextView.setRecognitionLocation(item: Recognition) {
+    text = context.getString(R.string.recognition_item_location, item.longitude, item.latitude)
 }
 
-@BindingAdapter("reportMessage")
-fun TextView.setReportMessage(item: Report) {
+@BindingAdapter("recognitionMessage")
+fun TextView.setRecognitionMessage(item: Recognition) {
 
     visibility = if(item.message.isEmpty()){
         View.GONE
@@ -31,6 +34,6 @@ fun TextView.setReportMessage(item: Report) {
         View.VISIBLE
     }
 
-    text = context.getString(R.string.report_item_message, item.message)
+    text = context.getString(R.string.recognition_item_message, item.message)
 
 }

@@ -43,7 +43,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.model.LocationService
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Report
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 
 /** Helper type alias used for analysis use case callbacks */
 typealias DetectionListener = (recognition: Bitmap) -> Unit
@@ -54,7 +54,7 @@ typealias DetectionListener = (recognition: Bitmap) -> Unit
  * -Photo taking
  * -Image analysis
  */
-class CameraFragment() : Fragment() {
+class CameraFragment : Fragment() {
 
     companion object{
         private const val TAG = "Camera fragment"
@@ -140,7 +140,6 @@ class CameraFragment() : Fragment() {
 
     }
 
-    @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
 
         super.onViewCreated(view, savedInstanceState)
@@ -222,7 +221,7 @@ class CameraFragment() : Fragment() {
         viewModel.setScreenProperties(metrics.widthPixels, metrics.heightPixels)
 
         if(CameraViewModel.settingsShowReceptiveField){
-            boundingBoxesImageView.background = resources.getDrawable(R.drawable.receptive_field_marker)
+            boundingBoxesImageView.background = ContextCompat.getDrawable(requireActivity().applicationContext, R.drawable.receptive_field_marker)
         }
         else{
             boundingBoxesImageView.background = null
@@ -442,16 +441,15 @@ class CameraFragment() : Fragment() {
         val alertButton = controls.findViewById<ConstraintLayout>(R.id.alert_live_button)
 
         // Create the recognitions observer which notifies when element has been recognized
-        val recognitionsObserver = Observer<Array<Report>> { recognitions ->
+        val recognitionsObserver = Observer<Array<Recognition>> { recognitions ->
 
             if(recognitions.isNotEmpty()){
 
                 alertButton.setOnClickListener {
 
                     LocationService.updateLocation()
-                    val location = LocationService.getLocation()
 
-                    AlertActivity.setActivityParameter(recognitions)
+                    viewModel.setAlertActivityParams()
                     val intent = Intent(this.requireActivity(), AlertActivity::class.java)
                     startActivity(intent)
 

@@ -12,6 +12,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.ai.StolenVehicleRe
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.TextRecognitionService
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.DatabaseService
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.CameraViewModel
 import java.util.*
 
@@ -49,6 +50,7 @@ class ApplicationRoot : Application() {
         super.onCreate()
         Log.i(TAG, "onCreate fired")
 
+        //init model singletons
         DatabaseService.initialize(applicationContext)
         ApiService.initialize()
 

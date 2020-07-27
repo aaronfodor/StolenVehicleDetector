@@ -9,31 +9,14 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Report
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AlertViewModel
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_alert.*
 
 class AlertActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    companion object{
-
-        /**
-         * Use it to pass list parameter to an instance of this activity before starting it.
-         * Used because passing custom objects between activities can be problematic via intents.
-         **/
-        fun setActivityParameter(list: Array<Report>){
-            listParam = list
-        }
-
-        var listParam = arrayOf<Report>()
-
-    }
-
     private lateinit var viewModel: AlertViewModel
-    private lateinit var adapter: ReportListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -59,14 +42,6 @@ class AlertActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         alert_navigation.bringToFront()
         alert_navigation.parent.requestLayout()
 
-        adapter = ReportListAdapter(this, null)
-        alert_list.adapter = adapter
-        alert_list.layoutManager = LinearLayoutManager(this)
-
-        subscribeToViewModel()
-        val alerts = listParam
-        viewModel.alerts.postValue(alerts.toList())
-
     }
 
     override fun onResume() {
@@ -77,12 +52,21 @@ class AlertActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private fun subscribeToViewModel() {
 
         // Create the observer
-        val listObserver = Observer<List<Report>> { list ->
-            adapter.submitList(list)
+        val showDetailsObserver = Observer<Boolean> { showDetails ->
+
+            if(showDetails){
+                removeFragment(RecognitionListFragment.TAG)
+                showDetailFragment()
+            }
+            else{
+                removeFragment(RecognitionDetailFragment.TAG)
+                showListFragment()
+            }
+
         }
 
         // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
-        viewModel.alerts.observe(this, listObserver)
+        viewModel.showDetails.observe(this, showDetailsObserver)
 
     }
 
@@ -125,13 +109,49 @@ class AlertActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     override fun onBackPressed() {
 
-        if(alertActivityDrawerLayout.isDrawerOpen(GravityCompat.START)){
-            alertActivityDrawerLayout.closeDrawer(GravityCompat.START)
-        }
-        else{
-            this.finish()
+        when {
+
+            alertActivityDrawerLayout.isDrawerOpen(GravityCompat.START) -> {
+                alertActivityDrawerLayout.closeDrawer(GravityCompat.START)
+            }
+
+            viewModel.showDetails.value == true -> {
+                viewModel.showDetails.postValue(false)
+            }
+
+            else -> {
+                this.finish()
+            }
+
         }
 
+    }
+
+    private fun showDetailFragment(){
+        val fragmentTag = RecognitionDetailFragment.TAG
+        supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(R.anim.nav_default_enter_anim, R.anim.nav_default_exit_anim)
+            .replace(R.id.alert_container, RecognitionDetailFragment(), fragmentTag)
+            .commit()
+    }
+
+    private fun showListFragment(){
+        val fragmentTag = RecognitionListFragment.TAG
+        supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(R.anim.nav_default_enter_anim, R.anim.nav_default_exit_anim)
+            .replace(R.id.alert_container, RecognitionListFragment(), fragmentTag)
+            .commit()
+    }
+
+    private fun removeFragment(fragmentTag: String){
+        val toRemove = supportFragmentManager.findFragmentByTag(fragmentTag) ?: return
+        supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(R.anim.nav_default_enter_anim, R.anim.nav_default_exit_anim)
+            .remove(toRemove)
+            .commit()
     }
 
 }

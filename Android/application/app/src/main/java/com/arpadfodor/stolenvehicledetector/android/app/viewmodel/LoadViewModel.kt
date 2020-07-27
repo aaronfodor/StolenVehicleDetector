@@ -9,7 +9,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.StolenVehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.MetaProvider
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Report
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 import kotlin.math.min
 
 class LoadViewModel : ViewModel(){
@@ -59,20 +59,20 @@ class LoadViewModel : ViewModel(){
     /**
      * List of recognitions from the last inference
      **/
-    val recognitions: MutableLiveData<Array<Report>> by lazy {
-        MutableLiveData<Array<Report>>()
+    val recognitions: MutableLiveData<Array<Recognition>> by lazy {
+        MutableLiveData<Array<Recognition>>()
     }
 
     fun loadImage(selectedImageUri: Uri){
 
-        val sourceBitmap = MediaHandler.getImage(selectedImageUri)
-        val imageOrientation = MediaHandler.getPhotoOrientation(selectedImageUri)
-        val imageMeta = MetaProvider.getImageMetaData(selectedImageUri)
-
-        // remove the bounding boxes of the previous image
-        boundingBoxImage.value = null
-
         Thread(Runnable {
+
+            val sourceBitmap = MediaHandler.getImage(selectedImageUri)
+            val imageOrientation = MediaHandler.getPhotoOrientation(selectedImageUri)
+            val imageMeta = MetaProvider.getImageMetaData(selectedImageUri)
+
+            // remove the bounding boxes of the previous image
+            boundingBoxImage.postValue(null)
 
             val rotatedBitmap = ImageConverter.rotateBitmap(sourceBitmap, imageOrientation)
             loadedImage.postValue(rotatedBitmap)
@@ -85,11 +85,11 @@ class LoadViewModel : ViewModel(){
                 requiredOutputImageSize, 0,
                 numRecognitionsToShow, minimumPredictionCertaintyToShow) {arrayOfIdImagePairs ->
 
-                val recognitions = arrayListOf<Report>()
+                val recognitions = arrayListOf<Recognition>()
                 var i = 1
                 for(pair in arrayOfIdImagePairs){
                     recognitions.add(
-                        Report(i, pair.first, pair.second,
+                        Recognition(i, pair.first, pair.second,
                             imageMeta[0], imageMeta[1], imageMeta[2])
                     )
                     i++
@@ -123,11 +123,11 @@ class LoadViewModel : ViewModel(){
                 requiredOutputImageSize, 0,
                 numRecognitionsToShow, minimumPredictionCertaintyToShow) {arrayOfIdImagePairs ->
 
-                val recognitions = arrayListOf<Report>()
+                val recognitions = arrayListOf<Recognition>()
                 var i = 1
                 for(pair in arrayOfIdImagePairs){
                     recognitions.add(
-                        Report(i, pair.first, pair.second,
+                        Recognition(i, pair.first, pair.second,
                             imageMeta[0], imageMeta[1], imageMeta[2])
                     )
                     i++
@@ -144,6 +144,10 @@ class LoadViewModel : ViewModel(){
 
     fun setScreenProperties(width: Int, height: Int){
         screenDimensions = Size(width, height)
+    }
+
+    fun setAlertActivityParams(){
+        AlertViewModel.setParameter(recognitions.value?.toList() ?: listOf())
     }
 
 }

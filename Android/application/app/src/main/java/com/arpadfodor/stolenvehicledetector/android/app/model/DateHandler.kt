@@ -1,5 +1,6 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model
 
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -10,7 +11,16 @@ object DateHandler{
     private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
     fun stringToDate(dateString: String) : Date{
-        return formatter.parse(dateString) ?: Date(0)
+
+        var date = Date(0)
+
+        try{
+            date = formatter.parse(dateString) ?: Date(0)
+        }
+        catch (e: Exception){}
+
+        return date
+
     }
 
     fun defaultDate() : Date{

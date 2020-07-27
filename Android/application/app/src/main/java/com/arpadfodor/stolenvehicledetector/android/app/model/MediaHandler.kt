@@ -2,12 +2,16 @@ package com.arpadfodor.stolenvehicledetector.android.app.model
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.Environment.DIRECTORY_PICTURES
 import android.provider.MediaStore
 import androidx.exifinterface.media.ExifInterface
 import java.io.File
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -106,16 +110,21 @@ object MediaHandler {
             val exif = ExifInterface(inputStream)
 
             val dateStringRaw = exif.getAttribute(ExifInterface.TAG_DATETIME) ?: ""
-            val date = exifFormatter.parse(dateStringRaw) ?: Date(0)
+
+            var date = Date(0)
+
+            try{
+                date = exifFormatter.parse(dateStringRaw) ?: Date(0)
+            }
+            catch (e: Exception){}
+
             dateString = DateHandler.dateToString(date)
 
-            val latLong = exif.latLong
+            val latLong = exif.latLong ?: doubleArrayOf()
 
-            if (latLong != null) {
-                if(latLong.isNotEmpty()){
-                    latitudeString = latLong[0].toString()
-                    longitudeString = latLong[1].toString()
-                }
+            if(latLong.isNotEmpty()){
+                latitudeString = latLong[0].toString()
+                longitudeString = latLong[1].toString()
             }
 
         }

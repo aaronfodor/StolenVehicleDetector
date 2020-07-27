@@ -5,10 +5,13 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.arpadfodor.stolenvehicledetector.android.app.R
+import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 
 /**
  * Dialog class of the app
@@ -18,7 +21,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.R
  * @param    description        Description of the dialog
  * @param    image              Image shown on the dialog
  */
-class AppDialog(context: Context, title: String, description: String, image: Drawable) : AlertDialog(context) {
+class AppDialog(context: Context, title: String, description: String, imageResourceCode: Int) : AlertDialog(context) {
 
     /**
      * Positive and negative Buttons of the dialog
@@ -31,11 +34,13 @@ class AppDialog(context: Context, title: String, description: String, image: Dra
         this.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         this.window?.attributes?.windowAnimations = R.style.DialogAnimation
 
-        val inflater = getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.app_dialog, null)
         setView(view)
 
         val imageViewIcon = view.findViewById<ImageView>(R.id.ivAppDialog)
+
+        val image = ContextCompat.getDrawable(context, imageResourceCode)
         imageViewIcon.setImageDrawable(image)
 
         val textViewTitle = view.findViewById<TextView>(R.id.tvCustomDialogTitle)

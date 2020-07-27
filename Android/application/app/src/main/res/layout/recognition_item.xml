@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="recognition_item"
+            type="com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition"/>
+        <variable
+            name="clickListener"
+            type="com.arpadfodor.stolenvehicledetector.android.app.view.RecognitionEventListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/card_background"
+        android:padding="@dimen/recognition_item_padding"
+        android:layout_margin="@dimen/recognition_item_margin">
+
+        <TextView
+            android:id="@+id/recognitionId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/recognition_sub_item_margin"
+            android:layout_marginTop="@dimen/recognition_sub_item_margin"
+            android:gravity="start"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:recognitionId="@{recognition_item}"
+            style="@style/recognitionTitleItem" />
+
+        <TextView
+            android:id="@+id/recognitionDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/recognition_sub_item_margin"
+            android:layout_marginTop="@dimen/recognition_sub_item_margin"
+            android:layout_marginBottom="@dimen/recognition_sub_item_margin"
+            android:gravity="start"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
+            app:layout_constraintTop_toBottomOf="@+id/recognitionId"
+            app:layout_constraintBottom_toTopOf="@+id/recognitionLocation"
+            app:recognitionDate="@{recognition_item}"
+            style="@style/recognitionItem" />
+
+        <TextView
+            android:id="@+id/recognitionLocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/recognition_sub_item_margin"
+            android:layout_marginBottom="@dimen/recognition_sub_item_margin"
+            android:layout_marginTop="@dimen/recognition_sub_item_margin"
+            android:gravity="start"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
+            app:layout_constraintTop_toBottomOf="@+id/recognitionDate"
+            app:recognitionLocation="@{recognition_item}"
+            style="@style/recognitionItem" />
+
+        <TextView
+            android:id="@+id/recognitionMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/recognition_sub_item_margin"
+            android:layout_marginTop="@dimen/recognition_sub_item_margin"
+            android:layout_marginBottom="@dimen/recognition_sub_item_margin"
+            android:gravity="start"
+            android:maxLines="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
+            app:layout_constraintTop_toBottomOf="@+id/recognitionLocation"
+            app:recognitionMessage="@{recognition_item}"
+            style="@style/recognitionItem" />
+
+        <ImageButton
+            android:id="@+id/recognition_edit_button"
+            android:layout_width="@dimen/round_button_small"
+            android:layout_height="@dimen/round_button_small"
+            android:layout_marginEnd="@dimen/recognition_sub_item_margin"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/spacing_small"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/recognition_delete_button"
+            app:layout_constraintEnd_toStartOf="@+id/recognition_delete_button"
+            app:layout_constraintTop_toTopOf="@+id/recognition_delete_button"
+            app:srcCompat="@android:drawable/ic_menu_edit"
+            android:contentDescription="@string/edit_recognition"
+            android:onClick="@{() -> clickListener.onEditClick(recognition_item)}"/>
+
+        <ImageButton
+            android:id="@+id/recognition_delete_button"
+            android:layout_width="@dimen/round_button_small"
+            android:layout_height="@dimen/round_button_small"
+            android:layout_marginEnd="@dimen/recognition_sub_item_margin"
+            android:padding="@dimen/spacing_small"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/recognition_send_button"
+            app:layout_constraintEnd_toStartOf="@+id/recognition_send_button"
+            app:layout_constraintTop_toTopOf="@+id/recognition_send_button"
+            android:background="@android:color/transparent"
+            app:srcCompat="@android:drawable/ic_menu_delete"
+            android:contentDescription="@string/delete_recognition"
+            android:onClick="@{() -> clickListener.onDeleteClick(recognition_item)}"/>
+
+        <ImageButton
+            android:id="@+id/recognition_send_button"
+            android:layout_width="@dimen/round_button_small"
+            android:layout_height="@dimen/round_button_small"
+            android:layout_marginEnd="@dimen/recognition_sub_item_margin"
+            android:padding="@dimen/spacing_small"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@android:color/transparent"
+            app:srcCompat="@android:drawable/ic_menu_send"
+            android:contentDescription="@string/send_recognition"
+            android:onClick="@{() -> clickListener.onSendClick(recognition_item)}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

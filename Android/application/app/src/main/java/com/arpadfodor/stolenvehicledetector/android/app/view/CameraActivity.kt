@@ -116,7 +116,7 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 //AppSnackBarBuilder.buildSuccessSnackBar(resources, container, getString(R.string.permission_granted), Snackbar.LENGTH_SHORT).show()
             }
             else{
-                AppSnackBarBuilder.buildAlertSnackBar(resources, container, getString(R.string.permission_denied), Snackbar.LENGTH_SHORT).show()
+                AppSnackBarBuilder.buildAlertSnackBar(this.applicationContext, container, getString(R.string.permission_denied), Snackbar.LENGTH_SHORT).show()
             }
 
         }
@@ -213,7 +213,7 @@ class CameraActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
      */
     private fun exitDialog(){
 
-        val exitDialog = AppDialog(this, getString(R.string.exit_title), getString(R.string.exit_dialog), resources.getDrawable(R.drawable.warning))
+        val exitDialog = AppDialog(this, getString(R.string.exit_title), getString(R.string.exit_dialog), R.drawable.warning)
         exitDialog.setPositiveButton {
             //showing the home screen - app is not visible but running
             val intent = Intent(Intent.ACTION_MAIN)

@@ -20,7 +20,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppDialog
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.LoadViewModel
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Report
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_load.*
@@ -130,14 +130,14 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         // Create the suspicious Id observer which notifies when suspicious element has been recognized
-        val recognitionsObserver = Observer<Array<Report>> { recognitions ->
+        val recognitionsObserver = Observer<Array<Recognition>> { recognitions ->
 
             val alertButton = alert_loaded_button
 
             if(recognitions.isNotEmpty()){
 
                 alertButton.setOnClickListener {
-                    AlertActivity.setActivityParameter(recognitions)
+                    viewModel.setAlertActivityParams()
                     val intent = Intent(this, AlertActivity::class.java)
                     startActivity(intent)
                 }
@@ -265,7 +265,7 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun exitDialog(){
 
         val exitDialog = AppDialog(this, getString(R.string.exit_title),
-            getString(R.string.exit_dialog), resources.getDrawable(R.drawable.warning))
+            getString(R.string.exit_dialog), R.drawable.warning)
         exitDialog.setPositiveButton {
             //showing the home screen - app is not visible but running
             val intent = Intent(Intent.ACTION_MAIN)

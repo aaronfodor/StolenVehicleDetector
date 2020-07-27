@@ -51,12 +51,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                         .apply()
                     requireActivity().invalidateOptionsMenu()
 
-                    AppSnackBarBuilder.buildSuccessSnackBar(resources, this.requireView(),
+                    AppSnackBarBuilder.buildSuccessSnackBar(requireContext().applicationContext, this.requireView(),
                         getString(R.string.updated_database), Snackbar.LENGTH_SHORT).show()
 
                 }
                 else{
-                    AppSnackBarBuilder.buildAlertSnackBar(resources, this.requireView(),
+                    AppSnackBarBuilder.buildAlertSnackBar(requireContext().applicationContext, this.requireView(),
                         getString(R.string.updating_failed), Snackbar.LENGTH_SHORT).show()
                 }
 
