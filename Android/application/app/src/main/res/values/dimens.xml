@@ -58,10 +58,10 @@
     <dimen name="snack_bar_margin_horizontal">32dp</dimen>
     <dimen name="snack_bar_margin_vertical">8dp</dimen>
 
-    <dimen name="recognition_item_padding">4dp</dimen>
-    <dimen name="recognition_item_margin">12dp</dimen>
-    <dimen name="recognition_sub_item_margin">4dp</dimen>
-    <dimen name="recognition_title_item_text_size">16sp</dimen>
-    <dimen name="recognition_item_text_size">12sp</dimen>
+    <dimen name="list_item_padding">4dp</dimen>
+    <dimen name="list_item_margin">12dp</dimen>
+    <dimen name="list_sub_item_margin">4dp</dimen>
+    <dimen name="list_title_item_text_size">16sp</dimen>
+    <dimen name="list_item_text_size">12sp</dimen>
 
 </resources>

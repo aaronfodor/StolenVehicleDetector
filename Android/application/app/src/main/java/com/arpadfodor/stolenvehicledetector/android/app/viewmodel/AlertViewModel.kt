@@ -2,6 +2,8 @@ package com.arpadfodor.stolenvehicledetector.android.app.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
+import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiVehicleReport
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 
 class AlertViewModel : ViewModel(){
@@ -41,10 +43,20 @@ class AlertViewModel : ViewModel(){
         MutableLiveData<Boolean>(false)
     }
 
-    fun sendRecognition(id: Int){
-        val toSend = alerts.value?.find { it.artificialId == id } ?: return
-        //TODO: API send
-        deleteRecognition(id)
+    fun sendRecognition(id: Int, callback: (Boolean) -> Unit){
+
+        val recognition = alerts.value?.find { it.artificialId == id } ?: return
+        val apiReport = ApiVehicleReport(0, recognition.licenseId, "",
+            recognition.latitude.toDouble(), recognition.longitude.toDouble(),
+            recognition.message, recognition.date)
+
+        ApiService.postReport(apiReport) { isSuccess ->
+            if(isSuccess){
+                deleteRecognition(id)
+            }
+            callback(isSuccess)
+        }
+
     }
 
     fun deleteRecognition(id: Int){
@@ -64,11 +76,11 @@ class AlertViewModel : ViewModel(){
         showDetails.value = false
     }
 
-    fun getAlertById(id: Int) : Recognition?{
+    fun getRecognitionById(id: Int) : Recognition?{
         return alerts.value?.find { it.artificialId == id }
     }
 
-    fun updateAlertMessageById(id: Int, message: String){
+    fun updateRecognitionMessageById(id: Int, message: String){
 
         val updatedList = alerts.value ?: return
 

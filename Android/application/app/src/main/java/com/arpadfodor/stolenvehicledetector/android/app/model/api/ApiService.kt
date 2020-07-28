@@ -57,6 +57,24 @@ object ApiService{
 
     }
 
+    //TODO: post report implementation
+    fun postReport(report: ApiVehicleReport, callback: (Boolean) -> Unit){
+
+        Thread {
+
+            try {
+                val a = 2
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+                callback(false)
+            }
+            callback(true)
+
+        }.start()
+
+    }
+
     //TODO: report, user, self interactions
 
     private fun dataResponseTransform(content: List<ApiVehicle>) : List<Vehicle>{

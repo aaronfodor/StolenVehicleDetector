@@ -54,6 +54,11 @@ class RecognitionListAdapter(context: Context, clickListener: RecognitionEventLi
         viewToAnimate.startAnimation(animation)
     }
 
+    private fun disappearAnimation(viewToAnimate: View) {
+        val animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_out_right)
+        viewToAnimate.startAnimation(animation)
+    }
+
 }
 
 class RecognitionDiffCallback : DiffUtil.ItemCallback<Recognition>() {
@@ -68,11 +73,12 @@ class RecognitionDiffCallback : DiffUtil.ItemCallback<Recognition>() {
 
 }
 
-class RecognitionEventListener(val editClickListener: (id: Int) -> Unit,
-        val sendClickListener: (id: Int) -> Unit, val deleteClickListener: (id: Int) -> Unit){
-
+class RecognitionEventListener(
+    val editClickListener: (id: Int) -> Unit,
+    val sendClickListener: (id: Int) -> Unit,
+    val deleteClickListener: (id: Int) -> Unit
+){
     fun onEditClick(recognition: Recognition) = editClickListener(recognition.artificialId)
     fun onSendClick(recognition: Recognition) = sendClickListener(recognition.artificialId)
     fun onDeleteClick(recognition: Recognition) = deleteClickListener(recognition.artificialId)
-
 }

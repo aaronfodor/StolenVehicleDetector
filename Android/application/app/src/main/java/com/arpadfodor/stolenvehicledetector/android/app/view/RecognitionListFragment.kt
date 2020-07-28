@@ -4,13 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.arpadfodor.stolenvehicledetector.android.app.R
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AlertViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_list.*
 
 class RecognitionListFragment : Fragment(){
@@ -62,11 +68,34 @@ class RecognitionListFragment : Fragment(){
             },
 
             sendClickListener = { id ->
-                viewModel.sendRecognition(id)
+
+                viewModel.sendRecognition(id){ isSuccess ->
+
+                    when(isSuccess){
+                        true -> {
+                            AppSnackBarBuilder.buildSuccessSnackBar(requireContext(),
+                                requireView(), getString(R.string.report_sent),
+                                Snackbar.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            AppSnackBarBuilder.buildAlertSnackBar(requireContext(),
+                                requireView(), getString(R.string.report_sending_failed),
+                                Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+
+                }
+
             },
 
             deleteClickListener = { id ->
+
                 viewModel.deleteRecognition(id)
+
+                AppSnackBarBuilder.buildInfoSnackBar(requireContext(),
+                    requireView(), getString(R.string.report_deleted),
+                    Snackbar.LENGTH_SHORT).show()
+
             }
 
         )
