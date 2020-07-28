@@ -58,9 +58,8 @@
             android:selectable="true" />
 
         <Preference
-            android:key="@string/SETTINGS_SYNC_NOW"
+            android:key="@string/LAST_SYNCED_DB"
             android:title="@string/last_synced"
-            android:summary="@string/settings_last_synced_default"
             app:useSimpleSummaryProvider="true">
         </Preference>
 

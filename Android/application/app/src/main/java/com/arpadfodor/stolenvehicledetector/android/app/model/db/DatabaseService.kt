@@ -115,17 +115,17 @@ object DatabaseService {
 
     fun updateFromApi(callback: (isSuccess: Boolean) -> Unit){
 
-        ApiService.getStolenVehiclesMeta { size, timestamp ->
+        ApiService.getStolenVehiclesMeta { size, apiTimestamp ->
 
-            isInputFreshTimestamp(timestamp){ isFreshTimestamp ->
+            isInputNewerTimestamp(apiTimestamp){ isNewer ->
 
                 //is the API data fresh compared to app DB content?
-                if(isFreshTimestamp){
+                if(isNewer){
                     //get content from API
                     ApiService.getStolenVehicleData { vehicles ->
 
                         if(vehicles.isNotEmpty()){
-                            val vehiclesMeta = MetaData(VEHICLES_META_ID, size, timestamp)
+                            val vehiclesMeta = MetaData(VEHICLES_META_ID, size, apiTimestamp)
                             setDatabase(vehicles, vehiclesMeta){ result ->
                                 callback(result)
                             }
@@ -149,7 +149,7 @@ object DatabaseService {
 
     }
 
-    private fun isInputFreshTimestamp(currentTimestampUTC: String, callback: (isFreshTimestamp: Boolean) -> Unit){
+    private fun isInputNewerTimestamp(currentTimestampUTC: String, callback: (isFreshTimestamp: Boolean) -> Unit){
         getVehiclesMeta { meta ->
             val currentDate = DateHandler.stringToDate(currentTimestampUTC)
             val dbDate = DateHandler.stringToDate(meta.modificationTimestampUTC)

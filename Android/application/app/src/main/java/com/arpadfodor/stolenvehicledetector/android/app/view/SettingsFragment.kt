@@ -5,13 +5,13 @@ import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.StolenVehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.DatabaseService
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
+
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -38,22 +38,22 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this.requireContext())
+        
+        updateLastUpdatedPreference(preferences)
 
         val syncButton: Preference? = findPreference(getString(R.string.SETTINGS_SYNC_NOW))
+
         syncButton?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
 
             DatabaseService.updateFromApi{ isSuccess ->
 
                 if(isSuccess){
-
                     val currentTime = Calendar.getInstance().time.toString()
                     preferences.edit().putString(getString(R.string.LAST_SYNCED_DB), currentTime)
                         .apply()
-                    requireActivity().invalidateOptionsMenu()
 
                     AppSnackBarBuilder.buildSuccessSnackBar(requireContext().applicationContext, this.requireView(),
                         getString(R.string.updated_database), Snackbar.LENGTH_SHORT).show()
-
                 }
                 else{
                     AppSnackBarBuilder.buildAlertSnackBar(requireContext().applicationContext, this.requireView(),
@@ -84,12 +84,18 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
      * @param key The key of the preference that was changed, added, or removed
      **/
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        changeSettings(sharedPreferences)
+        sharedPreferences?.let {
+            changeSettings(sharedPreferences){
+                updateLastUpdatedPreference(sharedPreferences)
+            }
+        }
     }
 
-    private fun changeSettings(sharedPreferences: SharedPreferences?) {
+    private fun changeSettings(sharedPreferences: SharedPreferences?, callback: (Boolean) -> Unit) {
 
         sharedPreferences?: return
+
+        val updatedTimestamp: String
 
         with (sharedPreferences.edit()) {
 
@@ -114,13 +120,24 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             ))
 
             remove(settingsLastSynced)
-            putString(settingsLastSynced, sharedPreferences.getString(settingsLastSynced,
-                resources.getString(R.string.settings_last_synced_default)
-            ))
+            updatedTimestamp = sharedPreferences.getString(settingsLastSynced,
+                resources.getString(R.string.settings_last_synced_default)).toString()
+            putString(settingsLastSynced, updatedTimestamp)
 
             apply()
-
         }
+
+        callback(true)
+
+    }
+
+    private fun updateLastUpdatedPreference(sharedPreferences: SharedPreferences){
+
+        val timestamp = sharedPreferences.getString(settingsLastSynced,
+            resources.getString(R.string.settings_last_synced_default)).toString()
+
+        preferenceManager.findPreference<Preference>(getString(R.string.LAST_SYNCED_DB))?.
+        summary = timestamp
 
     }
 
