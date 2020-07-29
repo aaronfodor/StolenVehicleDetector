@@ -7,23 +7,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AlertViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_detail.*
 
-class RecognitionDetailFragment() : Fragment(){
+class RecognitionDetailFragment(viewModel: RecognitionViewModel) : Fragment(){
 
     companion object{
         const val TAG = "Recognition detail fragment"
     }
 
-    private val viewModel: AlertViewModel by activityViewModels()
+    private val viewModel = viewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_recognition_detail, container, false)
@@ -115,7 +114,7 @@ class RecognitionDetailFragment() : Fragment(){
         }
 
         // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
-        viewModel.selectedAlertId.observe(requireActivity(), selectedAlertObserver)
+        viewModel.selectedRecognitionId.observe(requireActivity(), selectedAlertObserver)
 
     }
 

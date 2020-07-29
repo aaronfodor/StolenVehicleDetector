@@ -72,6 +72,16 @@
         </activity>
 
         <activity
+            android:name="com.arpadfodor.stolenvehicledetector.android.app.view.utils.RecognitionActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:clearTaskOnLaunch="true"
+            android:icon="@mipmap/ic_launcher"
+            android:rotationAnimation="seamless"
+            android:screenOrientation="fullUser"
+            android:theme="@style/AppTheme">
+        </activity>
+
+        <activity
             android:name="com.arpadfodor.stolenvehicledetector.android.app.view.AlertActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:clearTaskOnLaunch="true"

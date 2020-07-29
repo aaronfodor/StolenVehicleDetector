@@ -8,7 +8,7 @@
             type="com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition"/>
         <variable
             name="clickListener"
-            type="com.arpadfodor.stolenvehicledetector.android.app.view.RecognitionEventListener" />
+            type="com.arpadfodor.stolenvehicledetector.android.app.view.utils.RecognitionEventListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,4 +1,4 @@
-package com.arpadfodor.stolenvehicledetector.android.app.view
+package com.arpadfodor.stolenvehicledetector.android.app.view.utils
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -12,7 +12,9 @@ import com.arpadfodor.stolenvehicledetector.android.app.databinding.RecognitionI
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 
 class RecognitionListAdapter(context: Context, clickListener: RecognitionEventListener)
-    : ListAdapter<Recognition, RecognitionListAdapter.RecognitionViewHolder>(RecognitionDiffCallback()) {
+    : ListAdapter<Recognition, RecognitionListAdapter.RecognitionViewHolder>(
+    RecognitionDiffCallback()
+) {
 
     private val context = context
     private val clickListener = clickListener
@@ -28,7 +30,9 @@ class RecognitionListAdapter(context: Context, clickListener: RecognitionEventLi
             fun from(parent: ViewGroup): RecognitionViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = RecognitionItemBinding.inflate(layoutInflater, parent, false)
-                return RecognitionViewHolder(binding)
+                return RecognitionViewHolder(
+                    binding
+                )
             }
         }
 
@@ -46,7 +50,9 @@ class RecognitionListAdapter(context: Context, clickListener: RecognitionEventLi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecognitionViewHolder {
-        return RecognitionViewHolder.from(parent)
+        return RecognitionViewHolder.from(
+            parent
+        )
     }
 
     private fun appearAnimation(viewToAnimate: View) {

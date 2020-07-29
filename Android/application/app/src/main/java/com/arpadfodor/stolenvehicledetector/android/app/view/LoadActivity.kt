@@ -1,61 +1,41 @@
 package com.arpadfodor.stolenvehicledetector.android.app.view
 
-import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppDialog
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppActivity
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.LoadViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_load.*
 import kotlinx.android.synthetic.main.load_ui_container.*
 
-class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class LoadActivity : AppActivity() {
 
     private lateinit var viewModel: LoadViewModel
-
     private lateinit var container: ConstraintLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_load)
         container = findViewById(R.id.loaded_image_container)
+        val drawer = findViewById<DrawerLayout>(R.id.loadActivityDrawerLayout)
+        val navigation = findViewById<NavigationView>(R.id.load_navigation)
+        initUi(drawer, navigation)
 
         viewModel = ViewModelProvider(this).get(LoadViewModel::class.java)
-
-        val toolbar = findViewById<Toolbar>(R.id.custom_toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-
-        val drawerToggle = ActionBarDrawerToggle(this, loadActivityDrawerLayout, toolbar, R.string.menu_open, R.string.menu_close)
-        loadActivityDrawerLayout.addDrawerListener(drawerToggle)
-        drawerToggle.syncState()
-
-        load_navigation.setNavigationItemSelectedListener(this)
-        val navigationMenuView = findViewById<NavigationView>(R.id.load_navigation)
-        val header = navigationMenuView?.getHeaderView(0)
-
-        load_navigation.bringToFront()
-        load_navigation.parent.requestLayout()
 
         //due to an Android bug, setting clip to outline cannot be done from XML
         ivLoadedImage.clipToOutline = true
@@ -96,12 +76,9 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         LoadViewModel.numRecognitionsToShow = numRecognitionsToShow
         LoadViewModel.minimumPredictionCertaintyToShow = minimumPredictionCertaintyToShow.toFloat()
 
-        subscribeToViewModel()
-        setButtonListeners()
-
     }
 
-    private fun subscribeToViewModel() {
+    override fun subscribeToViewModel() {
 
         // Create the image observer which updates the UI in case of an image change
         val imageObserver = Observer<Bitmap> { newImage ->
@@ -170,6 +147,24 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    override fun subscribeListeners() {
+
+        ivLoadedImage.setOnClickListener {
+            loadImage()
+        }
+
+        load_image_button.setOnClickListener {
+            loadImage()
+        }
+
+        loaded_image_rotate_button.setOnClickListener {
+            viewModel.rotateImage()
+        }
+
+    }
+
+    override fun unsubscribeListeners() {}
+
     private fun loadImage(){
         // Create an Intent with action as ACTION_PICK
         val intent = Intent(Intent.ACTION_PICK)
@@ -195,86 +190,6 @@ class LoadActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
-    }
-
-    private fun setButtonListeners() {
-
-        ivLoadedImage.setOnClickListener {
-            loadImage()
-        }
-
-        load_image_button.setOnClickListener {
-            loadImage()
-        }
-
-        loaded_image_rotate_button.setOnClickListener {
-            viewModel.rotateImage()
-        }
-
-    }
-
-    /**
-     * Called when an item in the navigation menu is selected.
-     *
-     * @param item      The selected item
-     * @return Boolean  True if a valid item has been selected
-     **/
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.navigation_live -> {
-                val intent = Intent(this, CameraActivity::class.java)
-                startActivity(intent)
-            }
-            R.id.navigation_load -> {
-            }
-            R.id.navigation_gallery -> {
-            }
-            R.id.navigation_reports -> {
-            }
-            R.id.navigation_settings -> {
-                val intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
-            }
-            else ->{
-                return false
-            }
-        }
-
-        if(loadActivityDrawerLayout.isDrawerOpen(GravityCompat.START)){
-            loadActivityDrawerLayout.closeDrawer(GravityCompat.START)
-        }
-        return true
-
-    }
-
-    override fun onBackPressed() {
-
-        if(loadActivityDrawerLayout.isDrawerOpen(GravityCompat.START)){
-            loadActivityDrawerLayout.closeDrawer(GravityCompat.START)
-        }
-        else{
-            exitDialog()
-        }
-
-    }
-
-    /**
-     * Asks for exit confirmation
-     **/
-    private fun exitDialog(){
-
-        val exitDialog = AppDialog(this, getString(R.string.exit_title),
-            getString(R.string.exit_dialog), R.drawable.warning)
-        exitDialog.setPositiveButton {
-            //showing the home screen - app is not visible but running
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.addCategory(Intent.CATEGORY_HOME)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
-        }
-        exitDialog.show()
-
     }
 
 }

@@ -10,7 +10,7 @@
     android:background="@color/colorPrimaryDark">
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/alertActivityDrawerLayout"
+        android:id="@+id/recognitionActivityDrawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorTransparent"
@@ -20,7 +20,7 @@
         tools:openDrawer="start">
 
         <com.google.android.material.navigation.NavigationView
-            android:id="@+id/alert_navigation"
+            android:id="@+id/recognitionNavigation"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
@@ -33,14 +33,14 @@
             app:menu="@menu/dashboard_menu" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/alert_container"
+            android:id="@+id/recognition_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
             layout="@layout/custom_toolbar"
-            android:id="@+id/alert_toolbar"
+            android:id="@+id/recognition_toolbar"
             app:layout_constraintBottom_toTopOf="parent"/>
 
     </androidx.drawerlayout.widget.DrawerLayout>

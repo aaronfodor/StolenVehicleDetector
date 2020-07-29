@@ -43,6 +43,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.model.LocationService
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.RecognitionActivity
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 
 /** Helper type alias used for analysis use case callbacks */

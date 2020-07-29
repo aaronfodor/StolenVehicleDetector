@@ -4,28 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AlertViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.RecognitionEventListener
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.RecognitionListAdapter
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_list.*
 
-class RecognitionListFragment : Fragment(){
+class RecognitionListFragment(viewModel: RecognitionViewModel) : Fragment(){
 
     companion object{
         const val TAG = "Recognition list fragment"
     }
 
-    private val viewModel: AlertViewModel by activityViewModels()
+    private val viewModel = viewModel
     private lateinit var adapter: RecognitionListAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -36,7 +33,11 @@ class RecognitionListFragment : Fragment(){
 
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = RecognitionListAdapter(requireContext(), createEventListener())
+        adapter =
+            RecognitionListAdapter(
+                requireContext(),
+                createEventListener()
+            )
         alert_list.adapter = adapter
         alert_list.layoutManager = LinearLayoutManager(requireContext())
 
@@ -50,7 +51,7 @@ class RecognitionListFragment : Fragment(){
         }
 
         // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
-        viewModel.alerts.observe(requireActivity(), listObserver)
+        viewModel.recognitions.observe(requireActivity(), listObserver)
 
     }
 
@@ -59,7 +60,7 @@ class RecognitionListFragment : Fragment(){
         subscribeToViewModel()
     }
 
-    private fun createEventListener() : RecognitionEventListener{
+    private fun createEventListener() : RecognitionEventListener {
 
         return RecognitionEventListener(
 
@@ -69,18 +70,22 @@ class RecognitionListFragment : Fragment(){
 
             sendClickListener = { id ->
 
-                viewModel.sendRecognition(id){ isSuccess ->
+                viewModel.sendRecognition(id) { isSuccess ->
 
-                    when(isSuccess){
+                    when (isSuccess) {
                         true -> {
-                            AppSnackBarBuilder.buildSuccessSnackBar(requireContext(),
+                            AppSnackBarBuilder.buildSuccessSnackBar(
+                                requireContext(),
                                 requireView(), getString(R.string.report_sent),
-                                Snackbar.LENGTH_SHORT).show()
+                                Snackbar.LENGTH_SHORT
+                            ).show()
                         }
                         else -> {
-                            AppSnackBarBuilder.buildAlertSnackBar(requireContext(),
+                            AppSnackBarBuilder.buildAlertSnackBar(
+                                requireContext(),
                                 requireView(), getString(R.string.report_sending_failed),
-                                Snackbar.LENGTH_SHORT).show()
+                                Snackbar.LENGTH_SHORT
+                            ).show()
                         }
                     }
 
@@ -92,9 +97,11 @@ class RecognitionListFragment : Fragment(){
 
                 viewModel.deleteRecognition(id)
 
-                AppSnackBarBuilder.buildInfoSnackBar(requireContext(),
+                AppSnackBarBuilder.buildInfoSnackBar(
+                    requireContext(),
                     requireView(), getString(R.string.report_deleted),
-                    Snackbar.LENGTH_SHORT).show()
+                    Snackbar.LENGTH_SHORT
+                ).show()
 
             }
 

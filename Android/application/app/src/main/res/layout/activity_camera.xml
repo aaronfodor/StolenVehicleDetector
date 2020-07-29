@@ -10,7 +10,7 @@
     android:background="@color/colorPrimaryDark">
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/mainActivityDrawerLayout"
+        android:id="@+id/cameraActivityDrawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorTransparent"
