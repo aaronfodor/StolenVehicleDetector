@@ -24,11 +24,10 @@ open class AppButton : AppCompatButton {
 
         this.background = context.getDrawable(R.drawable.app_button)
         this.setTextColor(context.getColor(R.color.colorText))
-        this.isAllCaps = true
-        this.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
         this.setPadding(15,25,15,25)
-        this.isAllCaps = true
         this.gravity = Gravity.CENTER
+        this.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+        this.isAllCaps = true
 
         this.setOnClickListener {
         }

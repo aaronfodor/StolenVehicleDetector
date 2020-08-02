@@ -19,14 +19,14 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
  * @param    context            Context of the parent where the dialog is shown
  * @param    title              Title of the dialog
  * @param    description        Description of the dialog
- * @param    image              Image shown on the dialog
+ * @param    imageResourceCode  Image resource code shown on the dialog
  */
 class AppDialog(context: Context, title: String, description: String, imageResourceCode: Int) : AlertDialog(context) {
 
     /**
      * Positive and negative Buttons of the dialog
      */
-    private var buttonPositive: AppButton
+    private var buttonPositive: AppPositiveButton
     private var buttonNegative: AppButton
 
     init {

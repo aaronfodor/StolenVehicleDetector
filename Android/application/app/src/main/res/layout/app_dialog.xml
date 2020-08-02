@@ -19,7 +19,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/glMiddle"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/app_dialog_image" />
 
     <TextView
         style="@style/SubtitleText"
@@ -47,12 +48,12 @@
         app:layout_constraintTop_toBottomOf="@+id/tvCustomDialogTitle"
         app:layout_constraintBottom_toTopOf="@+id/btnPositiveAppDialog" />
 
-    <com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppButton
+    <com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppPositiveButton
         android:id="@+id/btnPositiveAppDialog"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dialog_margin"
         android:layout_marginStart="@dimen/dialog_margin"
+        android:layout_marginEnd="@dimen/dialog_margin"
         android:layout_marginBottom="@dimen/dialog_margin"
         android:textStyle="bold"
         android:text="@string/positive_button"

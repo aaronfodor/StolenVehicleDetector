@@ -83,7 +83,9 @@
     <string name="last_synced">Last Synced</string>
     <string name="auto_sync_interval_summary">Select how often the app should update.</string>
 
-    <string name="recognition_add_message_hint">Add message to this recognition</string>
+    <string name="app_dialog_image">app dialog image</string>
+
+    <string name="recognition_add_message_hint">Add your notes…</string>
     <string name="recognition_image">Edit recognition</string>
     <string name="send_recognition">Send recognition</string>
     <string name="delete_recognition">Delete recognition</string>
@@ -94,6 +96,7 @@
     <string name="recognition_item_timestamp">Time (UTC): %1$s</string>
     <string name="recognition_item_location">lat=%1$s, long=%2$s</string>
     <string name="recognition_item_message">Message: %1$s</string>
+    <string name="message_edit_text_title">Message</string>
 
     <string name="report_sent">Report sent</string>
     <string name="report_sending_failed">Report sending failed</string>
