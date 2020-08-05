@@ -3,8 +3,8 @@
 <!DOCTYPE resources [
     <!ENTITY appName "Stolen Vehicle Detector">
     <!ENTITY appId "">
-    <!ENTITY appVersion "v0.11">
-    <!ENTITY appDate "28/07/2020">
+    <!ENTITY appVersion "v0.12">
+    <!ENTITY appDate "05/08/2020">
     <!ENTITY appCreator "Arpad Fodor">
     <!ENTITY adMobAppId "ca-app-pub-3940256099942544~3347511713">
     <!ENTITY adMobBannerId "ca-app-pub-3940256099942544/6300978111">
@@ -43,8 +43,10 @@
     <string name="loaded_image_description">The loaded image</string>
     <string name="ivBoundingBoxes_description">Image to draw the bounding boxes on</string>
 
-    <string name="positive_button">OK</string>
-    <string name="negative_button">Cancel</string>
+    <string name="ok_button">OK</string>
+    <string name="send_button">Send</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="delete_button">Delete</string>
 
     <string name="delete_title">Confirm delete</string>
     <string name="delete_dialog">Are you sure you want to delete current photo?</string>
@@ -97,6 +99,9 @@
     <string name="recognition_item_location">lat=%1$s, long=%2$s</string>
     <string name="recognition_item_message">Message: %1$s</string>
     <string name="message_edit_text_title">Message</string>
+    <string name="license_id_title">License Id</string>
+    <string name="date_title">Time (UTC)</string>
+    <string name="location_title">Location</string>
 
     <string name="report_sent">Report sent</string>
     <string name="report_sending_failed">Report sending failed</string>

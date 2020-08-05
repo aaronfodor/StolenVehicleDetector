@@ -42,8 +42,10 @@
     <dimen name="button_padding_horizontal">15dp</dimen>
     <dimen name="button_stroke">4dp</dimen>
 
-    <dimen name="edit_corner_radius">1dp</dimen>
-    <dimen name="edit_stroke">1dp</dimen>
+    <dimen name="edit_text_corner_radius">1dp</dimen>
+    <dimen name="edit_text_stroke_normal">0.5dp</dimen>
+    <dimen name="edit_text_stroke_focused">2dp</dimen>
+    <dimen name="edit_text_padding">8dp</dimen>
 
     <dimen name="navigation_menu_height">180dp</dimen>
     <dimen name="navigation_menu_vertical_spacing">8dp</dimen>

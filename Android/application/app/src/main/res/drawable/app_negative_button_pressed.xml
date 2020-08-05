@@ -9,6 +9,5 @@
         />
     <stroke
         android:width="@dimen/button_stroke"
-        android:color="@color/colorButton"/>
-    <solid android:color="@color/colorButton" />
+        android:color="@color/colorButtonPressed"/>
 </shape>

@@ -4,8 +4,8 @@
     <solid android:color="@color/colorCardBackground" />
     <corners android:radius="@dimen/card_corner_radius" />
     <padding
-      android:bottom="@dimen/card_padding"
-      android:left="@dimen/card_padding"
-      android:right="@dimen/card_padding"
-      android:top="@dimen/card_padding" />
+        android:bottom="@dimen/dialog_vertical_padding"
+        android:left="@dimen/dialog_horizontal_padding"
+        android:right="@dimen/dialog_horizontal_padding"
+        android:top="@dimen/dialog_vertical_padding" />
 </shape>

@@ -72,34 +72,73 @@
                 </androidx.cardview.widget.CardView>
 
                 <TextView
-                    android:id="@+id/recognitionDetailLicenseId"
+                    android:id="@+id/recognitionDetailLicenseIdLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/list_item_margin"
+                    android:text="@string/license_id_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recognitionDetailImageCardView"
                     style="@style/recognitionItem" />
 
                 <TextView
-                    android:id="@+id/recognitionDetailDate"
+                    android:id="@+id/recognitionDetailLicenseId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/list_item_margin"
+                    android:layout_marginEnd="@dimen/list_item_margin"
+                    android:layout_marginBottom="@dimen/list_item_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recognitionDetailLicenseIdLabel"
+                    style="@style/recognitionTitleItem" />
+
+                <TextView
+                    android:id="@+id/recognitionDetailDateLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/list_item_margin"
+                    android:text="@string/date_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recognitionDetailLicenseId"
                     style="@style/recognitionItem" />
 
                 <TextView
-                    android:id="@+id/recognitionDetailLocation"
+                    android:id="@+id/recognitionDetailDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/list_item_margin"
+                    android:layout_marginEnd="@dimen/list_item_margin"
+                    android:layout_marginBottom="@dimen/list_item_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recognitionDetailDateLabel"
+                    style="@style/recognitionTitleItem" />
+
+                <TextView
+                    android:id="@+id/recognitionDetailLocationLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/list_item_margin"
+                    android:text="@string/location_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recognitionDetailDate"
                     style="@style/recognitionItem" />
+
+                <TextView
+                    android:id="@+id/recognitionDetailLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/list_item_margin"
+                    android:layout_marginEnd="@dimen/list_item_margin"
+                    android:layout_marginBottom="@dimen/list_item_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recognitionDetailLocationLabel"
+                    style="@style/recognitionTitleItem" />
 
                 <TextView
                     android:id="@+id/recognitionDetailMessageTitle"
@@ -119,7 +158,7 @@
                     android:layout_marginStart="@dimen/list_item_margin"
                     android:layout_marginEnd="@dimen/list_item_margin"
                     android:layout_marginBottom="@dimen/list_item_margin"
-                    android:padding="@dimen/list_item_padding"
+                    android:padding="@dimen/edit_text_padding"
                     android:gravity="start"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -129,52 +168,67 @@
                     android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
                     android:imeOptions="actionDone"
                     android:background="@drawable/app_edit_background"
+                    android:lines="3"
                     style="@style/recognitionItem"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
 
-        <ImageButton
+        <com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppButton
             android:id="@+id/recognition_back_button"
-            android:layout_width="@dimen/round_button_small"
-            android:layout_height="@dimen/round_button_medium"
-            android:layout_marginStart="@dimen/list_item_margin"
-            android:padding="@dimen/spacing_small"
-            android:scaleType="fitCenter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/button_margin"
+            android:layout_marginEnd="@dimen/button_margin"
+            android:layout_marginBottom="@dimen/button_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@android:color/transparent"
-            app:srcCompat="@android:drawable/ic_menu_revert"
-            android:contentDescription="@string/back_recognition" />
+            app:layout_constraintEnd_toStartOf="@+id/glVerticalMiddle1st"
+            android:textStyle="bold"
+            android:text="@string/cancel_button" />
 
-        <ImageButton
+        <com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppNegativeButton
             android:id="@+id/recognition_delete_button"
-            android:layout_width="@dimen/round_button_small"
-            android:layout_height="@dimen/round_button_medium"
-            android:layout_marginStart="@dimen/list_item_margin"
-            android:layout_marginEnd="@dimen/list_item_margin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/button_margin"
+            android:layout_marginEnd="@dimen/button_margin"
+            android:layout_marginBottom="@dimen/button_margin"
             android:background="@android:color/transparent"
             android:contentDescription="@string/delete_recognition"
-            android:padding="@dimen/spacing_small"
-            android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/recognition_send_button"
-            app:layout_constraintStart_toEndOf="@+id/recognition_back_button"
-            app:srcCompat="@android:drawable/ic_menu_delete" />
+            app:layout_constraintStart_toEndOf="@+id/glVerticalMiddle1st"
+            app:layout_constraintEnd_toStartOf="@+id/glVerticalMiddle2nd"
+            android:textStyle="bold"
+            android:text="@string/delete_button" />
 
-        <ImageButton
+        <com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppPositiveButton
             android:id="@+id/recognition_send_button"
-            android:layout_width="@dimen/round_button_small"
-            android:layout_height="@dimen/round_button_medium"
-            android:layout_marginEnd="@dimen/list_item_margin"
-            android:padding="@dimen/spacing_small"
-            android:scaleType="fitCenter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/button_margin"
+            android:layout_marginEnd="@dimen/button_margin"
+            android:layout_marginBottom="@dimen/button_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@android:color/transparent"
-            app:srcCompat="@android:drawable/ic_menu_send"
-            android:contentDescription="@string/send_recognition" />
+            app:layout_constraintStart_toEndOf="@+id/glVerticalMiddle2nd"
+            android:textStyle="bold"
+            android:text="@string/send_button" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/glVerticalMiddle1st"
+            app:layout_constraintGuide_percent="0.33"
+            android:orientation="vertical"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/glVerticalMiddle2nd"
+            app:layout_constraintGuide_percent="0.66"
+            android:orientation="vertical"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

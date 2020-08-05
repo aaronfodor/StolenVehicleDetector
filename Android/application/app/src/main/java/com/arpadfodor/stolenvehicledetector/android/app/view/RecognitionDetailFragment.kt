@@ -47,10 +47,8 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel) : Fragment(){
                 recognitionDetailMessage?.setRawInputType(InputType.TYPE_CLASS_TEXT)
                 recognitionDetailMessage?.text = SpannableStringBuilder(it.message)
 
-                recognitionDetailLicenseId?.text =
-                    requireContext().getString(R.string.recognition_item_license, recognition.licenseId)
-                recognitionDetailDate?.text =
-                    requireContext().getString(R.string.recognition_item_timestamp, recognition.date)
+                recognitionDetailLicenseId?.text = recognition.licenseId
+                recognitionDetailDate?.text = recognition.date
                 recognitionDetailLocation?.text =
                     requireContext().getString(R.string.recognition_item_location, recognition.longitude, recognition.latitude)
 
