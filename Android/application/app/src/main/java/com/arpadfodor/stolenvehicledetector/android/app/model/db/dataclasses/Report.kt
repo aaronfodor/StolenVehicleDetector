@@ -7,8 +7,8 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.DateHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.ApplicationDB
 import java.io.Serializable
 
-@Entity(tableName = ApplicationDB.VEHICLE_TABLE_NAME)
-data class VehicleReport(
+@Entity(tableName = ApplicationDB.REPORT_TABLE_NAME)
+data class Report(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")
     val Id: Int = 0,

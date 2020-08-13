@@ -4,11 +4,13 @@
     <string name="KEY_EVENT_ACTION">key_event_action</string>
     <string name="KEY_EVENT_EXTRA">key_event_extra</string>
 
+    <string name="SETTINGS_KEEP_SCREEN_ALIVE">keep_screen_alive</string>
     <string name="SETTINGS_NUM_RECOGNITIONS">num_recognitions_to_show</string>
     <string name="SETTINGS_MINIMUM_PREDICTION_CERTAINTY">minimum_prediction_certainty_to_show</string>
     <string name="SETTINGS_SHOW_RECEPTIVE_FIELD">show_receptive_field</string>
     <string name="SETTINGS_AUTO_SYNC">enable_auto_sync</string>
     <string name="SETTINGS_SYNC_NOW">sync_now</string>
-    <string name="LAST_SYNCED_DB">last_synced_db</string>
+    <string name="LAST_SYNCED_DB_VEHICLES">last_synced_db_vehicles</string>
+    <string name="LAST_SYNCED_DB_REPORTS">last_synced_db_coordinates</string>
 
 </resources>

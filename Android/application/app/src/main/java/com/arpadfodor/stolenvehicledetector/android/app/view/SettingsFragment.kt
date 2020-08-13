@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.StolenVehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.DatabaseService
@@ -15,11 +16,13 @@ import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private var settingsKeepScreenAlive = ""
     private var settingsMaximumRecognitions = ""
     private var settingsMinimumPredictionCertainty = ""
     private var settingsShowReceptiveField = ""
     private var settingsAutoSync = ""
-    private var settingsLastSynced = ""
+    private var settingsLastSyncedDbVehicles = ""
+    private var settingsLastSyncedDbReports = ""
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -29,40 +32,56 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         super.onResume()
 
+        settingsKeepScreenAlive = getString(R.string.SETTINGS_KEEP_SCREEN_ALIVE)
         settingsMaximumRecognitions = getString(R.string.SETTINGS_NUM_RECOGNITIONS)
         settingsMinimumPredictionCertainty = getString(R.string.SETTINGS_MINIMUM_PREDICTION_CERTAINTY)
         settingsShowReceptiveField = getString(R.string.SETTINGS_SHOW_RECEPTIVE_FIELD)
         settingsAutoSync = getString(R.string.SETTINGS_AUTO_SYNC)
-        settingsLastSynced = getString(R.string.LAST_SYNCED_DB)
+        settingsLastSyncedDbVehicles = getString(R.string.LAST_SYNCED_DB_VEHICLES)
+        settingsLastSyncedDbReports = getString(R.string.LAST_SYNCED_DB_REPORTS)
 
         preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this.requireContext())
         
-        updateLastUpdatedPreference(preferences)
+        updatePreferenceUpdatedTimestamp(preferences)
 
         val syncButton: Preference? = findPreference(getString(R.string.SETTINGS_SYNC_NOW))
 
         syncButton?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
 
-            DatabaseService.updateFromApi{ isSuccess ->
+            var dbVehiclesUpdated = false
+            var dbCoordinatesUpdated = false
 
-                if(isSuccess){
-                    val currentTime = Calendar.getInstance().time.toString()
-                    preferences.edit().putString(getString(R.string.LAST_SYNCED_DB), currentTime)
-                        .apply()
+            DatabaseService.updateAllFromApi(
 
-                    AppSnackBarBuilder.buildSuccessSnackBar(requireContext().applicationContext, this.requireView(),
-                        getString(R.string.updated_database), Snackbar.LENGTH_SHORT).show()
+                callbackVehicles = { isSuccess ->
+
+                    if(isSuccess){
+                        val currentTime = Calendar.getInstance().time.toString()
+                        preferences.edit().putString(getString(R.string.LAST_SYNCED_DB_VEHICLES), currentTime)
+                            .apply()
+                    }
+
+                    dbUpdateResultSnackBar(isSuccess)
+                    StolenVehicleRecognizerService.initialize()
+
+                },
+
+                callbackReports = { isSuccess ->
+
+                    if(isSuccess){
+                        val currentTime = Calendar.getInstance().time.toString()
+                        preferences.edit().putString(getString(R.string.LAST_SYNCED_DB_REPORTS), currentTime)
+                            .apply()
+                    }
+
+                    dbUpdateResultSnackBar(isSuccess)
+
                 }
-                else{
-                    AppSnackBarBuilder.buildAlertSnackBar(requireContext().applicationContext, this.requireView(),
-                        getString(R.string.updating_failed), Snackbar.LENGTH_SHORT).show()
-                }
 
-                StolenVehicleRecognizerService.initialize()
+            )
 
-            }
             true
 
         }
@@ -86,7 +105,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         sharedPreferences?.let {
             changeSettings(sharedPreferences){
-                updateLastUpdatedPreference(sharedPreferences)
+                updatePreferenceUpdatedTimestamp(sharedPreferences)
             }
         }
     }
@@ -95,9 +114,14 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         sharedPreferences?: return
 
-        val updatedTimestamp: String
-
         with (sharedPreferences.edit()) {
+
+            remove(settingsKeepScreenAlive)
+            val keepScreenOn = sharedPreferences.getBoolean(settingsKeepScreenAlive,
+                resources.getBoolean(R.bool.settings_keep_screen_alive_default)
+            )
+            putBoolean(settingsKeepScreenAlive, keepScreenOn)
+            ApplicationRoot.keepScreenAlive = keepScreenOn
 
             remove(settingsMaximumRecognitions)
             putInt(settingsMaximumRecognitions, sharedPreferences.getInt(settingsMaximumRecognitions,
@@ -119,10 +143,15 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 resources.getBoolean(R.bool.settings_auto_sync_default)
             ))
 
-            remove(settingsLastSynced)
-            updatedTimestamp = sharedPreferences.getString(settingsLastSynced,
+            remove(settingsLastSyncedDbVehicles)
+            val updatedDbVehiclesTimestamp = sharedPreferences.getString(settingsLastSyncedDbVehicles,
                 resources.getString(R.string.settings_last_synced_default)).toString()
-            putString(settingsLastSynced, updatedTimestamp)
+            putString(settingsLastSyncedDbVehicles, updatedDbVehiclesTimestamp)
+
+            remove(settingsLastSyncedDbReports)
+            val updatedDbReportsTimestamp = sharedPreferences.getString(settingsLastSyncedDbReports,
+                resources.getString(R.string.settings_last_synced_default)).toString()
+            putString(settingsLastSyncedDbReports, updatedDbReportsTimestamp)
 
             apply()
         }
@@ -131,13 +160,30 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     }
 
-    private fun updateLastUpdatedPreference(sharedPreferences: SharedPreferences){
+    private fun updatePreferenceUpdatedTimestamp(sharedPreferences: SharedPreferences){
 
-        val timestamp = sharedPreferences.getString(settingsLastSynced,
+        val dbVehiclesTimestamp = sharedPreferences.getString(settingsLastSyncedDbVehicles,
             resources.getString(R.string.settings_last_synced_default)).toString()
+        preferenceManager.findPreference<Preference>(getString(R.string.LAST_SYNCED_DB_VEHICLES))?.
+        summary = dbVehiclesTimestamp
 
-        preferenceManager.findPreference<Preference>(getString(R.string.LAST_SYNCED_DB))?.
-        summary = timestamp
+        val dbReportsTimestamp = sharedPreferences.getString(settingsLastSyncedDbReports,
+            resources.getString(R.string.settings_last_synced_default)).toString()
+        preferenceManager.findPreference<Preference>(getString(R.string.LAST_SYNCED_DB_REPORTS))?.
+        summary = dbReportsTimestamp
+
+    }
+
+    private fun dbUpdateResultSnackBar(isSuccess: Boolean){
+
+        if(isSuccess){
+            AppSnackBarBuilder.buildSuccessSnackBar(requireContext().applicationContext, this.requireView(),
+                getString(R.string.updated_database), Snackbar.LENGTH_SHORT).show()
+        }
+        else{
+            AppSnackBarBuilder.buildAlertSnackBar(requireContext().applicationContext, this.requireView(),
+                getString(R.string.updating_failed), Snackbar.LENGTH_SHORT).show()
+        }
 
     }
 

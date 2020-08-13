@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.*
 import com.google.android.material.navigation.NavigationView
@@ -46,6 +47,7 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         super.onResume()
         subscribeToViewModel()
         subscribeListeners()
+        setKeepScreenOnFlag()
     }
 
     override fun onPause() {
@@ -54,7 +56,6 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     }
 
     abstract fun subscribeToViewModel()
-
     abstract fun subscribeListeners()
     abstract fun unsubscribeListeners()
 
@@ -138,6 +139,15 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         }
         exitDialog.show()
 
+    }
+
+    private fun setKeepScreenOnFlag(){
+        if(ApplicationRoot.keepScreenAlive){
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+        else{
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
     }
 
 }

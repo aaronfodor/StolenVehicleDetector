@@ -3,29 +3,39 @@ package com.arpadfodor.stolenvehicledetector.android.app.model.api
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Vehicle
+import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Report
+import okhttp3.OkHttpClient
 
 object ApiService{
 
-    lateinit var stolenVehicleAPI: StolenVehicleAPI
+    private lateinit var stolenVehicleAPI: StolenVehicleAPI
 
     fun initialize(){
 
-        val retrofitStolenCarsAPI = Retrofit.Builder()
-            .baseUrl(StolenVehicleAPI.ENDPOINT_URL)
+        val httpClient = OkHttpClient.Builder().addInterceptor(
+            BasicAuthInterceptor(
+                StolenVehicleAPI.DEFAULT_USER,
+                StolenVehicleAPI.DEFAULT_USER_PASSWORD
+            )
+        ).build()
+
+        val retrofitStolenVehiclesAPI = Retrofit.Builder()
+            .baseUrl(StolenVehicleAPI.API_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient)
             .build()
 
-        this.stolenVehicleAPI = retrofitStolenCarsAPI.create(StolenVehicleAPI::class.java)
+        this.stolenVehicleAPI = retrofitStolenVehiclesAPI.create(StolenVehicleAPI::class.java)
 
     }
 
-    fun getStolenVehicleData(callback: (List<Vehicle>) -> Unit) {
+    fun getVehiclesData(callback: (List<Vehicle>) -> Unit) {
 
         Thread {
             try {
-                val dataCall = stolenVehicleAPI.getData()
+                val dataCall = stolenVehicleAPI.getVehiclesData()
                 val dataResponse = dataCall.execute().body() ?: emptyList<ApiVehicle>()
-                val transformedDataResponse = dataResponseTransform(dataResponse)
+                val transformedDataResponse = apiVehicleResponseTransform(dataResponse)
                 callback(transformedDataResponse)
             }
             catch (e: Exception) {
@@ -36,14 +46,14 @@ object ApiService{
 
     }
 
-    fun getStolenVehiclesMeta(callback: (Int, String) -> Unit) {
+    fun getVehiclesMeta(callback: (Int, String) -> Unit) {
 
         Thread {
             var size = 0
             //TODO: for testing, should be DateHandler.defaultDate()
             var timestampUTC = "1980-01-01 01:01:01"
             try {
-                val metaDataCall = stolenVehicleAPI.getMetaData()
+                val metaDataCall = stolenVehicleAPI.getVehiclesMeta()
                 val metaDataResponse = metaDataCall.execute().body()
                     ?: ApiMetaData(0, timestampUTC)
                 size = metaDataResponse.dataSize
@@ -57,34 +67,84 @@ object ApiService{
 
     }
 
-    //TODO: post report implementation
-    fun postReport(report: ApiVehicleReport, callback: (Boolean) -> Unit){
+    fun getReportsData(callback: (List<Report>) -> Unit) {
 
         Thread {
-
             try {
-                val a = 2
+                val dataCall = stolenVehicleAPI.getReportsData()
+                val dataResponse = dataCall.execute().body() ?: emptyList<ApiVehicleReport>()
+                val transformedDataResponse = apiReportResponseTransform(dataResponse)
+                callback(transformedDataResponse)
             }
             catch (e: Exception) {
                 e.printStackTrace()
-                callback(false)
+                callback(emptyList())
             }
-            callback(true)
+        }.start()
+
+    }
+
+    fun getReportsMeta(callback: (Int, String) -> Unit) {
+
+        Thread {
+
+            var size = 0
+            //TODO: for testing, should be DateHandler.defaultDate()
+            var timestampUTC = "1980-01-01 01:01:01"
+
+            try {
+                val metaDataCall = stolenVehicleAPI.getReportsMeta()
+                val metaDataResponse = metaDataCall.execute().body()
+                    ?: ApiMetaData(0, timestampUTC)
+                size = metaDataResponse.dataSize
+                timestampUTC = metaDataResponse.modificationTimestampUTC
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            callback(size, timestampUTC)
 
         }.start()
 
     }
 
-    //TODO: report, user, self interactions
+    fun postReport(report: ApiVehicleReport, callback: (Boolean) -> Unit){
 
-    private fun dataResponseTransform(content: List<ApiVehicle>) : List<Vehicle>{
+        Thread {
 
-        val stolenVehiclesList = mutableListOf<Vehicle>()
+            try {
+                val postReportCall = stolenVehicleAPI.postReport(report)
+                var response = postReportCall.execute().body() ?: ""
+
+                //TODO: response check
+                response = "200"
+                if(response == "200"){
+                    callback(true)
+                }
+                else{
+                    callback(false)
+                }
+
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+                callback(false)
+            }
+
+        }.start()
+
+    }
+
+    private fun apiVehicleResponseTransform(content: List<ApiVehicle>) : List<Vehicle>{
+
+        val vehiclesList = mutableListOf<Vehicle>()
 
         for(i in content.indices){
 
             val current = content[i]
 
+            //TODO: new server will provide data in a better format
             val constructed =
                 Vehicle(
                     current.name.replace("rendszám", "", true)
@@ -98,12 +158,12 @@ object ApiService{
                 )
 
             if(constructed.licenseId.isNotBlank()){
-                stolenVehiclesList.add(constructed)
+                vehiclesList.add(constructed)
             }
         }
 
-        //just for testing
-        stolenVehiclesList.add(
+        //TODO: just for testing
+        vehiclesList.add(
             Vehicle(
                 "SAMSUNG",
                 "phone",
@@ -111,7 +171,7 @@ object ApiService{
                 "black"
             )
         )
-        stolenVehiclesList.add(
+        vehiclesList.add(
             Vehicle(
                 "HJC759",
                 "car",
@@ -120,8 +180,53 @@ object ApiService{
             )
         )
 
-        return stolenVehiclesList
+        return vehiclesList
 
     }
+
+    private fun apiReportResponseTransform(content: List<ApiVehicleReport>) : List<Report>{
+
+        val reportsList = mutableListOf<Report>()
+
+        for(i in content.indices){
+
+            val current = content[i]
+
+            val constructed = Report(current.Id, current.Vehicle, current.Reporter,
+                current.latitude, current.longitude, current.message, current.timestampUTC)
+
+            reportsList.add(constructed)
+
+        }
+
+        //TODO: just for testing
+        reportsList.add(
+            Report(
+                1,
+                "SAMSUNG",
+                "aaa@bbb.com",
+                47.519959,
+                19.079840,
+                "I never thought I will find it there!",
+                "2020-07-18 06:00:00"
+            )
+        )
+        reportsList.add(
+            Report(
+                2,
+                "HJC759",
+                "aaa@bbb.com",
+                47.496686,
+                19.039277,
+                "Wow! Such a finding!",
+                "2020-07-30 16:12:34"
+            )
+        )
+
+        return reportsList
+
+    }
+
+    //TODO: user, self interactions
 
 }

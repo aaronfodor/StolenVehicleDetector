@@ -68,8 +68,10 @@
 
     <string name="about">About</string>
     <string name="further">Further apps from the developer</string>
+    <string name="general_settings">General settings</string>
     <string name="detector_settings">Detection settings</string>
     <string name="sync_settings">Sync settings</string>
+    <string name="setting_keep_screen_alive">Keep screen alive</string>
     <string name="setting_num_recognitions">Recognitions per image</string>
     <string name="setting_summary_num_recognitions">The maximum number of recognitions that appear at the same time.</string>
     <string name="setting_min_certainty">Minimum certainty %</string>
@@ -82,8 +84,8 @@
     <string name="updating_failed">Updating failed</string>
     <string name="force_update_db_summary">Internet connection is required to update the database.</string>
     <string name="setting_auto_sync">Enable Auto Sync</string>
-    <string name="last_synced">Last Synced</string>
-    <string name="auto_sync_interval_summary">Select how often the app should update.</string>
+    <string name="last_synced_db_vehicles">Vehicles last synced</string>
+    <string name="last_synced_db_reports">Reports last synced</string>
 
     <string name="app_dialog_image">app dialog image</string>
 

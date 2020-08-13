@@ -6,6 +6,20 @@
     android:theme="@style/AppTheme.AppBarOverlay">
 
     <PreferenceCategory
+        android:title="@string/general_settings">
+
+        <SwitchPreference
+            app:key="@string/SETTINGS_KEEP_SCREEN_ALIVE"
+            android:title="@string/setting_keep_screen_alive"
+            android:summaryOn="@string/enabled"
+            android:summaryOff="@string/disabled"
+            android:enabled="true"
+            android:selectable="true"
+            android:defaultValue="@bool/settings_keep_screen_alive_default"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/detector_settings">
 
         <SeekBarPreference
@@ -58,8 +72,14 @@
             android:selectable="true" />
 
         <Preference
-            android:key="@string/LAST_SYNCED_DB"
-            android:title="@string/last_synced"
+            android:key="@string/LAST_SYNCED_DB_VEHICLES"
+            android:title="@string/last_synced_db_vehicles"
+            app:useSimpleSummaryProvider="true">
+        </Preference>
+
+        <Preference
+            android:key="@string/LAST_SYNCED_DB_REPORTS"
+            android:title="@string/last_synced_db_reports"
             app:useSimpleSummaryProvider="true">
         </Preference>
 

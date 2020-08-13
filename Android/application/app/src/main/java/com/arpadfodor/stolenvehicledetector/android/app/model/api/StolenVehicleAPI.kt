@@ -1,25 +1,42 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model.api
 
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Query
 
 interface StolenVehicleAPI {
 
+    //TODO: new server interaction
     companion object {
-        const val API_KEY = "tmPCDRV0eK6e"
-        const val API_TOKEN = "tSjKNzYReoFE"
-        const val ENDPOINT_URL = "https://www.parsehub.com/api/v2/projects/${API_TOKEN}/"
-        const val GET_VEHICLES = "${ENDPOINT_URL}last_ready_run/data/"
+
+        const val BASE_URL = "https://www.mydomain.com/"
+        const val API_URL = "${BASE_URL}api/v1/"
+
+        const val DEFAULT_USER = "default_user@stolen_vehicle_detector"
+        const val DEFAULT_USER_PASSWORD = "default_user_czka84"
+
+        const val GET_VEHICLES = "${API_URL}vehicles/"
         const val GET_VEHICLES_META = "${GET_VEHICLES}meta/"
-        const val POST_REPORT = "${ENDPOINT_URL}report/"
+        const val GET_REPORTS = "${API_URL}coordinates/"
+        const val GET_REPORTS_META = "${GET_REPORTS}meta/"
+        const val POST_REPORT = "${API_URL}report/"
+
     }
 
     @GET(GET_VEHICLES)
-    fun getData(@Query("api_key") key: String = API_KEY): Call<List<ApiVehicle>>
+    fun getVehiclesData(): Call<List<ApiVehicle>>
 
     @GET(GET_VEHICLES_META)
-    fun getMetaData(@Query("api_key") key: String = API_KEY): Call<ApiMetaData>
+    fun getVehiclesMeta(): Call<ApiMetaData>
+
+    @GET(GET_REPORTS)
+    fun getReportsData(): Call<List<ApiVehicleReport>>
+
+    @GET(GET_REPORTS_META)
+    fun getReportsMeta(): Call<ApiMetaData>
+
+    @POST(POST_REPORT)
+    fun postReport(@Body report: ApiVehicleReport): Call<String>
 
 }

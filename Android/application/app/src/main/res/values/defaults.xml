@@ -9,6 +9,7 @@
     <integer name="settings_minimum_prediction_certainty_min">1</integer>
     <integer name="settings_minimum_prediction_certainty_default">50</integer>
 
+    <bool name="settings_keep_screen_alive_default">true</bool>
     <bool name="settings_receptive_field_default">true</bool>
     <bool name="settings_auto_sync_default">true</bool>
 

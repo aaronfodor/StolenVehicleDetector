@@ -6,17 +6,18 @@ import android.util.Size
 import com.arpadfodor.stolenvehicledetector.android.app.model.BoundingBoxDrawer
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.DatabaseService
+import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Vehicle
 import java.util.*
 
 class StolenVehicleRecognizerService {
 
     companion object{
 
-        private var stolenVehicleLicenses = listOf<String>()
+        private var stolenVehicles = listOf<Vehicle>()
 
         fun initialize(){
-            DatabaseService.getStolenVehicleLicenses {
-                stolenVehicleLicenses = it
+            DatabaseService.getVehicles {
+                stolenVehicles = it
             }
         }
 
@@ -70,12 +71,18 @@ class StolenVehicleRecognizerService {
     }
 
     private fun isIdSuspicious(licenseId: String) : Boolean{
+
         val clearedLicenseId = licenseId.replace("-", "")
             .replace("_", "").toUpperCase(Locale.ROOT)
-        if(stolenVehicleLicenses.contains(clearedLicenseId)){
-            return true
+
+        for(element in stolenVehicles){
+            if(element.licenseId == clearedLicenseId){
+                return true
+            }
         }
+
         return false
+
     }
 
 }
