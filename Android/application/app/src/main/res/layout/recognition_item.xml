@@ -27,7 +27,7 @@
             app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
             app:layout_constraintTop_toTopOf="parent"
             app:recognitionId="@{recognition_item}"
-            style="@style/ListSubtitleTop" />
+            style="@style/SubtitleTop" />
 
         <TextView
             android:id="@+id/recognitionMessage"
@@ -38,7 +38,7 @@
             app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
             app:layout_constraintTop_toBottomOf="@+id/recognitionId"
             app:recognitionMessage="@{recognition_item}"
-            style="@style/ListTextThin" />
+            style="@style/ParagraphBodyThin" />
 
         <TextView
             android:id="@+id/recognitionDate"
@@ -48,7 +48,7 @@
             app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
             app:layout_constraintTop_toBottomOf="@+id/recognitionMessage"
             app:recognitionDate="@{recognition_item}"
-            style="@style/ListTextThin" />
+            style="@style/ParagraphBodyThin" />
 
         <TextView
             android:id="@+id/recognitionLocation"
@@ -59,7 +59,7 @@
             app:layout_constraintTop_toBottomOf="@+id/recognitionDate"
             app:layout_constraintBottom_toBottomOf="parent"
             app:recognitionLocation="@{recognition_item}"
-            style="@style/ListTextBottom" />
+            style="@style/ParagraphBodyBottom" />
 
         <ImageButton
             android:id="@+id/recognition_edit_button"

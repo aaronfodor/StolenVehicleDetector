@@ -60,7 +60,7 @@
         <item name="android:paddingBottom">@dimen/paragraph_padding</item>
     </style>
 
-    <style name="SubtitleText" parent="ParagraphBody">
+    <style name="Subtitle" parent="ParagraphBody">
         <item name="android:textSize">@dimen/subtitle_text_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginTop">@dimen/paragraph_margin</item>
@@ -73,35 +73,35 @@
         <item name="android:paddingBottom">@dimen/paragraph_padding</item>
     </style>
 
-    <style name="ListTextTop" parent="ParagraphBody">
+    <style name="ParagraphBodyTop" parent="ParagraphBody">
         <item name="android:layout_marginTop">@dimen/paragraph_margin</item>
         <item name="android:layout_marginBottom">0dp</item>
         <item name="android:paddingTop">@dimen/paragraph_padding</item>
         <item name="android:paddingBottom">0dp</item>
     </style>
 
-    <style name="ListTextBottom" parent="ParagraphBody">
+    <style name="ParagraphBodyBottom" parent="ParagraphBody">
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginBottom">@dimen/paragraph_margin</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">@dimen/paragraph_padding</item>
     </style>
 
-    <style name="ListTextThin" parent="ParagraphBody">
+    <style name="ParagraphBodyThin" parent="ParagraphBody">
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginBottom">0dp</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
     </style>
 
-    <style name="ListSubtitleTop" parent="SubtitleText">
+    <style name="SubtitleTop" parent="Subtitle">
         <item name="android:layout_marginTop">@dimen/paragraph_margin</item>
         <item name="android:layout_marginBottom">0dp</item>
         <item name="android:paddingTop">@dimen/paragraph_padding</item>
         <item name="android:paddingBottom">0dp</item>
     </style>
 
-    <style name="ListSubtitleBottom" parent="SubtitleText">
+    <style name="SubtitleBottom" parent="Subtitle">
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginBottom">@dimen/paragraph_margin</item>
         <item name="android:paddingTop">0dp</item>

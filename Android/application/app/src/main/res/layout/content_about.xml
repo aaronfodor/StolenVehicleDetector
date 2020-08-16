@@ -41,7 +41,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                style="@style/ListSubtitleTop"
+                style="@style/SubtitleTop"
                 android:text="@string/app_name"/>
 
             <TextView
@@ -51,7 +51,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/aboutAppName"
-                style="@style/ListTextBottom"
+                style="@style/ParagraphBodyBottom"
                 android:text="@string/app_version"/>
 
             <TextView
@@ -61,7 +61,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/aboutAppVersion"
-                style="@style/ListSubtitleTop"
+                style="@style/SubtitleTop"
                 android:text="@string/app_creator"/>
 
             <TextView
@@ -71,7 +71,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/aboutAppCreator"
-                style="@style/ListTextBottom"
+                style="@style/ParagraphBodyBottom"
                 android:text="@string/app_date"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
