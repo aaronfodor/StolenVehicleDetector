@@ -16,71 +16,56 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/card_background"
-        android:padding="@dimen/list_item_padding"
-        android:layout_margin="@dimen/list_item_margin">
+        android:padding="@dimen/paragraph_padding"
+        android:layout_margin="@dimen/paragraph_margin">
 
         <TextView
             android:id="@+id/recognitionId"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/list_sub_item_margin"
-            android:layout_marginTop="@dimen/list_sub_item_margin"
-            android:gravity="start"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
             app:layout_constraintTop_toTopOf="parent"
             app:recognitionId="@{recognition_item}"
-            style="@style/recognitionTitleItem" />
-
-        <TextView
-            android:id="@+id/recognitionDate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/list_sub_item_margin"
-            android:layout_marginTop="@dimen/list_sub_item_margin"
-            android:layout_marginBottom="@dimen/list_sub_item_margin"
-            android:gravity="start"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
-            app:layout_constraintTop_toBottomOf="@+id/recognitionId"
-            app:layout_constraintBottom_toTopOf="@+id/recognitionLocation"
-            app:recognitionDate="@{recognition_item}"
-            style="@style/recognitionItem" />
-
-        <TextView
-            android:id="@+id/recognitionLocation"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/list_sub_item_margin"
-            android:layout_marginBottom="@dimen/list_sub_item_margin"
-            android:layout_marginTop="@dimen/list_sub_item_margin"
-            android:gravity="start"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
-            app:layout_constraintTop_toBottomOf="@+id/recognitionDate"
-            app:recognitionLocation="@{recognition_item}"
-            style="@style/recognitionItem" />
+            style="@style/ListSubtitleTop" />
 
         <TextView
             android:id="@+id/recognitionMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/list_sub_item_margin"
-            android:layout_marginTop="@dimen/list_sub_item_margin"
-            android:layout_marginBottom="@dimen/list_sub_item_margin"
-            android:gravity="start"
             android:maxLines="2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
-            app:layout_constraintTop_toBottomOf="@+id/recognitionLocation"
+            app:layout_constraintTop_toBottomOf="@+id/recognitionId"
             app:recognitionMessage="@{recognition_item}"
-            style="@style/recognitionItem" />
+            style="@style/ListTextThin" />
+
+        <TextView
+            android:id="@+id/recognitionDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
+            app:layout_constraintTop_toBottomOf="@+id/recognitionMessage"
+            app:recognitionDate="@{recognition_item}"
+            style="@style/ListTextThin" />
+
+        <TextView
+            android:id="@+id/recognitionLocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/recognition_edit_button"
+            app:layout_constraintTop_toBottomOf="@+id/recognitionDate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:recognitionLocation="@{recognition_item}"
+            style="@style/ListTextBottom" />
 
         <ImageButton
             android:id="@+id/recognition_edit_button"
             android:layout_width="@dimen/round_button_small"
             android:layout_height="@dimen/round_button_small"
-            android:layout_marginEnd="@dimen/list_sub_item_margin"
+            android:layout_marginEnd="@dimen/paragraph_margin"
             android:background="@android:color/transparent"
             android:padding="@dimen/spacing_small"
             android:scaleType="fitCenter"
@@ -95,7 +80,7 @@
             android:id="@+id/recognition_delete_button"
             android:layout_width="@dimen/round_button_small"
             android:layout_height="@dimen/round_button_small"
-            android:layout_marginEnd="@dimen/list_sub_item_margin"
+            android:layout_marginEnd="@dimen/paragraph_margin"
             android:padding="@dimen/spacing_small"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="@+id/recognition_send_button"
@@ -110,7 +95,7 @@
             android:id="@+id/recognition_send_button"
             android:layout_width="@dimen/round_button_small"
             android:layout_height="@dimen/round_button_small"
-            android:layout_marginEnd="@dimen/list_sub_item_margin"
+            android:layout_marginEnd="@dimen/paragraph_margin"
             android:padding="@dimen/spacing_small"
             android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"

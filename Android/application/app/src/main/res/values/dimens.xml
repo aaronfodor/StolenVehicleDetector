@@ -2,11 +2,13 @@
 
 <resources>
     <dimen name="margin_xxsmall">4dp</dimen>
-    <dimen name="margin_xsmall">16dp</dimen>
+    <dimen name="margin_xsmall">12dp</dimen>
     <dimen name="margin_small">32dp</dimen>
     <dimen name="margin_medium">48dp</dimen>
     <dimen name="margin_large">64dp</dimen>
     <dimen name="margin_xlarge">92dp</dimen>
+
+    <dimen name="padding_xxsmall">4dp</dimen>
 
     <dimen name="spacing_small">4dp</dimen>
     <dimen name="spacing_medium">8dp</dimen>
@@ -29,11 +31,14 @@
     <dimen name="bounding_box_radius">4dp</dimen>
     <dimen name="bounding_box_text_size">14sp</dimen>
 
-    <dimen name="subtitle_text_size">24sp</dimen>
-    <dimen name="subtitle_padding">8dp</dimen>
+    <dimen name="title_text_size">24sp</dimen>
+    <dimen name="title_padding">6dp</dimen>
+    <dimen name="title_margin">6dp</dimen>
 
+    <dimen name="subtitle_text_size">14sp</dimen>
     <dimen name="paragraph_text_size">12sp</dimen>
-    <dimen name="paragraph_padding">8dp</dimen>
+    <dimen name="paragraph_padding">4dp</dimen>
+    <dimen name="paragraph_margin">4dp</dimen>
 
     <dimen name="button_corner_radius">4dp</dimen>
     <dimen name="button_text_size">14sp</dimen>
@@ -67,11 +72,5 @@
 
     <dimen name="snack_bar_margin_horizontal">32dp</dimen>
     <dimen name="snack_bar_margin_vertical">8dp</dimen>
-
-    <dimen name="list_item_padding">4dp</dimen>
-    <dimen name="list_item_margin">12dp</dimen>
-    <dimen name="list_sub_item_margin">4dp</dimen>
-    <dimen name="list_title_item_text_size">16sp</dimen>
-    <dimen name="list_item_text_size">12sp</dimen>
 
 </resources>

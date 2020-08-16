@@ -23,7 +23,7 @@
         android:contentDescription="@string/app_dialog_image" />
 
     <TextView
-        style="@style/SubtitleText"
+        style="@style/TitleText"
         android:id="@+id/tvCustomDialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

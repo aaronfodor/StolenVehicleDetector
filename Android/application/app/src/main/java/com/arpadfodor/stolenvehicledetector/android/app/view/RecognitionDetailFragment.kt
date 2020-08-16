@@ -71,14 +71,17 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel) : Fragment(){
 
                     viewModel.sendRecognition(recognition.artificialId){ isSuccess ->
 
+                        val currentContext = context
+                        currentContext ?: return@sendRecognition
+
                         when(isSuccess){
                             true -> {
-                                AppSnackBarBuilder.buildSuccessSnackBar(requireContext(),
+                                AppSnackBarBuilder.buildSuccessSnackBar(currentContext,
                                     requireView(), getString(R.string.report_sent),
                                     Snackbar.LENGTH_SHORT).show()
                             }
                             else -> {
-                                AppSnackBarBuilder.buildAlertSnackBar(requireContext(),
+                                AppSnackBarBuilder.buildAlertSnackBar(currentContext,
                                     requireView(), getString(R.string.report_sending_failed),
                                     Snackbar.LENGTH_SHORT).show()
                             }

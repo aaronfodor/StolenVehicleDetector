@@ -27,30 +27,85 @@
         <item name="android:windowBackground">@color/optionsBackground</item>
     </style>
 
+    <style name="CardContainer">
+        <item name="android:padding">@dimen/padding_xxsmall</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:layout_marginStart">@dimen/margin_xsmall</item>
+        <item name="android:layout_marginEnd">@dimen/margin_xsmall</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large</item>
+        <item name="android:background">@drawable/card_background</item>
+    </style>
+
+    <style name="TitleText">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:fontFamily">@font/subtitle</item>
+        <item name="android:padding">@dimen/title_padding</item>
+        <item name="android:layout_margin">@dimen/title_margin</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
     <style name="ParagraphBody">
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textSize">@dimen/paragraph_text_size</item>
         <item name="android:fontFamily">@font/paragraph</item>
-        <item name="android:padding">@dimen/paragraph_padding</item>
+        <item name="android:gravity">start</item>
+        <item name="android:layout_marginTop">@dimen/paragraph_margin</item>
+        <item name="android:layout_marginStart">@dimen/paragraph_margin</item>
+        <item name="android:layout_marginEnd">@dimen/paragraph_margin</item>
+        <item name="android:layout_marginBottom">@dimen/paragraph_margin</item>
+        <item name="android:paddingTop">@dimen/paragraph_padding</item>
+        <item name="android:paddingStart">@dimen/paragraph_padding</item>
+        <item name="android:paddingEnd">@dimen/paragraph_padding</item>
+        <item name="android:paddingBottom">@dimen/paragraph_padding</item>
     </style>
 
-    <style name="SubtitleText">
-        <item name="android:textColor">@color/colorText</item>
+    <style name="SubtitleText" parent="ParagraphBody">
         <item name="android:textSize">@dimen/subtitle_text_size</item>
-        <item name="android:fontFamily">@font/subtitle</item>
-        <item name="android:padding">@dimen/subtitle_padding</item>
-    </style>
-
-    <style name="recognitionItem">
-        <item name="android:textColor">@color/colorCardText</item>
-        <item name="android:textSize">@dimen/list_item_text_size</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:fontFamily">@font/paragraph</item>
-    </style>
-
-    <style name="recognitionTitleItem" parent="recognitionItem">
-        <item name="android:textSize">@dimen/list_title_item_text_size</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/paragraph_margin</item>
+        <item name="android:layout_marginStart">@dimen/paragraph_margin</item>
+        <item name="android:layout_marginEnd">@dimen/paragraph_margin</item>
+        <item name="android:layout_marginBottom">@dimen/paragraph_margin</item>
+        <item name="android:paddingTop">@dimen/paragraph_padding</item>
+        <item name="android:paddingStart">@dimen/paragraph_padding</item>
+        <item name="android:paddingEnd">@dimen/paragraph_padding</item>
+        <item name="android:paddingBottom">@dimen/paragraph_padding</item>
+    </style>
+
+    <style name="ListTextTop" parent="ParagraphBody">
+        <item name="android:layout_marginTop">@dimen/paragraph_margin</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:paddingTop">@dimen/paragraph_padding</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="ListTextBottom" parent="ParagraphBody">
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">@dimen/paragraph_margin</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">@dimen/paragraph_padding</item>
+    </style>
+
+    <style name="ListTextThin" parent="ParagraphBody">
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="ListSubtitleTop" parent="SubtitleText">
+        <item name="android:layout_marginTop">@dimen/paragraph_margin</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:paddingTop">@dimen/paragraph_padding</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="ListSubtitleBottom" parent="SubtitleText">
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">@dimen/paragraph_margin</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">@dimen/paragraph_padding</item>
     </style>
 
 </resources>

@@ -87,13 +87,32 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
                 startActivity(intent)
             }
 
-            R.id.navigation_gallery -> {
-            }
             R.id.navigation_reports -> {
+            }
+
+            R.id.navigation_gallery -> {
             }
 
             R.id.navigation_settings -> {
                 val toStartActivity = SettingsActivity::class.java
+                if(toStartActivity == this::class.java){
+                    return false
+                }
+                val intent = Intent(this, toStartActivity)
+                startActivity(intent)
+            }
+
+            R.id.navigation_how_to_use -> {
+                val toStartActivity = HowToUseActivity::class.java
+                if(toStartActivity == this::class.java){
+                    return false
+                }
+                val intent = Intent(this, toStartActivity)
+                startActivity(intent)
+            }
+
+            R.id.navigation_about -> {
+                val toStartActivity = AboutActivity::class.java
                 if(toStartActivity == this::class.java){
                     return false
                 }

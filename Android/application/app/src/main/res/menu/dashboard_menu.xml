@@ -8,13 +8,8 @@
 
     <item
         android:id="@+id/navigation_load"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/menu_load" />
-
-    <item
-        android:id="@+id/navigation_gallery"
         android:icon="@android:drawable/ic_menu_gallery"
-        android:title="@string/menu_gallery" />
+        android:title="@string/menu_load" />
 
     <item
         android:id="@+id/navigation_reports"
@@ -22,8 +17,23 @@
         android:title="@string/menu_reports" />
 
     <item
+        android:id="@+id/navigation_gallery"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/menu_gallery" />
+
+    <item
         android:id="@+id/navigation_settings"
         android:icon="@android:drawable/ic_menu_manage"
         android:title="@string/menu_settings" />
+
+    <item
+        android:id="@+id/navigation_how_to_use"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="@string/menu_how_to_use" />
+
+    <item
+        android:id="@+id/navigation_about"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="@string/menu_about" />
 
 </menu>

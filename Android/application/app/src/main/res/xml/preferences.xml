@@ -85,23 +85,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/about">
-
-        <Preference
-            android:title="@string/app_name"
-            android:summary="@string/app_version" />
-
-        <Preference
-            android:title="@string/app_creator"
-            android:summary="@string/app_date" />
-
-        <Preference android:title="@string/further">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/developer_page" />
-        </Preference>
-
-    </PreferenceCategory>
-
 </PreferenceScreen>

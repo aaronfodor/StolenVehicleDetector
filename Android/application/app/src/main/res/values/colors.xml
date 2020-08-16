@@ -24,7 +24,8 @@
     <color name="colorCardBackground">#B333333D</color>
     <color name="colorCardText">#DFFFFF</color>
 
-    <color name="colorButton">#03DAC5</color>
+    <color name="colorButtonPositive">#03DAC5</color>
+    <color name="colorButtonNeutral">#DFFFFF</color>
     <color name="colorButtonPressed">#AAFFFFFF</color>
 
     <color name="colorEditTextBorder">#AAFFFFFF</color>
