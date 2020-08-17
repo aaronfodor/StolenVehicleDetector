@@ -6,8 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/alert_detail_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/TitleText"
+        android:text="@string/alert_details" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/recognition_detail_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -16,21 +25,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         style="@style/CardContainer">
 
-        <TextView
-            android:id="@+id/alert_detail_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            style="@style/TitleText"
-            android:text="@string/alert_details" />
-
         <ScrollView
             android:id="@+id/recognition_details_scrollview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/alert_detail_title"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/recognition_back_button"

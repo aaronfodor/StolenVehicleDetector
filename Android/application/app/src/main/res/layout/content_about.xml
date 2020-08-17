@@ -4,8 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    style="@style/CardContainer">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tvAboutTitle"
@@ -17,112 +16,123 @@
         style="@style/TitleText"
         android:text="@string/menu_about" />
 
-    <ScrollView
-        android:id="@+id/about_scrollview"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvAboutTitle"
-        app:layout_constraintBottom_toTopOf="@+id/fabBugReport"
-        android:padding="@dimen/paragraph_padding"
-        android:layout_margin="@dimen/paragraph_margin"
-        android:gravity="top">
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/CardContainer">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/about_details_container"
+        <ScrollView
+            android:id="@+id/about_scrollview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/fabBugReport"
+            android:padding="@dimen/paragraph_padding"
+            android:layout_margin="@dimen/paragraph_margin"
+            android:gravity="top">
 
-            <TextView
-                android:id="@+id/aboutAppName"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/about_details_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                style="@style/SubtitleTop"
-                android:text="@string/app_name"/>
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/aboutAppVersion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/aboutAppName"
-                style="@style/ParagraphBodyBottom"
-                android:text="@string/app_version"/>
+                <TextView
+                    android:id="@+id/aboutAppName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    style="@style/SubtitleTop"
+                    android:text="@string/app_name"/>
 
-            <TextView
-                android:id="@+id/aboutAppCreator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/aboutAppVersion"
-                style="@style/SubtitleTop"
-                android:text="@string/app_creator"/>
+                <TextView
+                    android:id="@+id/aboutAppVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/aboutAppName"
+                    style="@style/ParagraphBodyBottom"
+                    android:text="@string/app_version"/>
 
-            <TextView
-                android:id="@+id/aboutAppDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/aboutAppCreator"
-                style="@style/ParagraphBodyBottom"
-                android:text="@string/app_date"/>
+                <TextView
+                    android:id="@+id/aboutAppCreator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/aboutAppVersion"
+                    style="@style/SubtitleTop"
+                    android:text="@string/app_creator"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/aboutAppDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/aboutAppCreator"
+                    style="@style/ParagraphBodyBottom"
+                    android:text="@string/app_date"/>
 
-    </ScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabBugReport"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/button_margin"
-        android:backgroundTint="@color/colorButtonNeutral"
-        app:srcCompat="@drawable/icon_bug"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/glVerticalMiddle1st"/>
+        </ScrollView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabMoreFromDeveloper"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/button_margin"
-        android:backgroundTint="@color/colorButtonNeutral"
-        app:srcCompat="@drawable/icon_more_apps"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/glVerticalMiddle1st"
-        app:layout_constraintEnd_toEndOf="@+id/glVerticalMiddle2nd"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabBugReport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
+            android:backgroundTint="@color/colorButtonNeutral"
+            app:srcCompat="@drawable/icon_bug"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/glVerticalMiddle1st"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabReview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/button_margin"
-        android:backgroundTint="@color/colorButtonNeutral"
-        app:srcCompat="@drawable/icon_review"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/glVerticalMiddle2nd"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabMoreFromDeveloper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
+            android:backgroundTint="@color/colorButtonNeutral"
+            app:srcCompat="@drawable/icon_more_apps"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/glVerticalMiddle1st"
+            app:layout_constraintEnd_toEndOf="@+id/glVerticalMiddle2nd"/>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/glVerticalMiddle1st"
-        app:layout_constraintGuide_percent="0.33"
-        android:orientation="vertical"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabReview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
+            android:backgroundTint="@color/colorButtonNeutral"
+            app:srcCompat="@drawable/icon_review"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/glVerticalMiddle2nd"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/glVerticalMiddle2nd"
-        app:layout_constraintGuide_percent="0.66"
-        android:orientation="vertical"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/glVerticalMiddle1st"
+            app:layout_constraintGuide_percent="0.33"
+            android:orientation="vertical"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/glVerticalMiddle2nd"
+            app:layout_constraintGuide_percent="0.66"
+            android:orientation="vertical"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

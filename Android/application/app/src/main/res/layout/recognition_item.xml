@@ -15,9 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/card_background"
-        android:padding="@dimen/paragraph_padding"
-        android:layout_margin="@dimen/paragraph_margin">
+        style="@style/ListElementContainer">
 
         <TextView
             android:id="@+id/recognitionId"

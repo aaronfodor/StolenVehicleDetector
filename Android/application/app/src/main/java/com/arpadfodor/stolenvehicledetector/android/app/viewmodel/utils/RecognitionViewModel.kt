@@ -28,7 +28,7 @@ abstract class RecognitionViewModel : ViewModel(){
         MutableLiveData<Boolean>(false)
     }
 
-    open fun sendRecognition(id: Int, callback: (Boolean) -> Unit){
+    fun sendRecognition(id: Int, callback: (Boolean) -> Unit){
 
         val recognition = recognitions.value?.find { it.artificialId == id } ?: return
         val apiReport = ApiVehicleReport(0, recognition.licenseId, "",
@@ -37,18 +37,21 @@ abstract class RecognitionViewModel : ViewModel(){
 
         ApiService.postReport(apiReport) { isSuccess ->
             if(isSuccess){
-                deleteRecognition(id)
+                deleteRecognition(id){ isSuccess ->
+                    callback(isSuccess)
+                }
             }
             callback(isSuccess)
         }
 
     }
 
-    open fun deleteRecognition(id: Int){
+    fun deleteRecognition(id: Int, callback: (Boolean) -> Unit){
         val filteredAlerts = recognitions.value?.filter {
             it.artificialId != id
         }
         recognitions.postValue(filteredAlerts)
+        callback(true)
     }
 
     fun selectRecognition(id: Int) {

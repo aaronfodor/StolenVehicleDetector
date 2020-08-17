@@ -1,4 +1,4 @@
-package com.arpadfodor.stolenvehicledetector.android.app.view
+package com.arpadfodor.stolenvehicledetector.android.app.view.utils
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -33,11 +33,7 @@ class RecognitionListFragment(viewModel: RecognitionViewModel) : Fragment(){
 
         super.onViewCreated(view, savedInstanceState)
 
-        adapter =
-            RecognitionListAdapter(
-                requireContext(),
-                createEventListener()
-            )
+        adapter = RecognitionListAdapter(requireContext(), createEventListener())
         alert_list.adapter = adapter
         alert_list.layoutManager = LinearLayoutManager(requireContext())
 
@@ -73,20 +69,22 @@ class RecognitionListFragment(viewModel: RecognitionViewModel) : Fragment(){
                 viewModel.sendRecognition(id) { isSuccess ->
 
                     val currentContext = context
+                    val currentView = view
                     currentContext ?: return@sendRecognition
+                    currentView ?: return@sendRecognition
 
                     when (isSuccess) {
                         true -> {
                             AppSnackBarBuilder.buildSuccessSnackBar(
                                 currentContext,
-                                requireView(), getString(R.string.report_sent),
+                                currentView, getString(R.string.report_sent),
                                 Snackbar.LENGTH_SHORT
                             ).show()
                         }
                         else -> {
                             AppSnackBarBuilder.buildAlertSnackBar(
                                 currentContext,
-                                requireView(), getString(R.string.report_sending_failed),
+                                currentView, getString(R.string.report_sending_failed),
                                 Snackbar.LENGTH_SHORT
                             ).show()
                         }
@@ -98,13 +96,20 @@ class RecognitionListFragment(viewModel: RecognitionViewModel) : Fragment(){
 
             deleteClickListener = { id ->
 
-                viewModel.deleteRecognition(id)
+                viewModel.deleteRecognition(id){isSuccess ->
 
-                AppSnackBarBuilder.buildInfoSnackBar(
-                    requireContext(),
-                    requireView(), getString(R.string.report_deleted),
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                    val currentContext = context
+                    val currentView = view
+                    currentContext ?: return@deleteRecognition
+                    currentView ?: return@deleteRecognition
+
+                    AppSnackBarBuilder.buildInfoSnackBar(
+                        currentContext,
+                        currentView, getString(R.string.report_deleted),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+
+                }
 
             }
 

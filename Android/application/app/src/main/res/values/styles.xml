@@ -29,10 +29,19 @@
 
     <style name="CardContainer">
         <item name="android:padding">@dimen/padding_xxsmall</item>
-        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:layout_marginStart">@dimen/margin_xsmall</item>
         <item name="android:layout_marginEnd">@dimen/margin_xsmall</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
+        <item name="android:background">@drawable/card_background</item>
+    </style>
+
+    <style name="ListElementContainer" parent="CardContainer">
+        <item name="android:padding">@dimen/padding_xxsmall</item>
+        <item name="android:layout_marginTop">@dimen/margin_xsmall</item>
+        <item name="android:layout_marginStart">@dimen/margin_xsmall</item>
+        <item name="android:layout_marginEnd">@dimen/margin_xsmall</item>
+        <item name="android:layout_marginBottom">@dimen/margin_xsmall</item>
         <item name="android:background">@drawable/card_background</item>
     </style>
 

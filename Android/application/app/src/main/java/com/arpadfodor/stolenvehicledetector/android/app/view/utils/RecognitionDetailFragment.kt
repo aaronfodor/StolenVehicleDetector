@@ -1,4 +1,4 @@
-package com.arpadfodor.stolenvehicledetector.android.app.view
+package com.arpadfodor.stolenvehicledetector.android.app.view.utils
 
 import android.os.Bundle
 import android.text.InputType
@@ -8,10 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_detail.*
@@ -58,12 +56,23 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel) : Fragment(){
 
                 recognition_delete_button?.setOnClickListener {
 
-                    viewModel.deleteRecognition(recognition.artificialId)
-                    viewModel.deselectRecognition()
+                    viewModel.deleteRecognition(recognition.artificialId){
 
-                    AppSnackBarBuilder.buildInfoSnackBar(requireContext(),
-                        requireView(), getString(R.string.report_deleted),
-                        Snackbar.LENGTH_SHORT).show()
+                        viewModel.deselectRecognition()
+
+                        val currentContext = context
+                        val currentView = view
+                        currentContext ?: return@deleteRecognition
+                        currentView ?: return@deleteRecognition
+
+                        AppSnackBarBuilder.buildInfoSnackBar(
+                            currentContext,
+                            currentView,
+                            getString(R.string.report_deleted),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+
+                    }
 
                 }
 
@@ -72,18 +81,26 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel) : Fragment(){
                     viewModel.sendRecognition(recognition.artificialId){ isSuccess ->
 
                         val currentContext = context
+                        val currentView = view
                         currentContext ?: return@sendRecognition
+                        currentView ?: return@sendRecognition
 
                         when(isSuccess){
                             true -> {
-                                AppSnackBarBuilder.buildSuccessSnackBar(currentContext,
-                                    requireView(), getString(R.string.report_sent),
-                                    Snackbar.LENGTH_SHORT).show()
+                                AppSnackBarBuilder.buildSuccessSnackBar(
+                                    currentContext,
+                                    currentView,
+                                    getString(R.string.report_sent),
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
                             }
                             else -> {
-                                AppSnackBarBuilder.buildAlertSnackBar(currentContext,
-                                    requireView(), getString(R.string.report_sending_failed),
-                                    Snackbar.LENGTH_SHORT).show()
+                                AppSnackBarBuilder.buildAlertSnackBar(
+                                    currentContext,
+                                    currentView,
+                                    getString(R.string.report_sending_failed),
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
                             }
                         }
 
