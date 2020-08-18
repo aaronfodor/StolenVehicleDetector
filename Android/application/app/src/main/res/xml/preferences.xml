@@ -85,4 +85,15 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/user_settings">
+
+        <Preference
+            android:key="@string/SETTINGS_DELETE_USER_REPORTS"
+            android:title="@string/delete_user_reports"
+            android:summary="@string/delete_user_reports_summary"
+            android:selectable="true" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -115,6 +115,14 @@
             android:theme="@style/AppTheme">
         </activity>
 
+        <activity
+            android:name="com.arpadfodor.stolenvehicledetector.android.app.view.UserReportsActivity"
+            android:icon="@mipmap/ic_launcher"
+            android:rotationAnimation="seamless"
+            android:screenOrientation="fullUser"
+            android:theme="@style/AppTheme">
+        </activity>
+
     </application>
 
 </manifest>

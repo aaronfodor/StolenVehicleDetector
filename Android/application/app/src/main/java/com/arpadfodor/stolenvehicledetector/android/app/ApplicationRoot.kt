@@ -83,7 +83,7 @@ class ApplicationRoot : Application() {
 
         if(isAutoSyncEnabled){
 
-            DatabaseService.updateAllFromApi(
+            DatabaseService.updateAll(
 
                 callbackVehicles = { isSuccess ->
                     if(isSuccess){

@@ -7,14 +7,14 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/alert_detail_title"
+        android:id="@+id/recognition_detail_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         style="@style/TitleText"
-        android:text="@string/alert_details" />
+        android:text="@string/recognition_details" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -165,7 +165,7 @@
             app:layout_constraintEnd_toStartOf="@+id/glVerticalMiddle1st"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/recognition_delete_button"
+            android:id="@+id/recognitionDeleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
@@ -176,7 +176,7 @@
             app:layout_constraintEnd_toStartOf="@+id/glVerticalMiddle2nd"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/recognition_send_button"
+            android:id="@+id/recognitionSendButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"

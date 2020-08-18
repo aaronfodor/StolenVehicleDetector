@@ -2,8 +2,6 @@ package com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
-import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiVehicleReport
 
 abstract class RecognitionViewModel : ViewModel(){
 
@@ -28,25 +26,9 @@ abstract class RecognitionViewModel : ViewModel(){
         MutableLiveData<Boolean>(false)
     }
 
-    fun sendRecognition(id: Int, callback: (Boolean) -> Unit){
+    open fun sendRecognition(id: Int, callback: (Boolean) -> Unit){}
 
-        val recognition = recognitions.value?.find { it.artificialId == id } ?: return
-        val apiReport = ApiVehicleReport(0, recognition.licenseId, "",
-            recognition.latitude.toDouble(), recognition.longitude.toDouble(),
-            recognition.message, recognition.date)
-
-        ApiService.postReport(apiReport) { isSuccess ->
-            if(isSuccess){
-                deleteRecognition(id){ isSuccess ->
-                    callback(isSuccess)
-                }
-            }
-            callback(isSuccess)
-        }
-
-    }
-
-    fun deleteRecognition(id: Int, callback: (Boolean) -> Unit){
+    open fun deleteRecognition(id: Int, callback: (Boolean) -> Unit){
         val filteredAlerts = recognitions.value?.filter {
             it.artificialId != id
         }

@@ -1,5 +1,6 @@
 package com.arpadfodor.stolenvehicledetector.android.app.view.utils
 
+import android.app.Activity
 import android.app.ActivityOptions
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -90,7 +91,13 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             R.id.navigation_reports -> {
             }
 
-            R.id.navigation_gallery -> {
+            R.id.navigation_user_reports -> {
+                val toStartActivity = UserReportsActivity::class.java
+                if(toStartActivity == this::class.java){
+                    return false
+                }
+                val intent = Intent(this, toStartActivity)
+                startActivity(intent)
             }
 
             R.id.navigation_settings -> {

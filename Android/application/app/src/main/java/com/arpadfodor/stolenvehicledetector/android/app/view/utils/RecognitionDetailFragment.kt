@@ -14,7 +14,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognit
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_detail.*
 
-class RecognitionDetailFragment(viewModel: RecognitionViewModel) : Fragment(){
+class RecognitionDetailFragment(viewModel: RecognitionViewModel, title: String) : Fragment(){
 
     companion object{
         const val TAG = "Recognition detail fragment"
@@ -22,8 +22,15 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel) : Fragment(){
 
     private val viewModel = viewModel
 
+    private val title = title
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_recognition_detail, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recognition_detail_title.text = title
     }
 
     override fun onResume() {
@@ -54,7 +61,7 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel) : Fragment(){
                     viewModel.deselectRecognition()
                 }
 
-                recognition_delete_button?.setOnClickListener {
+                recognitionDeleteButton?.setOnClickListener {
 
                     viewModel.deleteRecognition(recognition.artificialId){
 
@@ -76,53 +83,74 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel) : Fragment(){
 
                 }
 
-                recognition_send_button?.setOnClickListener {
+                // if the recognition has been sent -> hide send button, disable editing message
+                if(recognition.isActive){
 
-                    viewModel.sendRecognition(recognition.artificialId){ isSuccess ->
+                    recognitionSendButton?.setImageResource(android.R.drawable.ic_menu_send)
+                    recognitionDetailMessage?.isFocusable = true
+                    recognitionDetailMessage?.isClickable = true
 
-                        val currentContext = context
-                        val currentView = view
-                        currentContext ?: return@sendRecognition
-                        currentView ?: return@sendRecognition
+                    recognitionSendButton?.setOnClickListener {
 
-                        when(isSuccess){
-                            true -> {
-                                AppSnackBarBuilder.buildSuccessSnackBar(
-                                    currentContext,
-                                    currentView,
-                                    getString(R.string.report_sent),
-                                    Snackbar.LENGTH_SHORT
-                                ).show()
+                        viewModel.sendRecognition(recognition.artificialId){ isSuccess ->
+
+                            val currentContext = context
+                            val currentView = view
+                            currentContext ?: return@sendRecognition
+                            currentView ?: return@sendRecognition
+
+                            when(isSuccess){
+                                true -> {
+                                    AppSnackBarBuilder.buildSuccessSnackBar(
+                                        currentContext,
+                                        currentView,
+                                        getString(R.string.report_sent),
+                                        Snackbar.LENGTH_SHORT
+                                    ).show()
+                                }
+                                else -> {
+                                    AppSnackBarBuilder.buildAlertSnackBar(
+                                        currentContext,
+                                        currentView,
+                                        getString(R.string.report_sending_failed),
+                                        Snackbar.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+
+                        }
+
+                        viewModel.deselectRecognition()
+
+                    }
+
+                    recognitionDetailMessage?.setOnEditorActionListener { view, actionId, event ->
+
+                        val message = view.text.toString()
+
+                        return@setOnEditorActionListener when (actionId){
+                            EditorInfo.IME_ACTION_DONE ->{
+                                viewModel.updateRecognitionMessageById(id, message)
+                                recognitionDetailMessage.clearFocus()
+                                false
                             }
                             else -> {
-                                AppSnackBarBuilder.buildAlertSnackBar(
-                                    currentContext,
-                                    currentView,
-                                    getString(R.string.report_sending_failed),
-                                    Snackbar.LENGTH_SHORT
-                                ).show()
+                                false
                             }
                         }
 
                     }
 
-                    viewModel.deselectRecognition()
-
                 }
+                else{
 
-                recognitionDetailMessage?.setOnEditorActionListener { view, actionId, event ->
+                    recognitionSendButton?.setImageResource(R.drawable.icon_tick)
+                    recognitionDetailMessage?.isFocusable = false
+                    recognitionDetailMessage?.isClickable = false
 
-                    val message = view.text.toString()
-
-                    return@setOnEditorActionListener when (actionId){
-                        EditorInfo.IME_ACTION_DONE ->{
-                            viewModel.updateRecognitionMessageById(id, message)
-                            recognitionDetailMessage.clearFocus()
-                            false
-                        }
-                        else -> {
-                            false
-                        }
+                    recognitionSendButton?.setOnClickListener {}
+                    recognitionDetailMessage?.setOnEditorActionListener { view, actionId, event ->
+                        true
                     }
 
                 }

@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.arpadfodor.stolenvehicledetector.android.app.databinding.RecognitionItemBinding
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
+import java.util.*
 
-class RecognitionListAdapter(context: Context, clickListener: RecognitionEventListener)
-    : ListAdapter<Recognition, RecognitionListAdapter.RecognitionViewHolder>(
-    RecognitionDiffCallback()
-) {
+class RecognitionListAdapter(context: Context, clickListener: RecognitionEventListener) :
+    ListAdapter<Recognition, RecognitionListAdapter.RecognitionViewHolder>(RecognitionDiffCallback())
+{
 
     private val context = context
     private val clickListener = clickListener
@@ -27,6 +27,7 @@ class RecognitionListAdapter(context: Context, clickListener: RecognitionEventLi
         val binding = binding
 
         companion object{
+
             fun from(parent: ViewGroup): RecognitionViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = RecognitionItemBinding.inflate(layoutInflater, parent, false)
@@ -34,6 +35,7 @@ class RecognitionListAdapter(context: Context, clickListener: RecognitionEventLi
                     binding
                 )
             }
+
         }
 
         fun bind(item: Recognition, clickListener: RecognitionEventListener?) {
@@ -50,9 +52,7 @@ class RecognitionListAdapter(context: Context, clickListener: RecognitionEventLi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecognitionViewHolder {
-        return RecognitionViewHolder.from(
-            parent
-        )
+        return RecognitionViewHolder.from(parent)
     }
 
     private fun appearAnimation(viewToAnimate: View) {

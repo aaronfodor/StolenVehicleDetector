@@ -13,13 +13,13 @@
 
     <item
         android:id="@+id/navigation_reports"
-        android:icon="@android:drawable/ic_menu_view"
+        android:icon="@android:drawable/ic_menu_myplaces"
         android:title="@string/menu_reports" />
 
     <item
-        android:id="@+id/navigation_gallery"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/menu_gallery" />
+        android:id="@+id/navigation_user_reports"
+        android:icon="@android:drawable/ic_menu_report_image"
+        android:title="@string/menu_user_reports" />
 
     <item
         android:id="@+id/navigation_settings"

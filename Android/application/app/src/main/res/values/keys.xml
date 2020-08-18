@@ -12,5 +12,6 @@
     <string name="SETTINGS_SYNC_NOW">sync_now</string>
     <string name="LAST_SYNCED_DB_VEHICLES">last_synced_db_vehicles</string>
     <string name="LAST_SYNCED_DB_REPORTS">last_synced_db_coordinates</string>
+    <string name="SETTINGS_DELETE_USER_REPORTS">delete_user_reports</string>
 
 </resources>

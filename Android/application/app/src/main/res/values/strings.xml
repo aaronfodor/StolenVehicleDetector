@@ -3,8 +3,8 @@
 <!DOCTYPE resources [
     <!ENTITY appName "Stolen Vehicle Detector">
     <!ENTITY appId "">
-    <!ENTITY appVersion "v0.14">
-    <!ENTITY appDate "17/08/2020">
+    <!ENTITY appVersion "v0.15">
+    <!ENTITY appDate "18/08/2020">
     <!ENTITY appCreator "Arpad Fodor">
     <!ENTITY adMobAppId "ca-app-pub-3940256099942544~3347511713">
     <!ENTITY adMobBannerId "ca-app-pub-3940256099942544/6300978111">
@@ -62,18 +62,23 @@
     <string name="menu_close">Close navigation menu</string>
     <string name="menu_live">Live</string>
     <string name="menu_load">Load</string>
-    <string name="menu_gallery">Gallery</string>
     <string name="menu_reports">Reports</string>
+    <string name="menu_user_reports">My reports</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_how_to_use">How to use</string>
     <string name="menu_about">About</string>
 
-    <string name="alert_list">Pending alerts</string>
+    <string name="recognition_list">Recognitions</string>
+    <string name="recognition_details">Recognition details</string>
+    <string name="alert_list">Alerts</string>
     <string name="alert_details">Alert details</string>
+    <string name="user_reports_list">My reports</string>
+    <string name="user_report_details">Report details</string>
 
     <string name="general_settings">General settings</string>
     <string name="detector_settings">Detection settings</string>
     <string name="sync_settings">Sync settings</string>
+    <string name="user_settings">User settings</string>
     <string name="setting_keep_screen_alive">Keep screen alive</string>
     <string name="setting_num_recognitions">Recognitions per image</string>
     <string name="setting_summary_num_recognitions">The maximum number of recognitions that appear at the same time.</string>
@@ -85,10 +90,14 @@
     <string name="force_update_db">Sync now</string>
     <string name="updated_database">Database updated</string>
     <string name="updating_failed">Updating failed</string>
+    <string name="deleted_database">Database deleted</string>
+    <string name="deleting_failed">Deleting failed</string>
     <string name="force_update_db_summary">Internet connection is required to update the database.</string>
     <string name="setting_auto_sync">Enable Auto Sync</string>
     <string name="last_synced_db_vehicles">Vehicles synced</string>
     <string name="last_synced_db_reports">Reports synced</string>
+    <string name="delete_user_reports">Delete my reports</string>
+    <string name="delete_user_reports_summary">Note: Reports already sent will not be affected.</string>
 
     <string name="app_dialog_image">app dialog image</string>
 

@@ -7,6 +7,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
+import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.StolenVehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.DatabaseService
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
@@ -47,13 +48,14 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         updatePreferenceUpdatedTimestamp(preferences)
 
         val syncButton: Preference? = findPreference(getString(R.string.SETTINGS_SYNC_NOW))
+        val deleteUserReportsButton: Preference? = findPreference(getString(R.string.SETTINGS_DELETE_USER_REPORTS))
 
         syncButton?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
 
             var dbVehiclesUpdated = false
             var dbCoordinatesUpdated = false
 
-            DatabaseService.updateAllFromApi(
+            DatabaseService.updateAll(
 
                 callbackVehicles = { isSuccess ->
 
@@ -82,6 +84,17 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
             )
 
+            true
+
+        }
+
+        deleteUserReportsButton?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+
+            val user = AuthenticationService.userName
+
+            DatabaseService.deleteUserReportsOfUser(user){isSuccess ->
+                dbDeleteResultSnackBar(isSuccess)
+            }
             true
 
         }
@@ -183,6 +196,19 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         else{
             AppSnackBarBuilder.buildAlertSnackBar(requireContext().applicationContext, this.requireView(),
                 getString(R.string.updating_failed), Snackbar.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun dbDeleteResultSnackBar(isSuccess: Boolean){
+
+        if(isSuccess){
+            AppSnackBarBuilder.buildInfoSnackBar(requireContext().applicationContext, this.requireView(),
+                getString(R.string.deleted_database), Snackbar.LENGTH_SHORT).show()
+        }
+        else{
+            AppSnackBarBuilder.buildAlertSnackBar(requireContext().applicationContext, this.requireView(),
+                getString(R.string.deleting_failed), Snackbar.LENGTH_SHORT).show()
         }
 
     }

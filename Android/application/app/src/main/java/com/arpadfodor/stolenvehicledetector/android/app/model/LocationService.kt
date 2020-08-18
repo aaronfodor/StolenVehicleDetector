@@ -30,7 +30,7 @@ object LocationService {
 
     /**
      * Retrieves the location to the given lambda
-     * */
+     **/
     fun updateLocation(){
 
         var latitude = 0.0

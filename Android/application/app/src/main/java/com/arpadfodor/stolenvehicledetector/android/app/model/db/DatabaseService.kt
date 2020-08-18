@@ -4,6 +4,7 @@ import android.content.Context
 import com.arpadfodor.stolenvehicledetector.android.app.model.DateHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.MetaData
+import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.UserReport
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Report
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Vehicle
 
@@ -54,7 +55,7 @@ object DatabaseService {
     }
 
     private fun setReports(reports : List<Report>, reportsMeta: MetaData,
-                            callback: (Boolean) -> Unit){
+                           callback: (Boolean) -> Unit){
 
         val database = ApplicationDB.getDatabase(context)
 
@@ -88,6 +89,9 @@ object DatabaseService {
 
     }
 
+    /**
+     * Vehicles
+     **/
     fun getVehicles(callback: (List<Vehicle>) -> Unit) {
 
         val vehicles = mutableListOf<Vehicle>()
@@ -129,6 +133,30 @@ object DatabaseService {
 
     }
 
+    private fun getVehiclesMeta(callback: (MetaData) -> Unit){
+
+        var metaData = MetaData()
+        val database = ApplicationDB.getDatabase(context)
+
+        Thread {
+
+            try {
+                metaData = database.metaTable().getByKey(VEHICLES_META_ID) ?: MetaData()
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+            finally {
+                callback(metaData)
+            }
+
+        }.start()
+
+    }
+
+    /**
+     * Reports
+     **/
     fun getReports(callback: (List<Report>) -> Unit) {
 
         val reports = mutableListOf<Report>()
@@ -145,27 +173,6 @@ object DatabaseService {
             }
             catch (e: Exception) {
                 e.printStackTrace()
-            }
-
-        }.start()
-
-    }
-
-    private fun getVehiclesMeta(callback: (MetaData) -> Unit){
-
-        var metaData = MetaData()
-        val database = ApplicationDB.getDatabase(context)
-
-        Thread {
-
-            try {
-                metaData = database.metaTable().getByKey(VEHICLES_META_ID) ?: MetaData()
-            }
-            catch (e: Exception) {
-                e.printStackTrace()
-            }
-            finally {
-                callback(metaData)
             }
 
         }.start()
@@ -193,11 +200,106 @@ object DatabaseService {
 
     }
 
+    /**
+     * User reports
+     **/
+    fun postUserReport(report: UserReport, callback: (Boolean) -> Unit){
+
+        val database = ApplicationDB.getDatabase(context)
+
+        Thread {
+
+            var isDbUpdated = false
+
+            // run delete, insert, etc. in an atomic transaction
+            database.runInTransaction{
+
+                try {
+                    database.userReportTable().insert(report)
+                    //update the local flag
+                    isDbUpdated = true
+                }
+                catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                finally {
+                    callback(isDbUpdated)
+                }
+
+            }
+
+        }.start()
+
+    }
+
+    fun getUserReportsByUser(userId: String, callback: (List<UserReport>) -> Unit) {
+
+        val reports = mutableListOf<UserReport>()
+        val database = ApplicationDB.getDatabase(context)
+
+        Thread {
+
+            try {
+                val dbContent = database.userReportTable().getByReporter(userId) ?: listOf()
+                for(element in dbContent){
+                    reports.add(element)
+                }
+                callback(reports)
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        }.start()
+
+    }
+
+    fun deleteUserReportByIdAndUser(id: Int, userId: String, callback: (Boolean) -> Unit) {
+
+        val database = ApplicationDB.getDatabase(context)
+
+        Thread {
+
+            try {
+                database.userReportTable().deleteByIdAndReporter(id, userId)
+                callback(true)
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+                callback(false)
+            }
+
+        }.start()
+
+    }
+
+    fun deleteUserReportsOfUser(userId: String, callback: (Boolean) -> Unit) {
+
+        val database = ApplicationDB.getDatabase(context)
+
+        Thread {
+
+            try {
+                database.userReportTable().deleteAllByReporter(userId)
+                callback(true)
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+                callback(false)
+            }
+
+        }.start()
+
+    }
+
+    /**
+     * Update from API
+     **/
     fun updateVehiclesFromApi(callback: (isSuccess: Boolean) -> Unit){
 
         ApiService.getVehiclesMeta { size, apiTimestamp ->
 
-            isInputNewerTimestamp(apiTimestamp){ isNewer ->
+            isVehiclesFreshTimestamp(apiTimestamp){ isNewer ->
 
                 //is the API data fresh compared to app DB content?
                 if(isNewer){
@@ -233,7 +335,7 @@ object DatabaseService {
 
         ApiService.getReportsMeta { size, apiTimestamp ->
 
-            isInputNewerTimestamp(apiTimestamp){ isNewer ->
+            isReportsFreshTimestamp(apiTimestamp){ isNewer ->
 
                 //is the API data fresh compared to app DB content?
                 if(isNewer){
@@ -265,19 +367,30 @@ object DatabaseService {
 
     }
 
-    fun updateAllFromApi(callbackVehicles: (isVehiclesSuccess: Boolean) -> Unit,
-        callbackReports: (isReportsSuccess: Boolean) -> Unit){
+    fun updateAll(callbackVehicles: (isVehiclesSuccess: Boolean) -> Unit,
+                  callbackReports: (isReportsSuccess: Boolean) -> Unit){
         updateVehiclesFromApi(callbackVehicles)
         updateReportsFromApi(callbackReports)
     }
 
-    private fun isInputNewerTimestamp(currentTimestampUTC: String, callback: (isFreshTimestamp: Boolean) -> Unit){
+    private fun isVehiclesFreshTimestamp(currentTimestampUTC: String, callback: (isFreshTimestamp: Boolean) -> Unit){
         getVehiclesMeta { meta ->
-            val currentDate = DateHandler.stringToDate(currentTimestampUTC)
-            val dbDate = DateHandler.stringToDate(meta.modificationTimestampUTC)
-            val isAfterDbTimestamp = currentDate.after(dbDate)
-            callback(isAfterDbTimestamp)
+            val result = isFreshTimestamp(meta, currentTimestampUTC)
+            callback(result)
         }
+    }
+
+    private fun isReportsFreshTimestamp(currentTimestampUTC: String, callback: (isFreshTimestamp: Boolean) -> Unit){
+        getReportsMeta { meta ->
+            val result = isFreshTimestamp(meta, currentTimestampUTC)
+            callback(result)
+        }
+    }
+
+    private fun isFreshTimestamp(meta: MetaData, currentTimestampUTC: String) : Boolean{
+        val currentDate = DateHandler.stringToDate(currentTimestampUTC)
+        val dbDate = DateHandler.stringToDate(meta.modificationTimestampUTC)
+        return currentDate.after(dbDate)
     }
 
 }

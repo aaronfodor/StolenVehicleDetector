@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Size
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.StolenVehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
@@ -69,35 +70,16 @@ class LoadViewModel : ViewModel(){
 
             val sourceBitmap = MediaHandler.getImage(selectedImageUri)
             val imageOrientation = MediaHandler.getPhotoOrientation(selectedImageUri)
-            val imageMeta = MetaProvider.getImageMetaData(selectedImageUri)
+            val imageMetaInfo = MetaProvider.getImageMetaData(selectedImageUri)
 
             // remove the bounding boxes of the previous image
             boundingBoxImage.postValue(null)
+            imageMetaData.postValue(imageMetaInfo)
 
             val rotatedBitmap = ImageConverter.rotateBitmap(sourceBitmap, imageOrientation)
             loadedImage.postValue(rotatedBitmap)
-            imageMetaData.postValue(imageMeta)
 
-            val smallerScreenDimension = min(screenDimensions.width, screenDimensions.height)
-            val requiredOutputImageSize = Size(smallerScreenDimension, smallerScreenDimension)
-
-            val boundingBoxBitmap = licensePlateReaderService.recognize(rotatedBitmap,
-                requiredOutputImageSize, 0,
-                numRecognitionsToShow, minimumPredictionCertaintyToShow) {arrayOfIdImagePairs ->
-
-                val recognitions = arrayListOf<Recognition>()
-                var i = 1
-                for(pair in arrayOfIdImagePairs){
-                    recognitions.add(
-                        Recognition(i, pair.first, pair.second,
-                            imageMeta[0], imageMeta[1], imageMeta[2])
-                    )
-                    i++
-                }
-                this.recognitions.postValue(recognitions.toTypedArray())
-            }
-
-            boundingBoxImage.postValue(boundingBoxBitmap)
+            recognizeImage(rotatedBitmap, imageMetaInfo)
 
         }).start()
 
@@ -106,39 +88,44 @@ class LoadViewModel : ViewModel(){
     fun rotateImage(){
 
         // remove the bounding boxes of the previous image
-        boundingBoxImage.value = null
+        boundingBoxImage.postValue(null)
 
-        val image = loadedImage.value ?: return
+        val sourceBitmap = loadedImage.value ?: return
 
         Thread(Runnable {
 
-            val rotatedBitmap = ImageConverter.rotateBitmap(image, 90)
+            val rotatedBitmap = ImageConverter.rotateBitmap(sourceBitmap, 90)
             loadedImage.postValue(rotatedBitmap)
-            val imageMeta = imageMetaData.value ?: arrayOf("", "", "")
 
-            val smallerScreenDimension = min(screenDimensions.width, screenDimensions.height)
-            val requiredOutputImageSize = Size(smallerScreenDimension, smallerScreenDimension)
-
-            val boundingBoxBitmap = licensePlateReaderService.recognize(rotatedBitmap,
-                requiredOutputImageSize, 0,
-                numRecognitionsToShow, minimumPredictionCertaintyToShow) {arrayOfIdImagePairs ->
-
-                val recognitions = arrayListOf<Recognition>()
-                var i = 1
-                for(pair in arrayOfIdImagePairs){
-                    recognitions.add(
-                        Recognition(i, pair.first, pair.second,
-                            imageMeta[0], imageMeta[1], imageMeta[2])
-                    )
-                    i++
-                }
-                this.recognitions.postValue(recognitions.toTypedArray())
-
-            }
-
-            boundingBoxImage.postValue(boundingBoxBitmap)
+            recognizeImage(rotatedBitmap, imageMetaData.value ?: arrayOf("", "", ""))
 
         }).start()
+
+    }
+
+    private fun recognizeImage(rotatedBitmap: Bitmap, imageMeta: Array<String>){
+
+        val smallerScreenDimension = min(screenDimensions.width, screenDimensions.height)
+        val requiredOutputImageSize = Size(smallerScreenDimension, smallerScreenDimension)
+
+        val boundingBoxBitmap = licensePlateReaderService.recognize(rotatedBitmap,
+            requiredOutputImageSize, 0,
+            numRecognitionsToShow, minimumPredictionCertaintyToShow) {arrayOfIdImagePairs ->
+
+            val recognitions = arrayListOf<Recognition>()
+            var i = 1
+            for(pair in arrayOfIdImagePairs){
+                recognitions.add(
+                    Recognition(i, pair.first, pair.second,
+                        imageMeta[0], imageMeta[1], imageMeta[2],
+                        AuthenticationService.userName)
+                )
+                i++
+            }
+            this.recognitions.postValue(recognitions.toTypedArray())
+        }
+
+        boundingBoxImage.postValue(boundingBoxBitmap)
 
     }
 

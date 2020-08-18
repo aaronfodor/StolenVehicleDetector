@@ -8,15 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.RecognitionEventListener
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.RecognitionListAdapter
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_list.*
 
-class RecognitionListFragment(viewModel: RecognitionViewModel) : Fragment(){
+class RecognitionListFragment(viewModel: RecognitionViewModel, title: String) : Fragment(){
 
     companion object{
         const val TAG = "Recognition list fragment"
@@ -25,6 +22,8 @@ class RecognitionListFragment(viewModel: RecognitionViewModel) : Fragment(){
     private val viewModel = viewModel
     private lateinit var adapter: RecognitionListAdapter
 
+    private val title = title
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_recognition_list, container, false)
     }
@@ -32,6 +31,7 @@ class RecognitionListFragment(viewModel: RecognitionViewModel) : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
 
         super.onViewCreated(view, savedInstanceState)
+        recognition_list_title.text = title
 
         adapter = RecognitionListAdapter(requireContext(), createEventListener())
         alert_list.adapter = adapter

@@ -8,9 +8,12 @@ import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
 import com.google.android.material.navigation.NavigationView
 
-abstract class RecognitionActivity : AppActivity() {
+abstract class RecognitionActivity() : AppActivity() {
 
-    lateinit var viewModel: RecognitionViewModel
+    open lateinit var viewModel: RecognitionViewModel
+
+    var listName = ""
+    var detailName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -20,6 +23,9 @@ abstract class RecognitionActivity : AppActivity() {
         val drawer = findViewById<DrawerLayout>(R.id.recognitionActivityDrawerLayout)
         val navigation = findViewById<NavigationView>(R.id.recognitionNavigation)
         initUi(drawer, navigation)
+
+        listName = getString(R.string.recognition_list)
+        detailName = getString(R.string.recognition_details)
 
     }
 
@@ -73,14 +79,10 @@ abstract class RecognitionActivity : AppActivity() {
 
             fragment = when(fragmentTag){
                 RecognitionListFragment.TAG -> {
-                    RecognitionListFragment(
-                        viewModel
-                    )
+                    RecognitionListFragment(viewModel, listName)
                 }
                 RecognitionDetailFragment.TAG -> {
-                    RecognitionDetailFragment(
-                        viewModel
-                    )
+                    RecognitionDetailFragment(viewModel, detailName)
                 }
                 else -> null
             }

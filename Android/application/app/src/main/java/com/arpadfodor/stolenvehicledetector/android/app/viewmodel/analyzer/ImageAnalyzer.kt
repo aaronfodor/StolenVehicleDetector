@@ -4,6 +4,7 @@ import android.util.Size
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.MetaProvider
@@ -96,7 +97,8 @@ class ImageAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewM
             for(pair in arrayOfIdImagePairs){
                 recognitions.add(
                     Recognition(i, pair.first, pair.second,
-                        imageMeta[0], imageMeta[1], imageMeta[2])
+                        imageMeta[0], imageMeta[1], imageMeta[2],
+                        AuthenticationService.userName)
                 )
                 i++
             }
