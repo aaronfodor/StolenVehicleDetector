@@ -13,16 +13,37 @@ import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognit
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_list.*
 
-class RecognitionListFragment(viewModel: RecognitionViewModel, title: String) : Fragment(){
+class RecognitionListFragment : Fragment(){
 
     companion object{
+
         const val TAG = "Recognition list fragment"
+
+        lateinit var viewModel: RecognitionViewModel
+        var title = ""
+
+        var sendSucceedSnackBarText = ""
+        var sendFailedSnackBarText = ""
+        var deletedSnackBarText = ""
+        var alreadySentSnackBarText = ""
+
+        fun setParams(viewModel: RecognitionViewModel, title: String,
+                      sendSucceedSnackBarText: String, sendFailedSnackBarText: String,
+                      deletedSnackBarText: String, alreadySentSnackBarText: String, ){
+
+            this.viewModel = viewModel
+            this.title = title
+
+            this.sendSucceedSnackBarText = sendSucceedSnackBarText
+            this.sendFailedSnackBarText = sendFailedSnackBarText
+            this.deletedSnackBarText = deletedSnackBarText
+            this.alreadySentSnackBarText = alreadySentSnackBarText
+
+        }
+
     }
 
-    private val viewModel = viewModel
     private lateinit var adapter: RecognitionListAdapter
-
-    private val title = title
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_recognition_list, container, false)
@@ -66,28 +87,52 @@ class RecognitionListFragment(viewModel: RecognitionViewModel, title: String) : 
 
             sendClickListener = { id ->
 
-                viewModel.sendRecognition(id) { isSuccess ->
+                val recognition = RecognitionDetailFragment.viewModel.getRecognitionById(id)
+                recognition?.let{
 
-                    val currentContext = context
-                    val currentView = view
-                    currentContext ?: return@sendRecognition
-                    currentView ?: return@sendRecognition
+                    if(recognition.isSent){
 
-                    when (isSuccess) {
-                        true -> {
-                            AppSnackBarBuilder.buildSuccessSnackBar(
-                                currentContext,
-                                currentView, getString(R.string.report_sent),
-                                Snackbar.LENGTH_SHORT
-                            ).show()
+                        val currentContext = context
+                        val currentView = view
+                        currentContext ?: return@RecognitionEventListener
+                        currentView ?: return@RecognitionEventListener
+
+                        AppSnackBarBuilder.buildInfoSnackBar(
+                            currentContext,
+                            currentView, alreadySentSnackBarText,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+
+                    }
+
+                    else{
+
+                        viewModel.sendRecognition(id) { isSuccess ->
+
+                            val currentContext = context
+                            val currentView = view
+                            currentContext ?: return@sendRecognition
+                            currentView ?: return@sendRecognition
+
+                            when (isSuccess) {
+                                true -> {
+                                    AppSnackBarBuilder.buildSuccessSnackBar(
+                                        currentContext,
+                                        currentView, sendSucceedSnackBarText,
+                                        Snackbar.LENGTH_SHORT
+                                    ).show()
+                                }
+                                else -> {
+                                    AppSnackBarBuilder.buildAlertSnackBar(
+                                        currentContext,
+                                        currentView, sendFailedSnackBarText,
+                                        Snackbar.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+
                         }
-                        else -> {
-                            AppSnackBarBuilder.buildAlertSnackBar(
-                                currentContext,
-                                currentView, getString(R.string.report_sending_failed),
-                                Snackbar.LENGTH_SHORT
-                            ).show()
-                        }
+
                     }
 
                 }
@@ -96,7 +141,7 @@ class RecognitionListFragment(viewModel: RecognitionViewModel, title: String) : 
 
             deleteClickListener = { id ->
 
-                viewModel.deleteRecognition(id){isSuccess ->
+                viewModel.deleteRecognition(id){ isSuccess ->
 
                     val currentContext = context
                     val currentView = view
@@ -105,7 +150,7 @@ class RecognitionListFragment(viewModel: RecognitionViewModel, title: String) : 
 
                     AppSnackBarBuilder.buildInfoSnackBar(
                         currentContext,
-                        currentView, getString(R.string.report_deleted),
+                        currentView, deletedSnackBarText,
                         Snackbar.LENGTH_SHORT
                     ).show()
 

@@ -14,9 +14,10 @@ object AppSnackBarBuilder {
         val snackBar = Snackbar.make(view, text, duration)
         val snackBarLayout = snackBar.view
 
-        val textView = snackBarLayout.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
-        textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawable, 0)
-        textView.compoundDrawablePadding = 0
+        val textView = snackBarLayout.findViewById<View>(R.id.snackbar_text) as TextView
+        //TODO: what to do with SnackBar icons? If needed, use SVG sources; if not, delete PNG sources
+        //textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawable, 0)
+        //textView.compoundDrawablePadding = 0
 
         return snackBar
 
@@ -27,18 +28,17 @@ object AppSnackBarBuilder {
         snackBar.setBackgroundTint(ContextCompat.getColor(context, R.color.colorAppSnackBarBackground))
         snackBar.setTextColor(ContextCompat.getColor(context, R.color.colorText))
         return snackBar
-
     }
 
     fun buildSuccessSnackBar(context: Context, view: View, text: String, duration: Int): Snackbar{
-        val snackBar = buildAppSnackBar(view, text, duration, R.drawable.icon_tick)
+        val snackBar = buildAppSnackBar(view, text, duration, R.drawable.icon_tick_snack)
         snackBar.setBackgroundTint(ContextCompat.getColor(context, R.color.colorSuccessSnackBarBackground))
         snackBar.setTextColor(ContextCompat.getColor(context, R.color.colorText))
         return snackBar
     }
 
     fun buildAlertSnackBar(context: Context, view: View, text: String, duration: Int): Snackbar{
-        val snackBar = buildAppSnackBar(view, text, duration, R.drawable.icon_cross)
+        val snackBar = buildAppSnackBar(view, text, duration, R.drawable.icon_cross_snack)
         snackBar.setBackgroundTint(ContextCompat.getColor(context, R.color.colorAlertSnackBarBackground))
         snackBar.setTextColor(ContextCompat.getColor(context, R.color.colorText))
         return snackBar

@@ -15,6 +15,13 @@ class AlertActivity : RecognitionActivity() {
         listName = getString(R.string.alert_list)
         detailName = getString(R.string.alert_details)
 
+        sendSucceed = getString(R.string.alert_sent)
+        sendFailed = getString(R.string.alert_sending_failed)
+        deleted = getString(R.string.alert_deleted)
+        alreadySent = getString(R.string.alert_already_sent)
+        updateSucceed = getString(R.string.alert_updated)
+        updateFailed = getString(R.string.alert_update_failed)
+
     }
 
 }

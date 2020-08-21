@@ -9,5 +9,5 @@
         />
     <stroke
         android:width="@dimen/edit_text_stroke_focused"
-        android:color="@color/colorEditTextBorder"/>
+        android:color="@color/colorEditTextBorderFocused"/>
 </shape>

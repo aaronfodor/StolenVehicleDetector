@@ -14,15 +14,40 @@ import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognit
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_detail.*
 
-class RecognitionDetailFragment(viewModel: RecognitionViewModel, title: String) : Fragment(){
+class RecognitionDetailFragment : Fragment(){
 
     companion object{
+
         const val TAG = "Recognition detail fragment"
+
+        lateinit var viewModel: RecognitionViewModel
+        var title = ""
+
+        var sendSucceedSnackBarText = ""
+        var sendFailedSnackBarText = ""
+        var deletedSnackBarText = ""
+        var alreadySentSnackBarText = ""
+        var updateSucceedSnackBarText = ""
+        var updateFailedSnackBarText = ""
+
+        fun setParams(viewModel: RecognitionViewModel, title: String,
+                      sendSucceedSnackBarText: String, sendFailedSnackBarText: String,
+                      deletedSnackBarText: String, alreadySentSnackBarText: String,
+                      updateSucceedSnackBarText: String, updateFailedSnackBarText: String){
+
+            this.viewModel = viewModel
+            this.title = title
+
+            this.sendSucceedSnackBarText = sendSucceedSnackBarText
+            this.sendFailedSnackBarText = sendFailedSnackBarText
+            this.deletedSnackBarText = deletedSnackBarText
+            this.alreadySentSnackBarText = alreadySentSnackBarText
+            this.updateSucceedSnackBarText = updateSucceedSnackBarText
+            this.updateFailedSnackBarText = updateFailedSnackBarText
+
+        }
+
     }
-
-    private val viewModel = viewModel
-
-    private val title = title
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_recognition_detail, container, false)
@@ -41,12 +66,15 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel, title: String) 
     private fun subscribeToViewModel() {
 
         // Create the observer
-        val selectedAlertObserver = Observer<Int> { id ->
+        val selectedRecognitionObserver = Observer<Int> { id ->
 
             val recognition = viewModel.getRecognitionById(id)
             recognition?.let {
 
-                recognitionDetailImage?.setImageBitmap(recognition.image)
+                val recognitionImage = recognition.image
+                recognitionImage?.let{
+                    recognitionDetailImage?.setImageBitmap(recognitionImage)
+                }
 
                 //force done button on keyboard instead of the new line button
                 recognitionDetailMessage?.setRawInputType(InputType.TYPE_CLASS_TEXT)
@@ -65,17 +93,17 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel, title: String) 
 
                     viewModel.deleteRecognition(recognition.artificialId){
 
-                        viewModel.deselectRecognition()
-
                         val currentContext = context
                         val currentView = view
                         currentContext ?: return@deleteRecognition
                         currentView ?: return@deleteRecognition
 
+                        viewModel.deselectRecognition()
+
                         AppSnackBarBuilder.buildInfoSnackBar(
                             currentContext,
                             currentView,
-                            getString(R.string.report_deleted),
+                            deletedSnackBarText,
                             Snackbar.LENGTH_SHORT
                         ).show()
 
@@ -84,11 +112,31 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel, title: String) 
                 }
 
                 // if the recognition has been sent -> hide send button, disable editing message
-                if(recognition.isActive){
+                if(recognition.isSent){
 
-                    recognitionSendButton?.setImageResource(android.R.drawable.ic_menu_send)
-                    recognitionDetailMessage?.isFocusable = true
-                    recognitionDetailMessage?.isClickable = true
+                    recognitionSendButton?.setOnClickListener {
+
+                        val currentContext = context
+                        val currentView = view
+                        currentContext ?: return@setOnClickListener
+                        currentView ?: return@setOnClickListener
+
+                        AppSnackBarBuilder.buildInfoSnackBar(
+                            currentContext,
+                            currentView,
+                            alreadySentSnackBarText,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    recognitionDetailMessage?.isFocusable = false
+                    recognitionDetailMessage?.isClickable = false
+                    recognitionDetailMessage?.setOnEditorActionListener { textView, actionId, event ->
+                        true
+                    }
+
+                }
+                else{
 
                     recognitionSendButton?.setOnClickListener {
 
@@ -104,7 +152,7 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel, title: String) 
                                     AppSnackBarBuilder.buildSuccessSnackBar(
                                         currentContext,
                                         currentView,
-                                        getString(R.string.report_sent),
+                                        sendSucceedSnackBarText,
                                         Snackbar.LENGTH_SHORT
                                     ).show()
                                 }
@@ -112,7 +160,7 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel, title: String) 
                                     AppSnackBarBuilder.buildAlertSnackBar(
                                         currentContext,
                                         currentView,
-                                        getString(R.string.report_sending_failed),
+                                        sendFailedSnackBarText,
                                         Snackbar.LENGTH_SHORT
                                     ).show()
                                 }
@@ -124,13 +172,41 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel, title: String) 
 
                     }
 
-                    recognitionDetailMessage?.setOnEditorActionListener { view, actionId, event ->
+                    recognitionDetailMessage?.isFocusable = true
+                    recognitionDetailMessage?.isClickable = true
+                    recognitionDetailMessage?.setOnEditorActionListener { textView, actionId, event ->
 
-                        val message = view.text.toString()
+                        val message = textView.text.toString()
 
                         return@setOnEditorActionListener when (actionId){
                             EditorInfo.IME_ACTION_DONE ->{
-                                viewModel.updateRecognitionMessageById(id, message)
+                                viewModel.updateRecognitionMessage(id, message){ isSuccess ->
+
+                                    val currentContext = context
+                                    val currentView = view
+                                    currentContext ?: return@updateRecognitionMessage
+                                    currentView ?: return@updateRecognitionMessage
+
+                                    when(isSuccess){
+                                        true -> {
+                                            AppSnackBarBuilder.buildInfoSnackBar(
+                                                currentContext,
+                                                currentView,
+                                                updateSucceedSnackBarText,
+                                                Snackbar.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                        else -> {
+                                            AppSnackBarBuilder.buildAlertSnackBar(
+                                                currentContext,
+                                                currentView,
+                                                updateFailedSnackBarText,
+                                                Snackbar.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+
+                                }
                                 recognitionDetailMessage.clearFocus()
                                 false
                             }
@@ -142,25 +218,13 @@ class RecognitionDetailFragment(viewModel: RecognitionViewModel, title: String) 
                     }
 
                 }
-                else{
-
-                    recognitionSendButton?.setImageResource(R.drawable.icon_tick)
-                    recognitionDetailMessage?.isFocusable = false
-                    recognitionDetailMessage?.isClickable = false
-
-                    recognitionSendButton?.setOnClickListener {}
-                    recognitionDetailMessage?.setOnEditorActionListener { view, actionId, event ->
-                        true
-                    }
-
-                }
 
             }
 
         }
 
         // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
-        viewModel.selectedRecognitionId.observe(requireActivity(), selectedAlertObserver)
+        viewModel.selectedRecognitionId.observe(requireActivity(), selectedRecognitionObserver)
 
     }
 

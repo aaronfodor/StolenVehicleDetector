@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
-import com.arpadfodor.stolenvehicledetector.android.app.model.ai.StolenVehicleRecognizerService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.MetaProvider
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
@@ -29,7 +29,7 @@ class LoadViewModel : ViewModel(){
 
     }
 
-    private val licensePlateReaderService = StolenVehicleRecognizerService()
+    private val licensePlateReaderService = VehicleRecognizerService()
 
     val imageMimeTypes = arrayListOf("image/jpeg", "image/png")
 
@@ -66,7 +66,7 @@ class LoadViewModel : ViewModel(){
 
     fun loadImage(selectedImageUri: Uri){
 
-        Thread(Runnable {
+        Thread {
 
             val sourceBitmap = MediaHandler.getImage(selectedImageUri)
             val imageOrientation = MediaHandler.getPhotoOrientation(selectedImageUri)
@@ -81,7 +81,7 @@ class LoadViewModel : ViewModel(){
 
             recognizeImage(rotatedBitmap, imageMetaInfo)
 
-        }).start()
+        }.start()
 
     }
 
@@ -92,14 +92,14 @@ class LoadViewModel : ViewModel(){
 
         val sourceBitmap = loadedImage.value ?: return
 
-        Thread(Runnable {
+        Thread {
 
             val rotatedBitmap = ImageConverter.rotateBitmap(sourceBitmap, 90)
             loadedImage.postValue(rotatedBitmap)
 
             recognizeImage(rotatedBitmap, imageMetaData.value ?: arrayOf("", "", ""))
 
-        }).start()
+        }.start()
 
     }
 
@@ -113,12 +113,13 @@ class LoadViewModel : ViewModel(){
             numRecognitionsToShow, minimumPredictionCertaintyToShow) {arrayOfIdImagePairs ->
 
             val recognitions = arrayListOf<Recognition>()
+            val user = AuthenticationService.userName
+
             var i = 1
             for(pair in arrayOfIdImagePairs){
                 recognitions.add(
-                    Recognition(i, pair.first, pair.second,
-                        imageMeta[0], imageMeta[1], imageMeta[2],
-                        AuthenticationService.userName)
+                    Recognition(i, false, pair.first, pair.second,
+                        imageMeta[0], imageMeta[1], imageMeta[2], user)
                 )
                 i++
             }

@@ -8,12 +8,12 @@ import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
-import com.arpadfodor.stolenvehicledetector.android.app.model.ai.StolenVehicleRecognizerService
-import com.arpadfodor.stolenvehicledetector.android.app.model.db.DatabaseService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.GeneralRepository
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserReportRepository
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
-
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -52,37 +52,24 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         syncButton?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
 
-            var dbVehiclesUpdated = false
-            var dbCoordinatesUpdated = false
+            GeneralRepository.updateAll{ isVehiclesSuccess, isReportsSuccess ->
 
-            DatabaseService.updateAll(
-
-                callbackVehicles = { isSuccess ->
-
-                    if(isSuccess){
+                    if(isVehiclesSuccess){
                         val currentTime = Calendar.getInstance().time.toString()
                         preferences.edit().putString(getString(R.string.LAST_SYNCED_DB_VEHICLES), currentTime)
                             .apply()
                     }
+                    VehicleRecognizerService.initialize()
 
-                    dbUpdateResultSnackBar(isSuccess)
-                    StolenVehicleRecognizerService.initialize()
-
-                },
-
-                callbackReports = { isSuccess ->
-
-                    if(isSuccess){
+                    if(isReportsSuccess){
                         val currentTime = Calendar.getInstance().time.toString()
                         preferences.edit().putString(getString(R.string.LAST_SYNCED_DB_REPORTS), currentTime)
                             .apply()
                     }
 
-                    dbUpdateResultSnackBar(isSuccess)
+                    dbUpdateResultSnackBar(isVehiclesSuccess && isReportsSuccess)
 
-                }
-
-            )
+            }
 
             true
 
@@ -92,7 +79,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
             val user = AuthenticationService.userName
 
-            DatabaseService.deleteUserReportsOfUser(user){isSuccess ->
+            UserReportRepository.deleteAllFromUser(user){ isSuccess ->
                 dbDeleteResultSnackBar(isSuccess)
             }
             true

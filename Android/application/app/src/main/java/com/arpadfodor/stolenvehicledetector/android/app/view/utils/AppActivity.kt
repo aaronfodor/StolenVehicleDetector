@@ -1,6 +1,5 @@
 package com.arpadfodor.stolenvehicledetector.android.app.view.utils
 
-import android.app.Activity
 import android.app.ActivityOptions
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -52,13 +51,13 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     }
 
     override fun onPause() {
-        unsubscribeListeners()
+        unsubscribe()
         super.onPause()
     }
 
     abstract fun subscribeToViewModel()
     abstract fun subscribeListeners()
-    abstract fun unsubscribeListeners()
+    abstract fun unsubscribe()
 
     /**
      * Called when an item in the navigation menu is selected.

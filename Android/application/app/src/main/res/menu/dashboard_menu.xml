@@ -13,12 +13,12 @@
 
     <item
         android:id="@+id/navigation_reports"
-        android:icon="@android:drawable/ic_menu_myplaces"
+        android:icon="@android:drawable/ic_menu_mapmode"
         android:title="@string/menu_reports" />
 
     <item
         android:id="@+id/navigation_user_reports"
-        android:icon="@android:drawable/ic_menu_report_image"
+        android:icon="@android:drawable/ic_menu_myplaces"
         android:title="@string/menu_user_reports" />
 
     <item

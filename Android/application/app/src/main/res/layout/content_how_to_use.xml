@@ -50,7 +50,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     style="@style/ParagraphBody"
-                    android:text="@string/menu_how_to_use"/>
+                    android:text="@string/how_to_use_content"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

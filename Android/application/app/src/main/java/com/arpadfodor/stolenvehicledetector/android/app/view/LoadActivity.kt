@@ -163,7 +163,7 @@ class LoadActivity : AppActivity() {
 
     }
 
-    override fun unsubscribeListeners() {}
+    override fun unsubscribe() {}
 
     private fun loadImage(){
         // Create an Intent with action as ACTION_PICK

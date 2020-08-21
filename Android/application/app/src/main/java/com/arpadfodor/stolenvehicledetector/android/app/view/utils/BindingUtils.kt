@@ -39,11 +39,11 @@ fun TextView.setRecognitionMessage(item: Recognition) {
 @BindingAdapter("recognitionEditButton")
 fun ImageButton.setRecognitionEditButton(item: Recognition) {
 
-    if(item.isActive){
-        this.setImageResource(android.R.drawable.ic_menu_edit)
+    if(item.isSent){
+        this.setImageResource(android.R.drawable.ic_menu_info_details)
     }
     else{
-        this.setImageResource(android.R.drawable.ic_menu_view)
+        this.setImageResource(android.R.drawable.ic_menu_edit)
     }
 
 }
@@ -51,11 +51,11 @@ fun ImageButton.setRecognitionEditButton(item: Recognition) {
 @BindingAdapter("recognitionSendButton")
 fun ImageButton.setRecognitionSendButton(item: Recognition) {
 
-    if(item.isActive){
-        this.setImageResource(android.R.drawable.ic_menu_send)
+    if(item.isSent){
+        this.setImageResource(R.drawable.icon_tick)
     }
     else{
-        this.setImageResource(R.drawable.icon_tick)
+        this.setImageResource(android.R.drawable.ic_menu_send)
     }
 
 }

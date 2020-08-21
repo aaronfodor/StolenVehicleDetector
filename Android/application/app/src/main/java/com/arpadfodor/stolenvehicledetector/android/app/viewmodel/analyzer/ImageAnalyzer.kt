@@ -8,7 +8,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationServ
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.MetaProvider
-import com.arpadfodor.stolenvehicledetector.android.app.model.ai.StolenVehicleRecognizerService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.view.DetectionListener
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.CameraViewModel
 import java.util.*
@@ -24,7 +24,7 @@ class ImageAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewM
     private var framesPerSecond: Double = -1.0
 
     private val viewModel: CameraViewModel = viewModel_
-    private val licensePlateReaderService = StolenVehicleRecognizerService()
+    private val licensePlateReaderService = VehicleRecognizerService()
 
     /**
      * Used to add listeners that will be called with each detection computed
@@ -93,12 +93,13 @@ class ImageAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewM
             CameraViewModel.minimumPredictionCertaintyToShow) { arrayOfIdImagePairs ->
 
             val recognitions = arrayListOf<Recognition>()
+            val user = AuthenticationService.userName
+
             var i = 1
             for(pair in arrayOfIdImagePairs){
                 recognitions.add(
-                    Recognition(i, pair.first, pair.second,
-                        imageMeta[0], imageMeta[1], imageMeta[2],
-                        AuthenticationService.userName)
+                    Recognition(i, false, pair.first, pair.second,
+                        imageMeta[0], imageMeta[1], imageMeta[2], user)
                 )
                 i++
             }

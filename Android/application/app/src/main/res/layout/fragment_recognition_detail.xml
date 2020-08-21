@@ -108,8 +108,8 @@
                     android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
                     android:imeOptions="actionDone"
                     android:background="@drawable/app_edit_background"
-                    android:lines="3"
-                    style="@style/ParagraphBody"/>
+                    android:lines="4"
+                    style="@style/ParagraphBodyBottom"/>
 
                 <TextView
                     android:id="@+id/recognitionDetailDateLabel"
@@ -128,7 +128,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recognitionDetailDateLabel"
-                    style="@style/SubtitleBottom" />
+                    style="@style/ParagraphBodyBottom" />
 
                 <TextView
                     android:id="@+id/recognitionDetailLocationLabel"
@@ -147,7 +147,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recognitionDetailLocationLabel"
-                    style="@style/SubtitleBottom" />
+                    style="@style/ParagraphBodyBottom" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

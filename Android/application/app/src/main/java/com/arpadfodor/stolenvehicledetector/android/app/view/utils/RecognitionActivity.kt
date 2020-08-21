@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 
 abstract class RecognitionActivity() : AppActivity() {
 
@@ -14,6 +15,13 @@ abstract class RecognitionActivity() : AppActivity() {
 
     var listName = ""
     var detailName = ""
+
+    var sendSucceed = ""
+    var sendFailed = ""
+    var deleted = ""
+    var alreadySent = ""
+    var updateSucceed = ""
+    var updateFailed = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -27,6 +35,15 @@ abstract class RecognitionActivity() : AppActivity() {
         listName = getString(R.string.recognition_list)
         detailName = getString(R.string.recognition_details)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Prepare those fragments to listen to the appropriate ViewModel
+        RecognitionListFragment.setParams(viewModel, listName,
+            sendSucceed, sendFailed, deleted, alreadySent)
+        RecognitionDetailFragment.setParams(viewModel, detailName,
+            sendSucceed, sendFailed, deleted, alreadySent, updateSucceed, updateFailed)
     }
 
     override fun subscribeToViewModel() {
@@ -49,7 +66,7 @@ abstract class RecognitionActivity() : AppActivity() {
     }
 
     override fun subscribeListeners(){}
-    override fun unsubscribeListeners(){}
+    override fun unsubscribe(){}
 
     override fun onBackPressed() {
 
@@ -79,10 +96,10 @@ abstract class RecognitionActivity() : AppActivity() {
 
             fragment = when(fragmentTag){
                 RecognitionListFragment.TAG -> {
-                    RecognitionListFragment(viewModel, listName)
+                    RecognitionListFragment()
                 }
                 RecognitionDetailFragment.TAG -> {
-                    RecognitionDetailFragment(viewModel, detailName)
+                    RecognitionDetailFragment()
                 }
                 else -> null
             }

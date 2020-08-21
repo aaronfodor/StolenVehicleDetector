@@ -11,10 +11,17 @@ class UserReportsActivity : RecognitionActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(UserReportsViewModel::class.java)
-        (viewModel as UserReportsViewModel).update()
+        (viewModel as UserReportsViewModel).updateDataFromDb()
 
         listName = getString(R.string.user_reports_list)
         detailName = getString(R.string.user_report_details)
+
+        sendSucceed = getString(R.string.report_sent)
+        sendFailed = getString(R.string.report_sending_failed)
+        deleted = getString(R.string.report_deleted)
+        alreadySent = getString(R.string.report_already_sent)
+        updateSucceed = getString(R.string.report_updated)
+        updateFailed = getString(R.string.report_update_failed)
 
     }
 

@@ -7,11 +7,12 @@ import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.model.BoundingBoxDrawer
 import com.arpadfodor.stolenvehicledetector.android.app.model.LocationService
 import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
+import com.arpadfodor.stolenvehicledetector.android.app.model.TextToSpeechService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.ObjectDetectionService
-import com.arpadfodor.stolenvehicledetector.android.app.model.ai.StolenVehicleRecognizerService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.TextRecognitionService
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
-import com.arpadfodor.stolenvehicledetector.android.app.model.db.DatabaseService
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.GeneralRepository
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.CameraViewModel
 import java.util.*
 
@@ -53,7 +54,7 @@ class ApplicationRoot : Application() {
         Log.i(TAG, "onCreate fired")
 
         //init model singletons
-        DatabaseService.initialize(applicationContext)
+        GeneralRepository.initialize(applicationContext)
         ApiService.initialize()
 
         ObjectDetectionService.initialize(assets, NUM_THREADS)
@@ -69,6 +70,7 @@ class ApplicationRoot : Application() {
         val appName = getString(R.string.app_name)
         MediaHandler.initialize(applicationContext, appName)
         LocationService.initialize(applicationContext)
+        TextToSpeechService.init(applicationContext)
 
         CameraViewModel.KEY_EVENT_ACTION = getString(R.string.KEY_EVENT_ACTION)
         CameraViewModel.KEY_EVENT_EXTRA = getString(R.string.KEY_EVENT_EXTRA)
@@ -83,26 +85,22 @@ class ApplicationRoot : Application() {
 
         if(isAutoSyncEnabled){
 
-            DatabaseService.updateAll(
+            GeneralRepository.updateAll{ isVehiclesSuccess, isReportsSuccess ->
 
-                callbackVehicles = { isSuccess ->
-                    if(isSuccess){
-                        val currentTime = Calendar.getInstance().time.toString()
-                        preferences.edit().putString(getString(R.string.LAST_SYNCED_DB_VEHICLES), currentTime)
-                            .apply()
-                    }
-                    StolenVehicleRecognizerService.initialize()
-                },
+                if(isVehiclesSuccess){
+                    val currentTime = Calendar.getInstance().time.toString()
+                    preferences.edit().putString(getString(R.string.LAST_SYNCED_DB_VEHICLES), currentTime)
+                        .apply()
+                }
+                VehicleRecognizerService.initialize()
 
-                callbackReports = { isSuccess ->
-                    if(isSuccess){
-                        val currentTime = Calendar.getInstance().time.toString()
-                        preferences.edit().putString(getString(R.string.LAST_SYNCED_DB_REPORTS), currentTime)
-                            .apply()
-                    }
+                if(isReportsSuccess){
+                    val currentTime = Calendar.getInstance().time.toString()
+                    preferences.edit().putString(getString(R.string.LAST_SYNCED_DB_REPORTS), currentTime)
+                        .apply()
                 }
 
-            )
+            }
 
         }
 

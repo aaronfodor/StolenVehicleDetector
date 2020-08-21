@@ -2,6 +2,8 @@ package com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
+import com.google.android.material.snackbar.Snackbar
 
 abstract class RecognitionViewModel : ViewModel(){
 
@@ -37,31 +39,32 @@ abstract class RecognitionViewModel : ViewModel(){
     }
 
     fun selectRecognition(id: Int) {
-        selectedRecognitionId.value = id
-        showDetails.value = true
+        selectedRecognitionId.postValue(id)
+        showDetails.postValue(true)
     }
 
     fun deselectRecognition() {
-        selectedRecognitionId.value = 0
-        showDetails.value = false
+        selectedRecognitionId.postValue(0)
+        showDetails.postValue(false)
     }
 
     fun getRecognitionById(id: Int) : Recognition?{
         return recognitions.value?.find { it.artificialId == id }
     }
 
-    fun updateRecognitionMessageById(id: Int, message: String){
+    open fun updateRecognitionMessage(id: Int, message: String, callback: (Boolean) -> Unit){
 
         val updatedList = recognitions.value ?: return
 
-        for(alert in updatedList){
-            if(alert.artificialId != id){
+        for(recognition in updatedList){
+            if(recognition.artificialId != id){
                 continue
             }
-            alert.message = message
+            recognition.message = message
         }
 
-        recognitions.value = updatedList
+        recognitions.postValue(updatedList)
+        callback(true)
 
     }
 

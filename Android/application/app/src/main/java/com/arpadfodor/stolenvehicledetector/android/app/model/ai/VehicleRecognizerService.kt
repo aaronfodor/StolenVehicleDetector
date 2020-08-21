@@ -5,18 +5,18 @@ import android.graphics.RectF
 import android.util.Size
 import com.arpadfodor.stolenvehicledetector.android.app.model.BoundingBoxDrawer
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
-import com.arpadfodor.stolenvehicledetector.android.app.model.db.DatabaseService
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Vehicle
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.VehicleRepository
 import java.util.*
 
-class StolenVehicleRecognizerService {
+class VehicleRecognizerService {
 
     companion object{
 
         private var stolenVehicles = listOf<Vehicle>()
 
         fun initialize(){
-            DatabaseService.getVehicles {
+            VehicleRepository.getVehicles {
                 stolenVehicles = it
             }
         }

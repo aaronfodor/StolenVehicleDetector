@@ -99,7 +99,7 @@ class CameraActivity : AppActivity() {
 
     }
 
-    override fun unsubscribeListeners() {
+    override fun unsubscribe() {
         deviceOrientationListener.disable()
     }
 

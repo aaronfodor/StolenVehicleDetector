@@ -44,7 +44,7 @@ class AboutActivity : AppActivity() {
 
     override fun subscribeToViewModel(){}
     override fun subscribeListeners(){}
-    override fun unsubscribeListeners(){}
+    override fun unsubscribe(){}
 
     override fun onBackPressed() {
         if(activityDrawerLayout.isDrawerOpen(GravityCompat.START)){

@@ -2,11 +2,8 @@ package com.arpadfodor.stolenvehicledetector.android.app.model
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.media.MediaScannerConnection
 import android.net.Uri
-import android.os.Build
 import android.os.Environment.DIRECTORY_PICTURES
 import android.provider.MediaStore
 import androidx.exifinterface.media.ExifInterface
