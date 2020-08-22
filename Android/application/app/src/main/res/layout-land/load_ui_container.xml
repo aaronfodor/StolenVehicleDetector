@@ -52,6 +52,21 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <ImageButton
+        android:id="@id/circular_alert_load_button"
+        android:layout_width="@dimen/round_button_large"
+        android:layout_height="@dimen/round_button_large"
+        android:layout_marginEnd="@dimen/margin_xsmall"
+        android:padding="@dimen/padding_xsmall"
+        android:background="@drawable/alert_circle_button"
+        app:srcCompat="@android:drawable/ic_dialog_alert"
+        android:contentDescription="@string/view_alert_button"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
+
+    <ImageButton
         android:id="@+id/loaded_image_rotate_button"
         android:layout_width="@dimen/round_button_medium"
         android:layout_height="@dimen/round_button_medium"

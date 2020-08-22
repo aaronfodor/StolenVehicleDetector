@@ -110,10 +110,16 @@ class LoadActivity : AppActivity() {
         val recognitionsObserver = Observer<Array<Recognition>> { recognitions ->
 
             val alertButton = alert_loaded_button
+            val circularAlertButton = circular_alert_load_button
 
             if(recognitions.isNotEmpty()){
 
                 alertButton.setOnClickListener {
+                    viewModel.setAlertActivityParams()
+                    val intent = Intent(this, AlertActivity::class.java)
+                    startActivity(intent)
+                }
+                circularAlertButton.setOnClickListener {
                     viewModel.setAlertActivityParams()
                     val intent = Intent(this, AlertActivity::class.java)
                     startActivity(intent)
@@ -125,6 +131,12 @@ class LoadActivity : AppActivity() {
                     alertButton.animation = animation
                     alertButton.animation.start()
                 }
+                if(circularAlertButton.visibility == View.GONE){
+                    val animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in)
+                    circularAlertButton.visibility = View.VISIBLE
+                    circularAlertButton.animation = animation
+                    circularAlertButton.animation.start()
+                }
 
             }
             else{
@@ -134,6 +146,12 @@ class LoadActivity : AppActivity() {
                     alertButton.animation = animation
                     alertButton.animation.start()
                     alertButton.visibility = View.GONE
+                }
+                if(circularAlertButton.visibility == View.VISIBLE){
+                    val animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_out)
+                    circularAlertButton.animation = animation
+                    circularAlertButton.animation.start()
+                    circularAlertButton.visibility = View.GONE
                 }
 
             }

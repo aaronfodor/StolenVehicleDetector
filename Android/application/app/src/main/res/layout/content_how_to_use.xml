@@ -61,11 +61,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
-            android:backgroundTint="@color/colorButtonPositive"
+            android:backgroundTint="@color/colorButtonNeutral"
             app:srcCompat="@android:drawable/ic_media_play"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/fabRead"
+            app:layout_constraintTop_toTopOf="@+id/fabRead"
+            app:layout_constraintBottom_toBottomOf="@+id/fabRead"
+            style="@style/ParagraphBody"
+            android:text="@string/listen"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

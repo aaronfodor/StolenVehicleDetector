@@ -27,23 +27,16 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
-import androidx.core.view.setPadding
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.CameraViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.analyzer.ImageAnalyzer
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.simulateClick
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.model.LocationService
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.RecognitionActivity
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 
 /** Helper type alias used for analysis use case callbacks */
@@ -119,26 +112,6 @@ class CameraFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_camera, container, false)
-    }
-
-    private fun setGalleryThumbnail(uri: Uri){
-
-        // gallery thumbnail holder view's reference
-        val thumbnail = container.findViewById<ImageButton>(R.id.photo_view_button)
-
-        thumbnail.post{
-
-            // Remove thumbnail padding
-            thumbnail.setPadding(resources.getDimension(R.dimen.stroke_small).toInt())
-
-            // load thumbnail into a circular button using Glide
-            Glide.with(thumbnail)
-                .load(uri)
-                .apply(RequestOptions.circleCropTransform())
-                .into(thumbnail)
-
-        }
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
@@ -344,11 +317,6 @@ class CameraFragment : Fragment() {
         // Inflate a new view containing all UI for controlling the camera
         val controls = View.inflate(requireContext(), R.layout.camera_ui_container, container)
 
-        // In the background, load latest photo taken (if any) for gallery thumbnail
-        lifecycleScope.launch(Dispatchers.IO) {
-            //TODO: gallery thumbnail update
-        }
-
         setButtonListeners(controls)
         subscribeToViewModel(controls)
 
@@ -388,9 +356,6 @@ class CameraFragment : Fragment() {
                             val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
                             Log.d(TAG, "Photo captured: $savedUri")
 
-                            // Update the gallery thumbnail with latest picture taken
-                            setGalleryThumbnail(savedUri)
-
                             // If the folder selected is an external media directory, this is
                             // unnecessary but otherwise other apps will not be able to access app
                             // images unless scanning them using [MediaScannerConnection]
@@ -429,17 +394,12 @@ class CameraFragment : Fragment() {
             bindCameraUseCases()
         }
 
-        // Listener for button used to view the most recent photo
-        controls.findViewById<ImageButton>(R.id.photo_view_button).setOnClickListener {
-            // Only navigate when the gallery has photos
-            if(true == viewModel.getOutputDirectory().listFiles()?.isNotEmpty()) { }
-        }
-
     }
 
     private fun subscribeToViewModel(controls: View) {
 
         val alertButton = controls.findViewById<ConstraintLayout>(R.id.alert_live_button)
+        val circularAlertButton = controls.findViewById<ImageButton>(R.id.circular_alert_live_button)
 
         // Create the recognitions observer which notifies when element has been recognized
         val recognitionsObserver = Observer<Array<Recognition>> { recognitions ->
@@ -455,12 +415,27 @@ class CameraFragment : Fragment() {
                     startActivity(intent)
 
                 }
+                circularAlertButton.setOnClickListener {
+
+                    LocationService.updateLocation()
+
+                    viewModel.setAlertActivityParams()
+                    val intent = Intent(this.requireActivity(), AlertActivity::class.java)
+                    startActivity(intent)
+
+                }
 
                 if(alertButton.visibility == View.GONE){
                     val animation = AnimationUtils.loadAnimation(this.requireContext(), android.R.anim.fade_in)
                     alertButton.visibility = View.VISIBLE
                     alertButton.animation = animation
                     alertButton.animation.start()
+                }
+                if(circularAlertButton.visibility == View.GONE){
+                    val animation = AnimationUtils.loadAnimation(this.requireContext(), android.R.anim.fade_in)
+                    circularAlertButton.visibility = View.VISIBLE
+                    circularAlertButton.animation = animation
+                    circularAlertButton.animation.start()
                 }
 
             }
@@ -471,6 +446,12 @@ class CameraFragment : Fragment() {
                     alertButton.animation = animation
                     alertButton.animation.start()
                     alertButton.visibility = View.GONE
+                }
+                if(circularAlertButton.visibility == View.VISIBLE){
+                    val animation = AnimationUtils.loadAnimation(this.requireContext(), android.R.anim.fade_out)
+                    circularAlertButton.animation = animation
+                    circularAlertButton.animation.start()
+                    circularAlertButton.visibility = View.GONE
                 }
 
             }

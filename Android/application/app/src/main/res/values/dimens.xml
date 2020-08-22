@@ -9,6 +9,7 @@
     <dimen name="margin_xlarge">92dp</dimen>
 
     <dimen name="padding_xxsmall">4dp</dimen>
+    <dimen name="padding_xsmall">12dp</dimen>
 
     <dimen name="spacing_small">4dp</dimen>
     <dimen name="spacing_medium">8dp</dimen>
