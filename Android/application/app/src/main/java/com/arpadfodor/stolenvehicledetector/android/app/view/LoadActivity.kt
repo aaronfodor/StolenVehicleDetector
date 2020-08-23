@@ -2,12 +2,9 @@ package com.arpadfodor.stolenvehicledetector.android.app.view
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.view.View
-import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
@@ -16,6 +13,8 @@ import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppActivity
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.appearingAnimation
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.disappearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.LoadViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 import com.bumptech.glide.Glide
@@ -43,7 +42,7 @@ class LoadActivity : AppActivity() {
         ivLoadedImage.clipToOutline = true
         Glide
             .with(this)
-            .load(R.drawable.load_image_placeholder)
+            .load(R.drawable.image_placeholder)
             .into(ivLoadedImage)
 
     }
@@ -85,22 +84,22 @@ class LoadActivity : AppActivity() {
         // Create the image observer which updates the UI in case of an image change
         val imageObserver = Observer<Bitmap> { newImage ->
             // Update the UI, in this case, the ImageView
-            ivLoadedImage.setImageBitmap(newImage)
 
+            ivLoadedImage.disappearingAnimation(this)
             Glide
                 .with(this)
                 .load(newImage)
                 .centerCrop()
-                .error(R.drawable.load_image_placeholder)
-                .placeholder(R.drawable.load_image_placeholder)
+                .error(R.drawable.image_placeholder)
+                .placeholder(R.drawable.image_placeholder)
                 .into(ivLoadedImage)
+            ivLoadedImage.appearingAnimation(this)
+
         }
 
         // Create the image observer which updates the UI in case of bounding box image change
         val boundingBoxImageObserver = Observer<Bitmap> { newImage ->
             // Update the UI, in this case, the ImageView
-            ivLoadedImageBoundingBoxes.setImageBitmap(newImage)
-
             Glide
                 .with(this)
                 .load(newImage)
@@ -128,32 +127,20 @@ class LoadActivity : AppActivity() {
                 }
 
                 if(alertButton.visibility == View.GONE){
-                    val animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in)
-                    alertButton.visibility = View.VISIBLE
-                    alertButton.animation = animation
-                    alertButton.animation.start()
+                    alertButton.appearingAnimation(this)
                 }
                 if(circularAlertButton.visibility == View.GONE){
-                    val animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in)
-                    circularAlertButton.visibility = View.VISIBLE
-                    circularAlertButton.animation = animation
-                    circularAlertButton.animation.start()
+                    circularAlertButton.appearingAnimation(this)
                 }
 
             }
             else{
 
                 if(alertButton.visibility == View.VISIBLE){
-                    val animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_out)
-                    alertButton.animation = animation
-                    alertButton.animation.start()
-                    alertButton.visibility = View.GONE
+                    alertButton.disappearingAnimation(this)
                 }
                 if(circularAlertButton.visibility == View.VISIBLE){
-                    val animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_out)
-                    circularAlertButton.animation = animation
-                    circularAlertButton.animation.start()
-                    circularAlertButton.visibility = View.GONE
+                    circularAlertButton.disappearingAnimation(this)
                 }
 
             }

@@ -1,8 +1,10 @@
 package com.arpadfodor.stolenvehicledetector.android.app.view.utils
 
+import android.content.Context
 import android.os.Build
 import android.view.DisplayCutout
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import androidx.annotation.RequiresApi
 import com.arpadfodor.stolenvehicledetector.android.app.R
@@ -47,4 +49,18 @@ fun View.padWithDisplayCutout() {
         insets.displayCutout?.let { doPadding(it) }
         insets
     }
+}
+
+fun View.disappearingAnimation(context: Context){
+    val anim = AnimationUtils.loadAnimation(context, android.R.anim.fade_out)
+    visibility = View.GONE
+    animation = anim
+    animation?.start()
+}
+
+fun View.appearingAnimation(context: Context){
+    val anim = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
+    visibility = View.VISIBLE
+    animation = anim
+    animation?.start()
 }

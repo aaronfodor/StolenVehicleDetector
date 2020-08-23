@@ -1,6 +1,7 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.UserReport
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserReportRepository
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
@@ -33,21 +34,31 @@ class AlertViewModel : RecognitionViewModel(){
 
         val recognition = recognitions.value?.find { it.artificialId == id } ?: return
 
-        val userReport =
-            UserReport(null, recognition.licenseId, recognition.reporter,
-            recognition.latitude.toDouble(), recognition.longitude.toDouble(),
-            recognition.message, recognition.date)
+        Thread{
 
-        UserReportRepository.postUserReport(userReport) { isSuccess ->
-            if(isSuccess){
-                deleteRecognition(id){ isSuccess ->
-                    callback(isSuccess)
+            var imagePath: String? = null
+
+            recognition.image?.let {
+                imagePath = MediaHandler.saveImage(MediaHandler.getPrivateDirectory(), it)
+            }
+
+            val userReport =
+                UserReport(null, recognition.licenseId, recognition.reporter,
+                    recognition.latitude.toDouble(), recognition.longitude.toDouble(),
+                    recognition.message, recognition.date, false, imagePath)
+
+            UserReportRepository.postUserReport(userReport) { isSuccess ->
+                if(isSuccess){
+                    deleteRecognition(id){ isSuccess ->
+                        callback(isSuccess)
+                    }
+                }
+                else{
+                    callback(false)
                 }
             }
-            else{
-                callback(false)
-            }
-        }
+
+        }.start()
 
     }
 

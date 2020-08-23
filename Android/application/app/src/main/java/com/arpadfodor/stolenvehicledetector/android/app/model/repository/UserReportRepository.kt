@@ -11,27 +11,26 @@ object UserReportRepository {
      **/
     fun postUserReport(report: UserReport, callback: (Boolean) -> Unit){
 
-        val database = ApplicationDB.getDatabase(GeneralRepository.context)
-
         Thread {
 
-            var isDbUpdated = false
+            val database = ApplicationDB.getDatabase(GeneralRepository.context)
+            var isSuccess = false
 
-            // run delete, insert, etc. in an atomic transaction
-            database.runInTransaction{
+            try {
 
-                try {
+                // run delete, insert, etc. in an atomic transaction
+                database.runInTransaction {
                     database.userReportTable().insert(report)
                     //update the local flag
-                    isDbUpdated = true
-                }
-                catch (e: Exception) {
-                    e.printStackTrace()
-                }
-                finally {
-                    callback(isDbUpdated)
+                    isSuccess = true
                 }
 
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+            finally {
+                callback(isSuccess)
             }
 
         }.start()
@@ -40,20 +39,27 @@ object UserReportRepository {
 
     fun getByUser(userId: String, callback: (List<UserReport>) -> Unit) {
 
-        val reports = mutableListOf<UserReport>()
-        val database = ApplicationDB.getDatabase(GeneralRepository.context)
-
         Thread {
 
+            val reports = mutableListOf<UserReport>()
+            val database = ApplicationDB.getDatabase(GeneralRepository.context)
+
             try {
-                val dbContent = database.userReportTable().getByReporter(userId) ?: listOf()
-                for(element in dbContent){
-                    reports.add(element)
+
+                // run delete, insert, etc. in an atomic transaction
+                database.runInTransaction {
+                    val dbContent = database.userReportTable().getByReporter(userId) ?: listOf()
+                    for (element in dbContent) {
+                        reports.add(element)
+                    }
                 }
-                callback(reports)
+
             }
             catch (e: Exception) {
                 e.printStackTrace()
+            }
+            finally {
+                callback(reports)
             }
 
         }.start()
@@ -67,19 +73,27 @@ object UserReportRepository {
         callback: (Boolean) -> Unit
     ) {
 
-        val database = ApplicationDB.getDatabase(GeneralRepository.context)
-
         Thread {
 
+            val database = ApplicationDB.getDatabase(GeneralRepository.context)
+            var isSuccess = false
+
             try {
-                database.userReportTable().updateSentFlagByIdAndReporter(id, userId, sentFlag)
+
+                // run delete, insert, etc. in an atomic transaction
+                database.runInTransaction {
+                    database.userReportTable()
+                        .updateSentFlagByIdAndReporter(id, userId, sentFlag)
+                }
+                isSuccess = true
+
             }
             catch (e: Exception) {
                 e.printStackTrace()
-                callback(false)
             }
-
-            callback(true)
+            finally {
+                callback(isSuccess)
+            }
 
         }.start()
 
@@ -92,19 +106,27 @@ object UserReportRepository {
         callback: (Boolean) -> Unit
     ) {
 
-        val database = ApplicationDB.getDatabase(GeneralRepository.context)
-
         Thread {
 
+            val database = ApplicationDB.getDatabase(GeneralRepository.context)
+            var isSuccess = false
+
             try {
-                database.userReportTable().updateMessageByIdAndReporter(id, userId, message)
+
+                // run delete, insert, etc. in an atomic transaction
+                database.runInTransaction {
+                    database.userReportTable().updateMessageByIdAndReporter(id, userId, message)
+                }
+                isSuccess = true
+
             }
             catch (e: Exception) {
                 e.printStackTrace()
-                callback(false)
+            }
+            finally {
+                callback(isSuccess)
             }
 
-            callback(true)
 
         }.start()
 
@@ -112,19 +134,26 @@ object UserReportRepository {
 
     fun deleteByIdAndUser(id: Int, userId: String, callback: (Boolean) -> Unit) {
 
-        val database = ApplicationDB.getDatabase(GeneralRepository.context)
-
         Thread {
 
+            val database = ApplicationDB.getDatabase(GeneralRepository.context)
+            var isSuccess = false
+
             try {
-                database.userReportTable().deleteByIdAndReporter(id, userId)
+
+                // run delete, insert, etc. in an atomic transaction
+                database.runInTransaction {
+                    database.userReportTable().deleteByIdAndReporter(id, userId)
+                }
+                isSuccess = true
+
             }
             catch (e: Exception) {
                 e.printStackTrace()
-                callback(false)
             }
-
-            callback(true)
+            finally {
+                callback(isSuccess)
+            }
 
         }.start()
 
@@ -132,19 +161,26 @@ object UserReportRepository {
 
     fun deleteAllFromUser(userId: String, callback: (Boolean) -> Unit) {
 
-        val database = ApplicationDB.getDatabase(GeneralRepository.context)
-
         Thread {
 
+            val database = ApplicationDB.getDatabase(GeneralRepository.context)
+            var isSuccess = false
+
             try {
-                database.userReportTable().deleteAllByReporter(userId)
+
+                // run delete, insert, etc. in an atomic transaction
+                database.runInTransaction {
+                    database.userReportTable().deleteAllByReporter(userId)
+                }
+                isSuccess = true
+
             }
             catch (e: Exception) {
                 e.printStackTrace()
-                callback(false)
             }
-
-            callback(true)
+            finally {
+                callback(isSuccess)
+            }
 
         }.start()
 

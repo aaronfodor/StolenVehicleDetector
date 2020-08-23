@@ -7,6 +7,7 @@ data class Recognition(
     var isSent: Boolean,
     val licenseId: String,
     val image: Bitmap?,
+    val imagePath: String?,
     val date: String,
     val latitude: String,
     val longitude: String,

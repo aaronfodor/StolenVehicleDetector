@@ -44,7 +44,7 @@
         android:layout_marginEnd="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
         android:background="@android:color/transparent"
-        app:srcCompat="@drawable/load_image_placeholder"
+        app:srcCompat="@drawable/image_placeholder"
         android:contentDescription="@string/load_image"
         android:padding="@dimen/spacing_small"
         android:scaleType="fitCenter"

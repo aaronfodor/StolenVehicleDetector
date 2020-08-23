@@ -29,7 +29,7 @@ class LoadViewModel : ViewModel(){
 
     }
 
-    private val licensePlateReaderService = VehicleRecognizerService()
+    private val vehicleRecognizerService = VehicleRecognizerService()
 
     val imageMimeTypes = arrayListOf("image/jpeg", "image/png")
 
@@ -68,7 +68,7 @@ class LoadViewModel : ViewModel(){
 
         Thread {
 
-            val sourceBitmap = MediaHandler.getImage(selectedImageUri)
+            val sourceBitmap = MediaHandler.getImageByUri(selectedImageUri)
             val imageOrientation = MediaHandler.getPhotoOrientation(selectedImageUri)
             val imageMetaInfo = MetaProvider.getImageMetaData(selectedImageUri)
 
@@ -108,7 +108,7 @@ class LoadViewModel : ViewModel(){
         val smallerScreenDimension = min(screenDimensions.width, screenDimensions.height)
         val requiredOutputImageSize = Size(smallerScreenDimension, smallerScreenDimension)
 
-        val boundingBoxBitmap = licensePlateReaderService.recognize(rotatedBitmap,
+        val boundingBoxBitmap = vehicleRecognizerService.recognize(rotatedBitmap,
             requiredOutputImageSize, 0,
             numRecognitionsToShow, minimumPredictionCertaintyToShow) {arrayOfIdImagePairs ->
 
@@ -118,7 +118,7 @@ class LoadViewModel : ViewModel(){
             var i = 1
             for(pair in arrayOfIdImagePairs){
                 recognitions.add(
-                    Recognition(i, false, pair.first, pair.second,
+                    Recognition(i, false, pair.first, pair.second, null,
                         imageMeta[0], imageMeta[1], imageMeta[2], user)
                 )
                 i++

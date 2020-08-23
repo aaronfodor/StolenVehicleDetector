@@ -2,6 +2,7 @@ package com.arpadfodor.stolenvehicledetector.android.app
 
 import android.Manifest
 import android.app.Application
+import android.os.Build
 import android.util.Log
 import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.model.BoundingBoxDrawer
@@ -25,14 +26,25 @@ class ApplicationRoot : Application() {
 
         const val IMMERSIVE_FLAG_TIMEOUT = 100L
 
-        val requiredPermissions = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.INTERNET,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_MEDIA_LOCATION)
+        var requiredPermissions = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.INTERNET,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_MEDIA_LOCATION)
+        }
+        else{
+            arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.INTERNET,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+        }
 
         var isAutoSyncEnabled = true
         var keepScreenAlive = true

@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -37,6 +38,8 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.model.LocationService
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.appearingAnimation
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.disappearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 
 /** Helper type alias used for analysis use case callbacks */
@@ -426,32 +429,20 @@ class CameraFragment : Fragment() {
                 }
 
                 if(alertButton.visibility == View.GONE){
-                    val animation = AnimationUtils.loadAnimation(this.requireContext(), android.R.anim.fade_in)
-                    alertButton.visibility = View.VISIBLE
-                    alertButton.animation = animation
-                    alertButton.animation.start()
+                    alertButton.appearingAnimation(requireContext())
                 }
                 if(circularAlertButton.visibility == View.GONE){
-                    val animation = AnimationUtils.loadAnimation(this.requireContext(), android.R.anim.fade_in)
-                    circularAlertButton.visibility = View.VISIBLE
-                    circularAlertButton.animation = animation
-                    circularAlertButton.animation.start()
+                    circularAlertButton.appearingAnimation(requireContext())
                 }
 
             }
             else{
 
                 if(alertButton.visibility == View.VISIBLE){
-                    val animation = AnimationUtils.loadAnimation(this.requireContext(), android.R.anim.fade_out)
-                    alertButton.animation = animation
-                    alertButton.animation.start()
-                    alertButton.visibility = View.GONE
+                    alertButton.disappearingAnimation(requireContext())
                 }
                 if(circularAlertButton.visibility == View.VISIBLE){
-                    val animation = AnimationUtils.loadAnimation(this.requireContext(), android.R.anim.fade_out)
-                    circularAlertButton.animation = animation
-                    circularAlertButton.animation.start()
-                    circularAlertButton.visibility = View.GONE
+                    circularAlertButton.disappearingAnimation(requireContext())
                 }
 
             }

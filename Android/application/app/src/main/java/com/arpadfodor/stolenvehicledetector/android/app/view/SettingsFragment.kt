@@ -8,6 +8,7 @@ import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
+import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.GeneralRepository
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserReportRepository
@@ -79,9 +80,20 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
             val user = AuthenticationService.userName
 
-            UserReportRepository.deleteAllFromUser(user){ isSuccess ->
-                dbDeleteResultSnackBar(isSuccess)
+            UserReportRepository.getByUser(user){ userReports ->
+
+                for(report in userReports){
+                    report.imagePath?.let{
+                        MediaHandler.deleteImage(it)
+                    }
+                }
+
+                UserReportRepository.deleteAllFromUser(user){ isSuccess ->
+                    dbDeleteResultSnackBar(isSuccess)
+                }
+
             }
+
             true
 
         }

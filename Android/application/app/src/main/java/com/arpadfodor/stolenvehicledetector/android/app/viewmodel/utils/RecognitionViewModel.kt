@@ -1,9 +1,8 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils
 
+import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
-import com.google.android.material.snackbar.Snackbar
 
 abstract class RecognitionViewModel : ViewModel(){
 
@@ -67,5 +66,7 @@ abstract class RecognitionViewModel : ViewModel(){
         callback(true)
 
     }
+
+    open fun loadImage(imagePath: String, callback: (Bitmap) -> Unit){}
 
 }

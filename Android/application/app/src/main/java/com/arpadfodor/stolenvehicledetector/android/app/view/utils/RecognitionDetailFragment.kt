@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_detail.*
 
@@ -68,17 +70,52 @@ class RecognitionDetailFragment : Fragment(){
         // Create the observer
         val selectedRecognitionObserver = Observer<Int> { id ->
 
-            val recognition = viewModel.getRecognitionById(id)
-            recognition?.let {
+            val currentRecognition = viewModel.getRecognitionById(id)
+            currentRecognition?.let { recognition ->
 
-                val recognitionImage = recognition.image
-                recognitionImage?.let{
-                    recognitionDetailImage?.setImageBitmap(recognitionImage)
+                val image = recognition.image
+                image?.let { bitmap ->
+
+                    recognitionDetailImage?.let {
+                        it.disappearingAnimation(requireContext())
+                        Glide
+                            .with(this)
+                            .load(bitmap)
+                            .error(R.drawable.image_placeholder)
+                            .into(it)
+                        it.appearingAnimation(requireContext())
+                    }
+
+                }
+
+                if(image == null && recognition.imagePath != null){
+
+                    recognitionDetailImage?.visibility = View.GONE
+
+                    viewModel.loadImage(recognition.imagePath){ bitmap ->
+
+                        requireActivity().runOnUiThread {
+
+                            recognitionDetailImage?.let {
+
+                                it.setImageBitmap(bitmap)
+
+                                it.postDelayed(
+                                    {
+                                        it.appearingAnimation(requireContext())
+                                    },
+                                    ApplicationRoot.IMMERSIVE_FLAG_TIMEOUT)
+                            }
+
+                        }
+
+                    }
+
                 }
 
                 //force done button on keyboard instead of the new line button
                 recognitionDetailMessage?.setRawInputType(InputType.TYPE_CLASS_TEXT)
-                recognitionDetailMessage?.text = SpannableStringBuilder(it.message)
+                recognitionDetailMessage?.text = SpannableStringBuilder(recognition.message)
 
                 recognitionDetailLicenseId?.text = recognition.licenseId
                 recognitionDetailDate?.text = recognition.date

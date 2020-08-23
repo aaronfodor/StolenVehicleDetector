@@ -4,14 +4,14 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.RecognitionActivity
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.UserReportsViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.UserReportViewModel
 
 class UserReportsActivity : RecognitionActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(UserReportsViewModel::class.java)
-        (viewModel as UserReportsViewModel).updateDataFromDb()
+        viewModel = ViewModelProvider(this).get(UserReportViewModel::class.java)
+        (viewModel as UserReportViewModel).updateDataFromDb()
 
         listName = getString(R.string.user_reports_list)
         detailName = getString(R.string.user_report_details)
@@ -23,6 +23,11 @@ class UserReportsActivity : RecognitionActivity() {
         updateSucceed = getString(R.string.report_updated)
         updateFailed = getString(R.string.report_update_failed)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (viewModel as UserReportViewModel).updateDataFromDb()
     }
 
 }

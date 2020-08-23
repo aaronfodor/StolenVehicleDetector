@@ -60,7 +60,7 @@
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/load_image_placeholder"
+                        app:srcCompat="@drawable/image_placeholder"
                         android:contentDescription="@string/recognition_image" />
 
                 </androidx.cardview.widget.CardView>

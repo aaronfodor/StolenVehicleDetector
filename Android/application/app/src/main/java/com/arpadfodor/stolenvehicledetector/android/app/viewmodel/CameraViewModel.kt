@@ -99,12 +99,8 @@ class CameraViewModel : ViewModel(){
         screenDimensions = Size(width, height)
     }
 
-    fun getOutputDirectory(): File {
-        return MediaHandler.getOutputDirectory()
-    }
-
     fun createFile(): File{
-        return MediaHandler.createTimestampedImageFile(getOutputDirectory())
+        return MediaHandler.createTimestampedImageFile(MediaHandler.getPublicDirectory())
     }
 
     fun setAlertActivityParams(){

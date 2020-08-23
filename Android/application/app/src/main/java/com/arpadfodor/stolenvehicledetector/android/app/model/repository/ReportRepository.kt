@@ -12,32 +12,32 @@ object ReportRepository {
     private fun setReports(reports : List<Report>, reportsMeta: MetaData,
                            callback: (Boolean) -> Unit){
 
-        val database = ApplicationDB.getDatabase(GeneralRepository.context)
-
         Thread {
 
-            var isDbUpdated = false
+            val database = ApplicationDB.getDatabase(GeneralRepository.context)
+            var isSuccess = false
 
-            // run delete, insert, etc. in an atomic transaction
-            database.runInTransaction{
+            try {
 
-                try {
+                // run delete, insert, etc. in an atomic transaction
+                database.runInTransaction {
+
                     database.reportTable().deleteAll()
                     database.reportTable().insert(reports)
 
                     database.metaTable().deleteByKey(REPORTS_META_ID)
                     database.metaTable().insert(reportsMeta)
 
-                    //update the local flag
-                    isDbUpdated = true
-                }
-                catch (e: Exception) {
-                    e.printStackTrace()
-                }
-                finally {
-                    callback(isDbUpdated)
                 }
 
+                //update the local flag
+                isSuccess = true
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+            finally {
+                callback(isSuccess)
             }
 
         }.start()
@@ -49,17 +49,22 @@ object ReportRepository {
      **/
     fun getReports(callback: (List<Report>) -> Unit) {
 
-        val reports = mutableListOf<Report>()
-        val database = ApplicationDB.getDatabase(GeneralRepository.context)
-
         Thread {
 
+            val reports = mutableListOf<Report>()
+            val database = ApplicationDB.getDatabase(GeneralRepository.context)
+
             try {
-                val dbContent = database.reportTable().getAll() ?: listOf()
-                for(element in dbContent){
-                    reports.add(element)
+
+                // run delete, insert, etc. in an atomic transaction
+                database.runInTransaction {
+                    val dbContent = database.reportTable().getAll() ?: listOf()
+                    for (element in dbContent) {
+                        reports.add(element)
+                    }
                 }
                 callback(reports)
+
             }
             catch (e: Exception) {
                 e.printStackTrace()
@@ -71,13 +76,18 @@ object ReportRepository {
 
     private fun getMeta(callback: (MetaData) -> Unit){
 
-        var metaData = MetaData()
-        val database = ApplicationDB.getDatabase(GeneralRepository.context)
-
         Thread {
 
+            var metaData = MetaData()
+            val database = ApplicationDB.getDatabase(GeneralRepository.context)
+
             try {
-                metaData = database.metaTable().getByKey(REPORTS_META_ID) ?: MetaData()
+
+                // run delete, insert, etc. in an atomic transaction
+                database.runInTransaction {
+                    metaData = database.metaTable().getByKey(REPORTS_META_ID) ?: MetaData()
+                }
+
             }
             catch (e: Exception) {
                 e.printStackTrace()

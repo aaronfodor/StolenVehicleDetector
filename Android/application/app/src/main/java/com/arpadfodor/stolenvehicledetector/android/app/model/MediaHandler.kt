@@ -2,6 +2,7 @@ package com.arpadfodor.stolenvehicledetector.android.app.model
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
@@ -9,6 +10,7 @@ import android.os.Environment.DIRECTORY_PICTURES
 import android.provider.MediaStore
 import androidx.exifinterface.media.ExifInterface
 import java.io.File
+import java.io.FileOutputStream
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,14 +33,13 @@ object MediaHandler {
     /**
      * Use external media if available, otherwise the app's file directory
      */
-    fun getOutputDirectory(): File {
+    fun getPublicDirectory(): File {
 
         val mediaDir = appContext.getExternalFilesDirs(DIRECTORY_PICTURES).firstOrNull()?.let {
             File(it, appName).apply {
                 mkdirs()
             }
         }
-
         MediaScannerConnection.scanFile(appContext, arrayOf(mediaDir.toString()), null, null)
 
         return if(mediaDir != null && mediaDir.exists()){
@@ -51,34 +52,111 @@ object MediaHandler {
     }
 
     /**
-     * Creates a timestamped image file
-     **/
-    fun createTimestampedImageFile(baseFolder: File) : File{
-        return createImageFile(baseFolder, SimpleDateFormat(FILENAME, Locale.US).format(System.currentTimeMillis()))
+     * App's private file directory
+     */
+    fun getPrivateDirectory(): File {
+        return appContext.filesDir
     }
 
     /**
-     * Creates an image file with name
+     * Creates a timestamped image file
      **/
-    fun createImageFileWithName(baseFolder: File, fileName: String) : File{
-        return createImageFile(baseFolder, fileName)
+    fun createTimestampedImageFile(targetDir: File) : File{
+        return createImageFile(targetDir, SimpleDateFormat(FILENAME, Locale.US).format(System.currentTimeMillis()))
     }
 
     /**
      * Creates an image file
      **/
-    private fun createImageFile(baseFolder: File, fileName: String) : File{
-        return File(baseFolder, fileName + PHOTO_EXTENSION)
+    private fun createImageFile(targetDir: File, fileName: String) : File{
+        return File(targetDir, fileName + PHOTO_EXTENSION)
+    }
+
+    /**
+     * Saves the image to the target directory
+     *
+     * @param targetDir     Where to save the image
+     * @param image         Image content
+     * @return String       Absolute path of the saved image
+     **/
+    fun saveImage(targetDir: File, image: Bitmap) : String{
+
+        val newFile = createImageFile(targetDir,
+            "img_" + SimpleDateFormat(FILENAME, Locale.US).format(System.currentTimeMillis()))
+
+        var fileOutputStream: FileOutputStream? = null
+
+        try{
+            fileOutputStream = FileOutputStream(newFile)
+            fileOutputStream.let {
+                image.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+            }
+        }
+        catch (e: Exception){
+            e.printStackTrace()
+        }
+        finally {
+            try {
+                fileOutputStream?.flush()
+                fileOutputStream?.close()
+            }
+            catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+
+        return newFile.absolutePath
+
+    }
+
+    /**
+     * Deletes the image file
+     **/
+    fun deleteImage(imagePath: String) : Boolean{
+        val fileToDelete = File(imagePath)
+        return fileToDelete.delete()
     }
 
     /**
      * Returns the loaded image from MediaStore
      *
-     * @param photoUri      URI of the image
+     * @param imagePath     Path of the image
      * @return Bitmap       The loaded image
      **/
-    fun getImage(photoUri: Uri): Bitmap {
-        return MediaStore.Images.Media.getBitmap(appContext.contentResolver, photoUri)
+    fun getImageByPath(imagePath: String): Bitmap? {
+
+        var image: Bitmap? = null
+
+        try {
+            image = BitmapFactory.decodeFile(imagePath)
+        }
+        catch (e: Exception){
+            e.printStackTrace()
+        }
+
+        return image
+    }
+
+    /**
+     * Returns the loaded image from MediaStore
+     *
+     * @param imageUri      URI of the image
+     * @return Bitmap       The loaded image
+     **/
+    fun getImageByUri(imageUri: Uri): Bitmap {
+
+        /*val image = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
+            val source = ImageDecoder.createSource(appContext.contentResolver, imageUri)
+            ImageDecoder.decodeBitmap(source)
+        }
+        else{
+            MediaStore.Images.Media.getBitmap(appContext.contentResolver, imageUri)
+        }*/
+
+        val image = MediaStore.Images.Media.getBitmap(appContext.contentResolver, imageUri)
+
+        return image
+
     }
 
     /**
@@ -89,9 +167,13 @@ object MediaHandler {
      **/
     fun getPhotoOrientation(photoUri: Uri): Int {
 
-        val cursor = appContext.contentResolver.query(photoUri,
-            arrayOf(MediaStore.Images.ImageColumns.ORIENTATION), null, null, null
-        )
+        val cursor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            appContext.contentResolver.query(photoUri,
+                arrayOf(MediaStore.Images.ImageColumns.ORIENTATION), null, null, null)
+        }
+        else {
+            appContext.contentResolver.query(photoUri, null, null, null, null)
+        }
 
         cursor?: return 0
 

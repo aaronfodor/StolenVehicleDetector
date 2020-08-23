@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/colorCardBackground" />
+    <gradient
+        android:type="radial"
+        android:gradientRadius="150%p"
+        android:startColor="@color/colorCardBackground"
+        android:endColor="@color/colorCardBackgroundDark" />
+    <corners android:radius="@dimen/card_corner_radius" />
     <corners android:radius="@dimen/card_corner_radius" />
     <padding
         android:bottom="@dimen/dialog_vertical_padding"

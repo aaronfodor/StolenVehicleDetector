@@ -7,7 +7,6 @@ import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 
 abstract class RecognitionActivity() : AppActivity() {
 

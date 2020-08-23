@@ -22,6 +22,7 @@
     <color name="colorAppSnackBarText">#DFFFFF</color>
 
     <color name="colorCardBackground">#B333333D</color>
+    <color name="colorCardBackgroundDark">#B3252529</color>
     <color name="colorCardText">#DFFFFF</color>
 
     <color name="colorButtonPositive">#03DAC5</color>

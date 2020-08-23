@@ -26,5 +26,7 @@ data class UserReport(
     @ColumnInfo(name = "timestamp_utc")
     val timestampUTC: String = DateHandler.dateToString(DateHandler.defaultDate()),
     @ColumnInfo(name = "is_sent")
-    var isSent: Boolean = false
+    var isSent: Boolean = false,
+    @ColumnInfo(name = "image_path")
+    var imagePath: String? = null
 ) : Serializable

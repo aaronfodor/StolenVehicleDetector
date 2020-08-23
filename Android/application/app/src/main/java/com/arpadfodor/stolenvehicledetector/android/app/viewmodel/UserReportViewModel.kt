@@ -1,14 +1,16 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel
 
+import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
+import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiVehicleReport
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserReportRepository
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
 
-class UserReportsViewModel : RecognitionViewModel(){
+class UserReportViewModel : RecognitionViewModel(){
 
     /**
      * List of recognition elements
@@ -23,18 +25,33 @@ class UserReportsViewModel : RecognitionViewModel(){
 
         UserReportRepository.getByUser(user){ userReportList ->
 
+            var isSelectedRecognitionExists = false
+
             val recognitionList = mutableListOf<Recognition>()
 
             for(userReport in userReportList){
+
+                val currentId = userReport.Id?.toInt() ?: 0
+
                 recognitionList.add(
-                    Recognition(userReport.Id?.toInt() ?: 0, userReport.isSent,
-                        userReport.Vehicle, null, userReport.timestampUTC,
+                    Recognition(currentId, userReport.isSent,
+                        userReport.Vehicle, null, userReport.imagePath, userReport.timestampUTC,
                         userReport.latitude.toString(), userReport.longitude.toString(),
                         userReport.Reporter, userReport.message)
                 )
+
+                if(currentId == selectedRecognitionId.value){
+                    isSelectedRecognitionExists = true
+                }
+
             }
 
             recognitions.postValue(recognitionList)
+
+            // if the selected Id does not exists anymore, clear show details flag
+            if(!isSelectedRecognitionExists){
+                showDetails.postValue(false)
+            }
 
         }
 
@@ -76,27 +93,53 @@ class UserReportsViewModel : RecognitionViewModel(){
     }
 
     override fun updateRecognitionMessage(id: Int, message: String, callback: (Boolean) -> Unit){
+
         val user = AuthenticationService.userName
+
         UserReportRepository.updateMessageByIdAndUser(id, user, message){ isSuccess ->
             if(isSuccess){
                 updateDataFromDb()
             }
             callback(isSuccess)
         }
+
     }
 
     override fun deleteRecognition(id: Int, callback: (Boolean) -> Unit){
 
-        val user = AuthenticationService.userName
+        Thread{
 
-        UserReportRepository.deleteByIdAndUser(id, user){ isSuccess ->
+            val user = AuthenticationService.userName
 
-            if(isSuccess){
-                updateDataFromDb()
+            val recognition = recognitions.value?.find { it.artificialId == id } ?: return@Thread
+            recognition.imagePath?.let {
+                MediaHandler.deleteImage(it)
             }
-            callback(isSuccess)
 
-        }
+            UserReportRepository.deleteByIdAndUser(id, user){ isSuccess ->
+
+                if(isSuccess){
+                    updateDataFromDb()
+                }
+                callback(isSuccess)
+
+            }
+
+        }.start()
+
+    }
+
+    override fun loadImage(imagePath: String, callback: (Bitmap) -> Unit){
+
+        Thread{
+
+            val loadedImage = MediaHandler.getImageByPath(imagePath)
+            loadedImage?.let{
+                callback(it)
+            }
+
+        }.start()
+
     }
 
 }
