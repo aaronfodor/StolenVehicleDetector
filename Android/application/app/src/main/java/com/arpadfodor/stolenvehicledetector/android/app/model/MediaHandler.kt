@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.Environment.DIRECTORY_PICTURES
 import android.provider.MediaStore
 import androidx.exifinterface.media.ExifInterface
@@ -50,10 +51,24 @@ object MediaHandler {
     }
 
     /**
-     * Creates a timestamped file
-     * */
-    fun createFile(baseFolder: File) : File{
-        return File(baseFolder, SimpleDateFormat(FILENAME, Locale.US).format(System.currentTimeMillis()) + PHOTO_EXTENSION)
+     * Creates a timestamped image file
+     **/
+    fun createTimestampedImageFile(baseFolder: File) : File{
+        return createImageFile(baseFolder, SimpleDateFormat(FILENAME, Locale.US).format(System.currentTimeMillis()))
+    }
+
+    /**
+     * Creates an image file with name
+     **/
+    fun createImageFileWithName(baseFolder: File, fileName: String) : File{
+        return createImageFile(baseFolder, fileName)
+    }
+
+    /**
+     * Creates an image file
+     **/
+    private fun createImageFile(baseFolder: File, fileName: String) : File{
+        return File(baseFolder, fileName + PHOTO_EXTENSION)
     }
 
     /**
@@ -93,35 +108,50 @@ object MediaHandler {
 
     }
 
-    fun getImageMeta(photoUri: Uri): Array<String> {
+    fun getImageMeta(rawPhotoUri: Uri): Array<String> {
 
         val contentResolver = appContext.contentResolver
-        val inputStream = contentResolver.openInputStream(photoUri)
+
+        // Location from Exif works this way above Android Q
+        val photoUri = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            MediaStore.setRequireOriginal(rawPhotoUri)
+        }
+        else{
+            rawPhotoUri
+        }
 
         var dateString = ""
         var latitudeString = "0.0"
         var longitudeString = "0.0"
 
-        if (inputStream != null) {
+        contentResolver.openInputStream(photoUri)?.use { stream ->
 
-            val exif = ExifInterface(inputStream)
+            ExifInterface(stream).run {
 
-            val dateStringRaw = exif.getAttribute(ExifInterface.TAG_DATETIME) ?: ""
+                // coordinates from Exif - ACCESS_MEDIA_LOCATION permission needed
+                try {
+                    // If lat/long is null, fall back to the coordinates (0, 0).
+                    val latLong = latLong ?: doubleArrayOf(0.0, 0.0)
+                    if(latLong.isNotEmpty()){
+                        latitudeString = latLong[0].toString()
+                        longitudeString = latLong[1].toString()
+                    }
+                }
+                catch (e: Exception){
+                    e.printStackTrace()
+                }
 
-            var date = Date(0)
+                val dateStringRaw = getAttribute(ExifInterface.TAG_DATETIME) ?: ""
+                var date = Date(0)
+                try{
+                    date = exifFormatter.parse(dateStringRaw) ?: Date(0)
+                }
+                catch (e: Exception){
+                    e.printStackTrace()
+                }
+                dateString = DateHandler.dateToString(date)
 
-            try{
-                date = exifFormatter.parse(dateStringRaw) ?: Date(0)
-            }
-            catch (e: Exception){}
 
-            dateString = DateHandler.dateToString(date)
-
-            val latLong = exif.latLong ?: doubleArrayOf()
-
-            if(latLong.isNotEmpty()){
-                latitudeString = latLong[0].toString()
-                longitudeString = latLong[1].toString()
             }
 
         }

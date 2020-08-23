@@ -104,7 +104,7 @@ class CameraViewModel : ViewModel(){
     }
 
     fun createFile(): File{
-        return MediaHandler.createFile(getOutputDirectory())
+        return MediaHandler.createTimestampedImageFile(getOutputDirectory())
     }
 
     fun setAlertActivityParams(){

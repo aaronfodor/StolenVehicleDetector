@@ -66,9 +66,7 @@ class HowToUseActivity : AppActivity() {
 
     }
 
-    override fun unsubscribe(){
-        viewModel.stopTextToSpeech()
-    }
+    override fun unsubscribe(){}
 
     override fun onBackPressed() {
         if(activityDrawerLayout.isDrawerOpen(GravityCompat.START)){
