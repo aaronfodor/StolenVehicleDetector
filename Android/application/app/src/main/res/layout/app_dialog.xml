@@ -18,7 +18,7 @@
         android:layout_marginBottom="@dimen/dialog_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/glMiddle"
+        app:layout_constraintBottom_toTopOf="@+id/glHorizontalMiddle"
         app:layout_constraintTop_toTopOf="parent"
         android:contentDescription="@string/app_dialog_image" />
 
@@ -32,7 +32,7 @@
         android:layout_marginBottom="@dimen/dialog_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/glMiddle" />
+        app:layout_constraintTop_toTopOf="@+id/glHorizontalMiddle" />
 
     <TextView
         style="@style/ParagraphBody"
@@ -74,16 +74,18 @@
         app:layout_constraintEnd_toStartOf="@+id/glVerticalMiddle"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:id="@+id/glVerticalMiddle"
-                                                app:layout_constraintGuide_percent="0.5"
-                                                android:orientation="vertical"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/glVerticalMiddle"
+        app:layout_constraintGuide_percent="0.5"
+        android:orientation="vertical"/>
 
-    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:id="@+id/glMiddle"
-                                                app:layout_constraintGuide_percent="0.5"
-                                                android:orientation="horizontal"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/glHorizontalMiddle"
+        app:layout_constraintGuide_percent="0.5"
+        android:orientation="horizontal"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

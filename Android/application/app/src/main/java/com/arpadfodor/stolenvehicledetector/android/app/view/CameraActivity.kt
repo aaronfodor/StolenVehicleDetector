@@ -38,7 +38,7 @@ class CameraActivity : AppActivity() {
 
         viewModel = ViewModelProvider(this).get(CameraViewModel::class.java)
 
-        activatePermissionFragment()
+        showPermissionFragment()
 
         deviceOrientationListener = object : OrientationEventListener(this,
             SensorManager.SENSOR_DELAY_NORMAL) {
@@ -69,13 +69,10 @@ class CameraActivity : AppActivity() {
         CameraViewModel.settingsShowReceptiveField = settingsShowReceptiveField
 
         // Create the observer which updates the UI in case of value change
-        val hasPermissionsGranted = Observer<Boolean> { permissionGranted ->
+        val hasPermissionsGranted = Observer<Boolean> { permissionsGranted ->
 
-            if(permissionGranted == true){
-                //AppSnackBarBuilder.buildSuccessSnackBar(resources, container, getString(R.string.permission_granted), Snackbar.LENGTH_SHORT).show()
-            }
-            else{
-                AppSnackBarBuilder.buildAlertSnackBar(this.applicationContext, container, getString(R.string.permission_denied), Snackbar.LENGTH_SHORT).show()
+            if(!permissionsGranted){
+                showMissingPermissionNotification()
             }
 
         }
@@ -103,7 +100,7 @@ class CameraActivity : AppActivity() {
         deviceOrientationListener.disable()
     }
 
-    private fun activatePermissionFragment(){
+    private fun showPermissionFragment(){
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.camera_container, PermissionsFragment())

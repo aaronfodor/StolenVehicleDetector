@@ -48,14 +48,14 @@ class PermissionsFragment : Fragment() {
 
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
 
-            if (PackageManager.PERMISSION_GRANTED == grantResults.firstOrNull()) {
-                viewModel.hasPermissionsGranted.postValue(true)
-                // Take the user to the success fragment when permission is granted
-                proceedToNextFragment()
-            }
-            else {
+            if (grantResults.contains(PackageManager.PERMISSION_DENIED)) {
                 viewModel.hasPermissionsGranted.postValue(false)
             }
+            else {
+                viewModel.hasPermissionsGranted.postValue(true)
+            }
+
+            proceedToNextFragment()
 
         }
 

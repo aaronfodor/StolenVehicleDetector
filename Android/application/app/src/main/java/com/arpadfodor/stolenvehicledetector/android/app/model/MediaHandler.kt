@@ -206,36 +206,33 @@ object MediaHandler {
         var latitudeString = "0.0"
         var longitudeString = "0.0"
 
-        contentResolver.openInputStream(photoUri)?.use { stream ->
+        try {
 
-            ExifInterface(stream).run {
+            contentResolver.openInputStream(photoUri)?.use { stream ->
 
-                // coordinates from Exif - ACCESS_MEDIA_LOCATION permission needed
-                try {
+                ExifInterface(stream).run {
+
+                    // coordinates from Exif - ACCESS_MEDIA_LOCATION permission needed
                     // If lat/long is null, fall back to the coordinates (0, 0).
                     val latLong = latLong ?: doubleArrayOf(0.0, 0.0)
                     if(latLong.isNotEmpty()){
                         latitudeString = latLong[0].toString()
                         longitudeString = latLong[1].toString()
                     }
-                }
-                catch (e: Exception){
-                    e.printStackTrace()
-                }
 
-                val dateStringRaw = getAttribute(ExifInterface.TAG_DATETIME) ?: ""
-                var date = Date(0)
-                try{
-                    date = exifFormatter.parse(dateStringRaw) ?: Date(0)
-                }
-                catch (e: Exception){
-                    e.printStackTrace()
-                }
-                dateString = DateHandler.dateToString(date)
+                    val dateStringRaw = getAttribute(ExifInterface.TAG_DATETIME) ?: ""
+                    val date = exifFormatter.parse(dateStringRaw) ?: Date(0)
 
+                    dateString = DateHandler.dateToString(date)
+
+
+                }
 
             }
 
+        }
+        catch (e: Exception){
+            e.printStackTrace()
         }
 
         return arrayOf(dateString, latitudeString, longitudeString)

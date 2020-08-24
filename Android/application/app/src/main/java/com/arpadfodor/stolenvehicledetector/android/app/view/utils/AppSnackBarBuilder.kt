@@ -26,21 +26,21 @@ object AppSnackBarBuilder {
     fun buildInfoSnackBar(context: Context, view: View, text: String, duration: Int): Snackbar{
         val snackBar = buildAppSnackBar(view, text, duration)
         snackBar.setBackgroundTint(ContextCompat.getColor(context, R.color.colorAppSnackBarBackground))
-        snackBar.setTextColor(ContextCompat.getColor(context, R.color.colorText))
+        snackBar.setTextColor(ContextCompat.getColor(context, R.color.colorAppSnackBarLightText))
         return snackBar
     }
 
     fun buildSuccessSnackBar(context: Context, view: View, text: String, duration: Int): Snackbar{
         val snackBar = buildAppSnackBar(view, text, duration)
         snackBar.setBackgroundTint(ContextCompat.getColor(context, R.color.colorSuccessSnackBarBackground))
-        snackBar.setTextColor(ContextCompat.getColor(context, R.color.colorText))
+        snackBar.setTextColor(ContextCompat.getColor(context, R.color.colorAppSnackBarLightText))
         return snackBar
     }
 
     fun buildAlertSnackBar(context: Context, view: View, text: String, duration: Int): Snackbar{
         val snackBar = buildAppSnackBar(view, text, duration)
         snackBar.setBackgroundTint(ContextCompat.getColor(context, R.color.colorAlertSnackBarBackground))
-        snackBar.setTextColor(ContextCompat.getColor(context, R.color.colorText))
+        snackBar.setTextColor(ContextCompat.getColor(context, R.color.colorAppSnackBarLightText))
         return snackBar
     }
 

@@ -8,7 +8,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
 import com.google.android.material.navigation.NavigationView
 
-abstract class RecognitionActivity() : AppActivity() {
+abstract class MasterDetailActivity() : AppActivity() {
 
     open lateinit var viewModel: RecognitionViewModel
 
@@ -39,9 +39,9 @@ abstract class RecognitionActivity() : AppActivity() {
     override fun onResume() {
         super.onResume()
         // Prepare those fragments to listen to the appropriate ViewModel
-        RecognitionListFragment.setParams(viewModel, listName,
+        MasterFragment.setParams(viewModel, listName,
             sendSucceed, sendFailed, deleted, alreadySent)
-        RecognitionDetailFragment.setParams(viewModel, detailName,
+        DetailFragment.setParams(viewModel, detailName,
             sendSucceed, sendFailed, deleted, alreadySent, updateSucceed, updateFailed)
     }
 
@@ -51,10 +51,10 @@ abstract class RecognitionActivity() : AppActivity() {
         val showDetailsObserver = Observer<Boolean> { showDetails ->
 
             if(showDetails){
-                showFragmentByTag(RecognitionDetailFragment.TAG)
+                showFragmentByTag(DetailFragment.TAG)
             }
             else{
-                showFragmentByTag(RecognitionListFragment.TAG)
+                showFragmentByTag(MasterFragment.TAG)
             }
 
         }
@@ -94,11 +94,11 @@ abstract class RecognitionActivity() : AppActivity() {
         if(fragment == null){
 
             fragment = when(fragmentTag){
-                RecognitionListFragment.TAG -> {
-                    RecognitionListFragment()
+                MasterFragment.TAG -> {
+                    MasterFragment()
                 }
-                RecognitionDetailFragment.TAG -> {
-                    RecognitionDetailFragment()
+                DetailFragment.TAG -> {
+                    DetailFragment()
                 }
                 else -> null
             }

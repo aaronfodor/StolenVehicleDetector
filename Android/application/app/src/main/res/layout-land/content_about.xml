@@ -18,7 +18,7 @@
         android:text="@string/menu_about" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,12 +28,12 @@
 
         <ScrollView
             android:id="@+id/about_scrollview"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/fabMoreFromDeveloper"
+            app:layout_constraintStart_toEndOf="@+id/glVerticalMiddle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:padding="@dimen/paragraph_padding"
             android:layout_margin="@dimen/paragraph_margin"
             android:gravity="top">
@@ -102,7 +102,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/fabMoreFromDeveloper"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/glVerticalMiddle"
             app:layout_constraintTop_toTopOf="@+id/fabMoreFromDeveloper"
             app:layout_constraintBottom_toBottomOf="@+id/fabMoreFromDeveloper"
             style="@style/ButtonLabel"
@@ -123,7 +123,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/fabReview"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/glVerticalMiddle"
             app:layout_constraintTop_toTopOf="@+id/fabReview"
             app:layout_constraintBottom_toBottomOf="@+id/fabReview"
             style="@style/ButtonLabel"
@@ -144,11 +144,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/fabBugReport"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/glVerticalMiddle"
             app:layout_constraintTop_toTopOf="@+id/fabBugReport"
             app:layout_constraintBottom_toBottomOf="@+id/fabBugReport"
             style="@style/ButtonLabel"
             android:text="@string/report_bug"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/glVerticalMiddle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_percent="@dimen/button_vs_text_land_layout_ratio"
+            android:orientation="vertical"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -26,8 +26,7 @@
     <string name="maintenance_message_title">[%1$s][bug report]</string>
     <string name="store_page">http://play.google.com/store/apps/details?id=%1$s</string>
 
-    <string name="permission_granted">Permission request granted</string>
-    <string name="permission_denied">Permission request denied</string>
+    <string name="permission_denied">Functionality limited: missing permission(s)</string>
 
     <string name="switch_camera">Switch camera</string>
     <string name="capture">Capture</string>
@@ -118,19 +117,18 @@
     <string name="date_title">Time (UTC)</string>
     <string name="location_title">Location</string>
 
+    <string name="updated">Updated</string>
+    <string name="update_failed">Update failed</string>
+
     <string name="report_sent">Report sent</string>
-    <string name="report_sending_failed">Report sending failed</string>
+    <string name="report_sending_failed">Sending failed</string>
     <string name="report_deleted">Report deleted</string>
     <string name="report_already_sent">Report already sent</string>
-    <string name="report_updated">Report updated</string>
-    <string name="report_update_failed">Report update failed</string>
 
-    <string name="alert_sent">Alert added to my reports</string>
-    <string name="alert_sending_failed">Alert addition failed</string>
+    <string name="alert_sent">Added to my reports</string>
+    <string name="alert_sending_failed">Addition failed</string>
     <string name="alert_deleted">Alert deleted</string>
     <string name="alert_already_sent">Alert already added</string>
-    <string name="alert_updated">Alert updated</string>
-    <string name="alert_update_failed">Alert update failed</string>
 
     <string name="more_from_developer">More from the developer</string>
     <string name="review_app">Review app</string>

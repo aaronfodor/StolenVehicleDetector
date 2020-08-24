@@ -75,4 +75,6 @@
     <dimen name="snack_bar_margin_horizontal">32dp</dimen>
     <dimen name="snack_bar_margin_vertical">8dp</dimen>
 
+    <dimen name="button_vs_text_land_layout_ratio">0.33</dimen>
+
 </resources>

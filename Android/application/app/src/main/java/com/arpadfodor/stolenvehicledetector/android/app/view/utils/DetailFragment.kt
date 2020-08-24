@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_detail.*
 
-class RecognitionDetailFragment : Fragment(){
+class DetailFragment : Fragment(){
 
     companion object{
 

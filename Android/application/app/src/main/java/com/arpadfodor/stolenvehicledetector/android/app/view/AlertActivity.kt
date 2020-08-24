@@ -3,10 +3,10 @@ package com.arpadfodor.stolenvehicledetector.android.app.view
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.RecognitionActivity
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.MasterDetailActivity
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AlertViewModel
 
-class AlertActivity : RecognitionActivity() {
+class AlertActivity : MasterDetailActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,8 +19,8 @@ class AlertActivity : RecognitionActivity() {
         sendFailed = getString(R.string.alert_sending_failed)
         deleted = getString(R.string.alert_deleted)
         alreadySent = getString(R.string.alert_already_sent)
-        updateSucceed = getString(R.string.alert_updated)
-        updateFailed = getString(R.string.alert_update_failed)
+        updateSucceed = getString(R.string.updated)
+        updateFailed = getString(R.string.update_failed)
 
     }
 

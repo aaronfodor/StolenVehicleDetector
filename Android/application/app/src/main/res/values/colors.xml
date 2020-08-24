@@ -17,9 +17,9 @@
     <color name="colorNavigationBar">#000000</color>
 
     <color name="colorAppSnackBarBackground">#B333333D</color>
-    <color name="colorSuccessSnackBarBackground">#B303DAC5</color>
+    <color name="colorSuccessSnackBarBackground">#B300FF00</color>
     <color name="colorAlertSnackBarBackground">#B3FF0000</color>
-    <color name="colorAppSnackBarText">#DFFFFF</color>
+    <color name="colorAppSnackBarLightText">#DFFFFF</color>
 
     <color name="colorCardBackground">#B333333D</color>
     <color name="colorCardBackgroundDark">#B3252529</color>

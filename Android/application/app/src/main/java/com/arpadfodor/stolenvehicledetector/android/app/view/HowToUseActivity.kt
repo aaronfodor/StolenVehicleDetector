@@ -68,13 +68,4 @@ class HowToUseActivity : AppActivity() {
 
     override fun unsubscribe(){}
 
-    override fun onBackPressed() {
-        if(activityDrawerLayout.isDrawerOpen(GravityCompat.START)){
-            activityDrawerLayout.closeDrawer(GravityCompat.START)
-        }
-        else{
-            this.finish()
-        }
-    }
-
 }

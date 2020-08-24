@@ -13,7 +13,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognit
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_list.*
 
-class RecognitionListFragment : Fragment(){
+class MasterFragment : Fragment(){
 
     companion object{
 
@@ -87,7 +87,7 @@ class RecognitionListFragment : Fragment(){
 
             sendClickListener = { id ->
 
-                val recognition = RecognitionDetailFragment.viewModel.getRecognitionById(id)
+                val recognition = DetailFragment.viewModel.getRecognitionById(id)
                 recognition?.let{
 
                     if(recognition.isSent){
