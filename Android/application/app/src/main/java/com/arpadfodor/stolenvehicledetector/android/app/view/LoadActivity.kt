@@ -13,12 +13,14 @@ import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppActivity
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.appearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.disappearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.LoadViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.load_ui_container.*
 
 class LoadActivity : AppActivity() {
@@ -185,18 +187,28 @@ class LoadActivity : AppActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         // Result code is RESULT_OK only if the user has selected an Image
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-
                 LoadViewModel.GALLERY_REQUEST_CODE -> {
+
                     //data.getData returns the content URI for the selected Image
                     val selectedImageUri = data?.data ?: return
-                    viewModel.loadImage(selectedImageUri)
+
+                    viewModel.loadImage(selectedImageUri){isSuccess ->
+                        if(!isSuccess){
+                            imageLoadFailedNotification()
+                        }
+                    }
+
                 }
             }
         }
+    }
+
+    private fun imageLoadFailedNotification(){
+        AppSnackBarBuilder.buildInfoSnackBar(this, container,
+            getString(R.string.load_image_failed), Snackbar.LENGTH_SHORT).show()
     }
 
 }

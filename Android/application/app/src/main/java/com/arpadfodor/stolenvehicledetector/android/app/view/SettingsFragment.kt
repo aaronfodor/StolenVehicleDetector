@@ -80,18 +80,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
             val user = AuthenticationService.userName
 
-            UserReportRepository.getByUser(user){ userReports ->
-
-                for(report in userReports){
-                    report.imagePath?.let{
-                        MediaHandler.deleteImage(it)
-                    }
-                }
-
-                UserReportRepository.deleteAllFromUser(user){ isSuccess ->
-                    dbDeleteResultSnackBar(isSuccess)
-                }
-
+            UserReportRepository.deleteAllFromUser(user){ isSuccess ->
+                dbDeleteResultSnackBar(isSuccess)
             }
 
             true

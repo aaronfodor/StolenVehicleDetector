@@ -9,16 +9,11 @@ import android.content.res.Configuration
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
-import android.media.MediaScannerConnection
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
-import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
-import android.webkit.MimeTypeMap
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.camera.core.*
@@ -27,7 +22,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
-import androidx.core.net.toFile
 import androidx.fragment.app.activityViewModels
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.arpadfodor.stolenvehicledetector.android.app.R
@@ -38,9 +32,11 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.model.LocationService
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.appearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.disappearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
+import com.google.android.material.snackbar.Snackbar
 
 /** Helper type alias used for analysis use case callbacks */
 typealias DetectionListener = (recognition: Bitmap) -> Unit
@@ -210,7 +206,7 @@ class CameraFragment : Fragment() {
 
         val cameraOrientation = viewFinder.display.rotation
 
-        cameraProviderFuture.addListener(Runnable {
+        cameraProviderFuture.addListener( {
 
             // CameraProvider
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
@@ -334,7 +330,8 @@ class CameraFragment : Fragment() {
             imageCapture?.let { imageCapture ->
 
                 // Create output file to hold the image
-                val photoFile = viewModel.createFile()
+                val photoFileStream = viewModel.getImageOutputStream()
+                photoFileStream ?: return@let
 
                 // Setup image capture metadata
                 val metadata = ImageCapture.Metadata().apply {
@@ -342,34 +339,33 @@ class CameraFragment : Fragment() {
                     isReversedHorizontal = (viewModel.lensFacing == CameraSelector.LENS_FACING_FRONT)
                 }
 
-                // Create output options object which contains file + metadata
-                val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
+                // Create output options object which contains file stream + metadata
+                val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFileStream)
                     .setMetadata(metadata)
                     .build()
+
+                val currentRotation = CameraViewModel.deviceOrientation
+                val surfaceRotationCode = when(currentRotation){
+                    0 -> 0
+                    90 -> 1
+                    180 -> 2
+                    270 -> 3
+                    else -> 0
+                }
+                imageCapture.targetRotation = surfaceRotationCode
 
                 // Setup image capture listener which is triggered after photo has been taken
                 imageCapture.takePicture(
                     outputOptions, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
 
                         override fun onError(exc: ImageCaptureException) {
+                            takePhotoResultSnackBar(false)
                             Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                         }
 
                         override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                            val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
-                            Log.d(TAG, "Photo captured: $savedUri")
-
-                            // If the folder selected is an external media directory, this is
-                            // unnecessary but otherwise other apps will not be able to access app
-                            // images unless scanning them using [MediaScannerConnection]
-                            val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(savedUri.toFile().extension)
-                            MediaScannerConnection.scanFile(
-                                context,
-                                arrayOf(savedUri.toString()),
-                                arrayOf(mimeType)
-                            ) { _, uri ->
-                                Log.d(TAG, "Image capture scanned into media store: $uri")
-                            }
+                            takePhotoResultSnackBar(true)
+                            Log.d(TAG, "Photo captured: ${output.savedUri}")
                         }
 
                     })
@@ -451,6 +447,19 @@ class CameraFragment : Fragment() {
 
         // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
         viewModel.recognitions.observe(this.viewLifecycleOwner, recognitionsObserver)
+
+    }
+
+    private fun takePhotoResultSnackBar(isSuccess: Boolean){
+
+        if(isSuccess){
+            AppSnackBarBuilder.buildInfoSnackBar(requireContext().applicationContext, this.requireView(),
+                getString(R.string.image_captured), Snackbar.LENGTH_SHORT).show()
+        }
+        else{
+            AppSnackBarBuilder.buildAlertSnackBar(requireContext().applicationContext, this.requireView(),
+                getString(R.string.image_capture_failed), Snackbar.LENGTH_SHORT).show()
+        }
 
     }
 

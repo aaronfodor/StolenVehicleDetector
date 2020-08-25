@@ -3,8 +3,8 @@
 <!DOCTYPE resources [
     <!ENTITY appName "Stolen Vehicle Detector">
     <!ENTITY appId "">
-    <!ENTITY appVersion "v0.17">
-    <!ENTITY appDate "23/08/2020">
+    <!ENTITY appVersion "v0.18">
+    <!ENTITY appDate "25/08/2020">
     <!ENTITY appCreator "Arpad Fodor">
     <!ENTITY adMobAppId "ca-app-pub-3940256099942544~3347511713">
     <!ENTITY adMobBannerId "ca-app-pub-3940256099942544/6300978111">
@@ -116,6 +116,11 @@
     <string name="license_id_title">License Id</string>
     <string name="date_title">Time (UTC)</string>
     <string name="location_title">Location</string>
+
+    <string name="image_captured">Image captured</string>
+    <string name="image_capture_failed">Image capture failed</string>
+
+    <string name="load_image_failed">Image loading failed</string>
 
     <string name="updated">Updated</string>
     <string name="update_failed">Update failed</string>

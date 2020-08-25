@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
 import com.bumptech.glide.Glide
@@ -84,31 +83,6 @@ class DetailFragment : Fragment(){
                             .error(R.drawable.image_placeholder)
                             .into(it)
                         it.appearingAnimation(requireContext())
-                    }
-
-                }
-
-                if(image == null && recognition.imagePath != null){
-
-                    recognitionDetailImage?.visibility = View.GONE
-
-                    viewModel.loadImage(recognition.imagePath){ bitmap ->
-
-                        requireActivity().runOnUiThread {
-
-                            recognitionDetailImage?.let {
-
-                                it.setImageBitmap(bitmap)
-
-                                it.postDelayed(
-                                    {
-                                        it.appearingAnimation(requireContext())
-                                    },
-                                    ApplicationRoot.IMMERSIVE_FLAG_TIMEOUT)
-                            }
-
-                        }
-
                     }
 
                 }

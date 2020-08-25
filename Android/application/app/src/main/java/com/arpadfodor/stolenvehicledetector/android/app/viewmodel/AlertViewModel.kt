@@ -36,18 +36,13 @@ class AlertViewModel : RecognitionViewModel(){
 
         Thread{
 
-            var imagePath: String? = null
-
-            recognition.image?.let {
-                imagePath = MediaHandler.saveImage(MediaHandler.getPrivateDirectory(), it)
-            }
-
             val userReport =
                 UserReport(null, recognition.licenseId, recognition.reporter,
                     recognition.latitude.toDouble(), recognition.longitude.toDouble(),
-                    recognition.message, recognition.date, false, imagePath)
+                    recognition.message, recognition.date, false, null)
 
-            UserReportRepository.postUserReport(userReport) { isSuccess ->
+            UserReportRepository.postUserReport(userReport, recognition.image) { isSuccess ->
+
                 if(isSuccess){
                     deleteRecognition(id){ isSuccess ->
                         callback(isSuccess)
@@ -56,6 +51,7 @@ class AlertViewModel : RecognitionViewModel(){
                 else{
                     callback(false)
                 }
+
             }
 
         }.start()

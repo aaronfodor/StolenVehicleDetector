@@ -1,27 +1,31 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model
 
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
-import android.os.Environment.DIRECTORY_PICTURES
+import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import androidx.exifinterface.media.ExifInterface
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Exception
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
 object MediaHandler {
 
-    private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
+    private const val TAG = "Media handler"
+
+    private const val TIMESTAMP_FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
     private const val PHOTO_EXTENSION = ".jpg"
+    private const val DB_IMAGES_ALBUM = "dbImages"
 
     private lateinit var appContext: Context
-    private var appName = ""
+    private lateinit var appName: String
 
     private val exifFormatter = SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.ENGLISH)
 
@@ -31,38 +35,115 @@ object MediaHandler {
     }
 
     /**
-     * Use external media if available, otherwise the app's file directory
+     * Returns the image output stream to the shared storage.
+     * An image placed there will be available even after app deletion.
      */
-    fun getPublicDirectory(): File {
+    fun getImagePublicDirOutputStream() : OutputStream? {
 
-        val mediaDir = appContext.getExternalFilesDirs(DIRECTORY_PICTURES).firstOrNull()?.let {
-            File(it, appName).apply {
-                mkdirs()
+        val relativeImagePath = File.separator + appName
+
+        var fos: OutputStream? = null
+
+        try{
+
+            val fileName = SimpleDateFormat(TIMESTAMP_FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
+                val resolver = appContext.contentResolver
+                val contentValues = ContentValues()
+                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/$PHOTO_EXTENSION")
+                contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/$appName")
+                val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                imageUri?.let{
+                    fos = resolver.openOutputStream(it)
+                }
+
             }
-        }
-        MediaScannerConnection.scanFile(appContext, arrayOf(mediaDir.toString()), null, null)
+            else {
 
-        return if(mediaDir != null && mediaDir.exists()){
-            mediaDir
+                val imageDirPath = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DCIM).toString() + relativeImagePath
+
+                val imageDir = File(imageDirPath).apply {
+                    mkdirs()
+                }
+
+                imageDirPath.let {
+                    File(it, fileName + PHOTO_EXTENSION).apply {
+                        mkdirs()
+                        fos = FileOutputStream(it)
+                    }
+                }
+
+            }
+
         }
-        else{
-            appContext.filesDir
+        catch (e: Exception){
+            e.printStackTrace()
+        }
+        finally {
+            return fos
         }
 
     }
 
     /**
-     * App's private file directory
+     * App's private external directory (used for Db images).
+     * No need to request any storage-related permissions to access.
+     * Verification is needed to decide whether the storage is available.
+     * Tends to be small- before writing app-specific files, query the free space on the device.
      */
-    fun getPrivateDirectory(): File {
+    fun getExternalDbImagesDirOfUser(userName: String): File? {
+
+        val userAlbumPath = "${DB_IMAGES_ALBUM}${File.separator}${userName}"
+
+        val externalPictureDirs = appContext.getExternalFilesDirs(Environment.DIRECTORY_PICTURES)
+
+        val dbPicturesDir = externalPictureDirs.firstOrNull()?.let {
+            File(it, userAlbumPath).apply {
+                mkdirs()
+            }
+        }
+
+        return if(dbPicturesDir != null && dbPicturesDir.exists()){
+            dbPicturesDir
+        }
+        else{
+            Log.e(TAG, "Directory not available/not created")
+            null
+        }
+
+    }
+
+    fun deleteExternalDbImagesOfUser(userName: String) : Boolean{
+        return getExternalDbImagesDirOfUser(userName)?.deleteRecursively() ?: true
+    }
+
+    /**
+     * App's encrypted, private internal directory.
+     * No need to request any storage-related permissions to access.
+     * Always available.
+     * Tends to be small - before writing app-specific files, query the free space on the device.
+     */
+    fun getInternalFileStorage(): File {
         return appContext.filesDir
     }
 
     /**
-     * Creates a timestamped image file
+     * Checks if a volume containing external storage is available for read and write.
      **/
-    fun createTimestampedImageFile(targetDir: File) : File{
-        return createImageFile(targetDir, SimpleDateFormat(FILENAME, Locale.US).format(System.currentTimeMillis()))
+    fun isExternalStorageWritable(): Boolean {
+        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
+    }
+
+    /**
+     * Checks if a volume containing external storage is available to at least read.
+     **/
+    fun isExternalStorageReadable(): Boolean {
+        return Environment.getExternalStorageState() in
+                setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)
     }
 
     /**
@@ -81,8 +162,13 @@ object MediaHandler {
      **/
     fun saveImage(targetDir: File, image: Bitmap) : String{
 
-        val newFile = createImageFile(targetDir,
-            "img_" + SimpleDateFormat(FILENAME, Locale.US).format(System.currentTimeMillis()))
+        val newFile = createImageFile(
+            targetDir,
+            "img_" + SimpleDateFormat(
+                TIMESTAMP_FILENAME_FORMAT,
+                Locale.US
+            ).format(System.currentTimeMillis())
+        )
 
         var fileOutputStream: FileOutputStream? = null
 
@@ -96,6 +182,7 @@ object MediaHandler {
             e.printStackTrace()
         }
         finally {
+
             try {
                 fileOutputStream?.flush()
                 fileOutputStream?.close()
@@ -103,9 +190,10 @@ object MediaHandler {
             catch (e: Exception){
                 e.printStackTrace()
             }
-        }
 
-        return newFile.absolutePath
+            return newFile.absolutePath
+
+        }
 
     }
 
@@ -118,14 +206,15 @@ object MediaHandler {
     }
 
     /**
-     * Returns the loaded image from MediaStore
+     * Returns the loaded image from path
      *
      * @param imagePath     Path of the image
      * @return Bitmap       The loaded image
      **/
-    fun getImageByPath(imagePath: String): Bitmap? {
+    fun getImageByPath(imagePath: String?): Bitmap? {
 
         var image: Bitmap? = null
+        imagePath ?: return image
 
         try {
             image = BitmapFactory.decodeFile(imagePath)
@@ -133,29 +222,48 @@ object MediaHandler {
         catch (e: Exception){
             e.printStackTrace()
         }
+        finally {
+            return image
+        }
 
-        return image
     }
 
     /**
-     * Returns the loaded image from MediaStore
+     * Returns the loaded image
      *
      * @param imageUri      URI of the image
-     * @return Bitmap       The loaded image
+     * @return Bitmap?      The loaded image
      **/
-    fun getImageByUri(imageUri: Uri): Bitmap {
+    fun getImageByUri(imageUri: Uri): Bitmap? {
 
-        /*val image = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
-            val source = ImageDecoder.createSource(appContext.contentResolver, imageUri)
-            ImageDecoder.decodeBitmap(source)
+        var image: Bitmap? = null
+
+        try{
+
+            // Open a specific media item using ParcelFileDescriptor.
+            val resolver = appContext.contentResolver
+
+            // "r" for read
+            // "rw" for read-and-write
+            // "rwt" for truncating or overwriting existing file contents
+            val readOnlyMode = "r"
+
+            resolver.openFileDescriptor(imageUri, readOnlyMode).use { pfd ->
+
+                pfd?.let {
+                    val fileDescriptor = it.fileDescriptor
+                    image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+                }
+
+            }
+
         }
-        else{
-            MediaStore.Images.Media.getBitmap(appContext.contentResolver, imageUri)
-        }*/
-
-        val image = MediaStore.Images.Media.getBitmap(appContext.contentResolver, imageUri)
-
-        return image
+        catch (e: Exception){
+            e.printStackTrace()
+        }
+        finally {
+            return image
+        }
 
     }
 
@@ -168,8 +276,10 @@ object MediaHandler {
     fun getPhotoOrientation(photoUri: Uri): Int {
 
         val cursor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            appContext.contentResolver.query(photoUri,
-                arrayOf(MediaStore.Images.ImageColumns.ORIENTATION), null, null, null)
+            appContext.contentResolver.query(
+                photoUri,
+                arrayOf(MediaStore.Images.ImageColumns.ORIENTATION), null, null, null
+            )
         }
         else {
             appContext.contentResolver.query(photoUri, null, null, null, null)

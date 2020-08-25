@@ -98,7 +98,7 @@ class ImageAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewM
             var i = 1
             for(pair in arrayOfIdImagePairs){
                 recognitions.add(
-                    Recognition(i, false, pair.first, pair.second, null,
+                    Recognition(i, false, pair.first, pair.second,
                         imageMeta[0], imageMeta[1], imageMeta[2], user)
                 )
                 i++

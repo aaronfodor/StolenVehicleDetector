@@ -6,6 +6,9 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Use
 @Dao
 interface UserReportDAO {
 
+    @Query("SELECT * FROM ${ApplicationDB.USER_REPORT_TABLE_NAME} WHERE id=:id AND reporter=:reporter ")
+    fun getByIdAndReporter(id: Int, reporter: String): UserReport?
+
     @Query("SELECT * FROM ${ApplicationDB.USER_REPORT_TABLE_NAME} WHERE reporter=:reporter ")
     fun getByReporter(reporter: String): List<UserReport>?
 

@@ -1,9 +1,7 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel
 
-import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
-import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiVehicleReport
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserReportRepository
@@ -23,19 +21,19 @@ class UserReportViewModel : RecognitionViewModel(){
 
         val user = AuthenticationService.userName
 
-        UserReportRepository.getByUser(user){ userReportList ->
+        UserReportRepository.getByUser(user){ userReportList, userReportImages ->
 
             var isSelectedRecognitionExists = false
 
             val recognitionList = mutableListOf<Recognition>()
 
-            for(userReport in userReportList){
+            userReportList.forEachIndexed { index, userReport ->
 
                 val currentId = userReport.Id?.toInt() ?: 0
 
                 recognitionList.add(
-                    Recognition(currentId, userReport.isSent,
-                        userReport.Vehicle, null, userReport.imagePath, userReport.timestampUTC,
+                    Recognition(currentId, userReport.isSent, userReport.Vehicle,
+                        userReportImages[index], userReport.timestampUTC,
                         userReport.latitude.toString(), userReport.longitude.toString(),
                         userReport.Reporter, userReport.message)
                 )
@@ -111,31 +109,11 @@ class UserReportViewModel : RecognitionViewModel(){
 
             val user = AuthenticationService.userName
 
-            val recognition = recognitions.value?.find { it.artificialId == id } ?: return@Thread
-            recognition.imagePath?.let {
-                MediaHandler.deleteImage(it)
-            }
-
             UserReportRepository.deleteByIdAndUser(id, user){ isSuccess ->
-
                 if(isSuccess){
                     updateDataFromDb()
                 }
                 callback(isSuccess)
-
-            }
-
-        }.start()
-
-    }
-
-    override fun loadImage(imagePath: String, callback: (Bitmap) -> Unit){
-
-        Thread{
-
-            val loadedImage = MediaHandler.getImageByPath(imagePath)
-            loadedImage?.let{
-                callback(it)
             }
 
         }.start()

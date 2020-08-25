@@ -64,22 +64,29 @@ class LoadViewModel : ViewModel(){
         MutableLiveData<Array<Recognition>>()
     }
 
-    fun loadImage(selectedImageUri: Uri){
+    fun loadImage(selectedImageUri: Uri, callback: (Boolean) -> Unit){
 
         Thread {
 
             val sourceBitmap = MediaHandler.getImageByUri(selectedImageUri)
-            val imageOrientation = MediaHandler.getPhotoOrientation(selectedImageUri)
-            val imageMetaInfo = MetaProvider.getImageMetaData(selectedImageUri)
 
-            // remove the bounding boxes of the previous image
-            boundingBoxImage.postValue(null)
-            imageMetaData.postValue(imageMetaInfo)
+            sourceBitmap ?: callback(false)
 
-            val rotatedBitmap = ImageConverter.rotateBitmap(sourceBitmap, imageOrientation)
-            loadedImage.postValue(rotatedBitmap)
+            sourceBitmap?.let {
 
-            recognizeImage(rotatedBitmap, imageMetaInfo)
+                val imageOrientation = MediaHandler.getPhotoOrientation(selectedImageUri)
+                val imageMetaInfo = MetaProvider.getImageMetaData(selectedImageUri)
+
+                // remove the bounding boxes of the previous image
+                boundingBoxImage.postValue(null)
+                imageMetaData.postValue(imageMetaInfo)
+
+                val rotatedBitmap = ImageConverter.rotateBitmap(it, imageOrientation)
+                loadedImage.postValue(rotatedBitmap)
+
+                recognizeImage(rotatedBitmap, imageMetaInfo)
+
+            }
 
         }.start()
 
@@ -118,7 +125,7 @@ class LoadViewModel : ViewModel(){
             var i = 1
             for(pair in arrayOfIdImagePairs){
                 recognitions.add(
-                    Recognition(i, false, pair.first, pair.second, null,
+                    Recognition(i, false, pair.first, pair.second,
                         imageMeta[0], imageMeta[1], imageMeta[2], user)
                 )
                 i++

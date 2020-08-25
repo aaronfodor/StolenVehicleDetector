@@ -48,6 +48,9 @@ class PermissionsFragment : Fragment() {
 
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
 
+            if(grantResults.isEmpty()){
+                viewModel.hasPermissionsGranted.postValue(false)
+            }
             if (grantResults.contains(PackageManager.PERMISSION_DENIED)) {
                 viewModel.hasPermissionsGranted.postValue(false)
             }

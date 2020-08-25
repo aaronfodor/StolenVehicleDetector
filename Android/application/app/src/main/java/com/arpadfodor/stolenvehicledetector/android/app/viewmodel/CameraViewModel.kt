@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
-import java.io.File
+import java.io.OutputStream
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -99,8 +99,8 @@ class CameraViewModel : ViewModel(){
         screenDimensions = Size(width, height)
     }
 
-    fun createFile(): File{
-        return MediaHandler.createTimestampedImageFile(MediaHandler.getPublicDirectory())
+    fun getImageOutputStream(): OutputStream? {
+        return MediaHandler.getImagePublicDirOutputStream()
     }
 
     fun setAlertActivityParams(){

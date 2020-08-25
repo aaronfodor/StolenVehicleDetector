@@ -15,10 +15,8 @@ import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppActivity
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.CameraViewModel
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 
 class CameraActivity : AppActivity() {
 
@@ -70,11 +68,9 @@ class CameraActivity : AppActivity() {
 
         // Create the observer which updates the UI in case of value change
         val hasPermissionsGranted = Observer<Boolean> { permissionsGranted ->
-
             if(!permissionsGranted){
                 showMissingPermissionNotification()
             }
-
         }
 
         // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
