@@ -16,9 +16,21 @@ class VehicleRecognizerService {
         private var stolenVehicles = listOf<Vehicle>()
 
         fun initialize(){
-            VehicleRepository.getVehicles {
-                stolenVehicles = it
+
+            VehicleRepository.getVehicles {vehicleList ->
+                val normalizedVehicleList = mutableListOf<Vehicle>()
+                for(element in vehicleList){
+                    normalizedVehicleList.add(Vehicle(normalizeLicenseId(element.licenseId),
+                        element.type, element.manufacturer, element.color))
+                }
+                stolenVehicles = normalizedVehicleList
             }
+
+        }
+
+        private fun normalizeLicenseId(licenseId: String) : String{
+            return licenseId.replace("-", "")
+                .replace("_", "").toUpperCase(Locale.ROOT)
         }
 
     }
@@ -72,11 +84,10 @@ class VehicleRecognizerService {
 
     private fun isIdSuspicious(licenseId: String) : Boolean{
 
-        val clearedLicenseId = licenseId.replace("-", "")
-            .replace("_", "").toUpperCase(Locale.ROOT)
+        val normalizedLicenseId = normalizeLicenseId(licenseId)
 
         for(element in stolenVehicles){
-            if(element.licenseId.toUpperCase(Locale.ROOT) == clearedLicenseId){
+            if(element.licenseId == normalizedLicenseId){
                 return true
             }
         }

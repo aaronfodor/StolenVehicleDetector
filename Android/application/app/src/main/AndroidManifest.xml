@@ -80,7 +80,7 @@
         </activity>
 
         <activity
-            android:name="com.arpadfodor.stolenvehicledetector.android.app.view.UserReportsActivity"
+            android:name="com.arpadfodor.stolenvehicledetector.android.app.view.UserRecognitionActivity"
             android:icon="@mipmap/ic_launcher"
             android:rotationAnimation="seamless"
             android:screenOrientation="fullUser"

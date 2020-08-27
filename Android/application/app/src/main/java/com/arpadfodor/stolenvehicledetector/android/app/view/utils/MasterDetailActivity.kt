@@ -18,6 +18,7 @@ abstract class MasterDetailActivity() : AppActivity() {
     var sendSucceed = ""
     var sendFailed = ""
     var deleted = ""
+    var deleteFailed = ""
     var alreadySent = ""
     var updateSucceed = ""
     var updateFailed = ""
@@ -40,9 +41,9 @@ abstract class MasterDetailActivity() : AppActivity() {
         super.onResume()
         // Prepare those fragments to listen to the appropriate ViewModel
         MasterFragment.setParams(viewModel, listName,
-            sendSucceed, sendFailed, deleted, alreadySent)
+            sendSucceed, sendFailed, alreadySent, deleted, deleteFailed)
         DetailFragment.setParams(viewModel, detailName,
-            sendSucceed, sendFailed, deleted, alreadySent, updateSucceed, updateFailed)
+            sendSucceed, sendFailed, alreadySent, deleted, deleteFailed, updateSucceed, updateFailed)
     }
 
     override fun subscribeToViewModel() {

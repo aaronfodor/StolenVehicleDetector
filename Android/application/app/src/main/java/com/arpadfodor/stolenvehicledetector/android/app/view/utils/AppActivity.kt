@@ -92,7 +92,7 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             }
 
             R.id.navigation_user_reports -> {
-                val toStartActivity = UserReportsActivity::class.java
+                val toStartActivity = UserRecognitionActivity::class.java
                 if(toStartActivity == this::class.java){
                     return false
                 }

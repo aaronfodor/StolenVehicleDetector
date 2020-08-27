@@ -34,9 +34,16 @@ object ApiService{
 
         Thread {
 
+            var dataResponse: List<ApiVehicle> = listOf()
+
             try {
                 val dataCall = stolenVehicleAPI.getVehiclesData()
-                val dataResponse = dataCall.execute().body() ?: emptyList()
+                dataResponse = dataCall.execute().body() ?: emptyList()
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+            finally{
 
                 //TODO: just for testing
                 val responseWithAddedElements = dataResponse.toMutableList()
@@ -67,10 +74,7 @@ object ApiService{
                 )
 
                 callback(responseWithAddedElements)
-            }
-            catch (e: Exception) {
-                e.printStackTrace()
-                callback(emptyList())
+
             }
 
         }.start()
@@ -80,9 +84,12 @@ object ApiService{
     fun getVehiclesMeta(callback: (Int, String) -> Unit) {
 
         Thread {
+
             var size = 0
+
             //TODO: for testing, should be DateHandler.defaultDate()
             var timestampUTC = "1980-01-01 01:01:01"
+
             try {
                 val metaDataCall = stolenVehicleAPI.getVehiclesMeta()
                 val metaDataResponse = metaDataCall.execute().body()
@@ -93,7 +100,10 @@ object ApiService{
             catch (e: Exception) {
                 e.printStackTrace()
             }
-            callback(size, timestampUTC)
+            finally {
+                callback(size, timestampUTC)
+            }
+
         }.start()
 
     }
@@ -102,9 +112,16 @@ object ApiService{
 
         Thread {
 
+            var dataResponse: List<ApiReport> = listOf()
+
             try {
                 val dataCall = stolenVehicleAPI.getReportsData()
-                val dataResponse = dataCall.execute().body() ?: emptyList()
+                dataResponse = dataCall.execute().body() ?: emptyList()
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+            finally {
 
                 //TODO: just for testing
                 val responseWithAddedElements = dataResponse.toMutableList()
@@ -133,10 +150,7 @@ object ApiService{
                 )
 
                 callback(responseWithAddedElements)
-            }
-            catch (e: Exception) {
-                e.printStackTrace()
-                callback(emptyList())
+
             }
 
         }.start()
@@ -148,6 +162,7 @@ object ApiService{
         Thread {
 
             var size = 0
+
             //TODO: for testing, should be DateHandler.defaultDate()
             var timestampUTC = "1980-01-01 01:01:01"
 
@@ -161,8 +176,9 @@ object ApiService{
             catch (e: Exception) {
                 e.printStackTrace()
             }
-
-            callback(size, timestampUTC)
+            finally {
+                callback(size, timestampUTC)
+            }
 
         }.start()
 
@@ -172,6 +188,8 @@ object ApiService{
 
         Thread {
 
+            var isSuccess = false
+
             try {
                 val postReportCall = stolenVehicleAPI.postReport(report)
                 var response = postReportCall.execute().body() ?: ""
@@ -179,16 +197,18 @@ object ApiService{
                 //TODO: response check
                 response = "200"
                 if(response == "200"){
-                    callback(true)
+                    isSuccess = true
                 }
                 else{
-                    callback(false)
+                    isSuccess = false
                 }
 
             }
             catch (e: Exception) {
                 e.printStackTrace()
-                callback(false)
+            }
+            finally {
+                callback(isSuccess)
             }
 
         }.start()

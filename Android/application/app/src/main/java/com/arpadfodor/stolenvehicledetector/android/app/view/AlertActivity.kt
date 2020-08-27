@@ -17,7 +17,8 @@ class AlertActivity : MasterDetailActivity() {
 
         sendSucceed = getString(R.string.alert_sent)
         sendFailed = getString(R.string.alert_sending_failed)
-        deleted = getString(R.string.alert_deleted)
+        deleted = getString(R.string.deleted)
+        deleteFailed = getString(R.string.delete_failed)
         alreadySent = getString(R.string.alert_already_sent)
         updateSucceed = getString(R.string.updated)
         updateFailed = getString(R.string.update_failed)

@@ -19,7 +19,7 @@
     <item
         android:id="@+id/navigation_user_reports"
         android:icon="@android:drawable/ic_menu_myplaces"
-        android:title="@string/menu_user_reports" />
+        android:title="@string/menu_user_recognitions" />
 
     <item
         android:id="@+id/navigation_settings"

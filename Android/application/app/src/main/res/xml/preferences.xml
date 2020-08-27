@@ -90,8 +90,8 @@
 
         <Preference
             android:key="@string/SETTINGS_DELETE_USER_REPORTS"
-            android:title="@string/delete_user_reports"
-            android:summary="@string/delete_user_reports_summary"
+            android:title="@string/delete_user_recognitions"
+            android:summary="@string/delete_user_recognitions_summary"
             android:selectable="true" />
 
     </PreferenceCategory>

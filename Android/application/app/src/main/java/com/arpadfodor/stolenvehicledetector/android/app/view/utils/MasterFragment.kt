@@ -24,20 +24,22 @@ class MasterFragment : Fragment(){
 
         var sendSucceedSnackBarText = ""
         var sendFailedSnackBarText = ""
-        var deletedSnackBarText = ""
         var alreadySentSnackBarText = ""
+        var deletedSnackBarText = ""
+        var deleteFailedSnackBarText = ""
 
         fun setParams(viewModel: MasterDetailViewModel, title: String,
-                      sendSucceedSnackBarText: String, sendFailedSnackBarText: String,
-                      deletedSnackBarText: String, alreadySentSnackBarText: String, ){
+                      sendSucceedSnackBarText: String, sendFailedSnackBarText: String, alreadySentSnackBarText: String,
+                      deletedSnackBarText: String, deleteFailedSnackBarText: String){
 
             this.viewModel = viewModel
             this.title = title
 
             this.sendSucceedSnackBarText = sendSucceedSnackBarText
             this.sendFailedSnackBarText = sendFailedSnackBarText
-            this.deletedSnackBarText = deletedSnackBarText
             this.alreadySentSnackBarText = alreadySentSnackBarText
+            this.deletedSnackBarText = deletedSnackBarText
+            this.deleteFailedSnackBarText = deleteFailedSnackBarText
 
         }
 
@@ -148,11 +150,22 @@ class MasterFragment : Fragment(){
                     currentContext ?: return@deleteRecognition
                     currentView ?: return@deleteRecognition
 
-                    AppSnackBarBuilder.buildInfoSnackBar(
-                        currentContext,
-                        currentView, deletedSnackBarText,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                    when (isSuccess) {
+                        true -> {
+                            AppSnackBarBuilder.buildInfoSnackBar(
+                                currentContext,
+                                currentView, deletedSnackBarText,
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                        }
+                        else -> {
+                            AppSnackBarBuilder.buildAlertSnackBar(
+                                currentContext,
+                                currentView, deleteFailedSnackBarText,
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
 
                 }
 

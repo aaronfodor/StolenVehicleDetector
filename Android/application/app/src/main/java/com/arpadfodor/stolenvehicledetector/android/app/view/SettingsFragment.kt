@@ -179,11 +179,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         if(isSuccess){
             AppSnackBarBuilder.buildSuccessSnackBar(requireContext().applicationContext, this.requireView(),
-                getString(R.string.updated_database), Snackbar.LENGTH_SHORT).show()
+                getString(R.string.updated), Snackbar.LENGTH_SHORT).show()
         }
         else{
             AppSnackBarBuilder.buildAlertSnackBar(requireContext().applicationContext, this.requireView(),
-                getString(R.string.updating_failed), Snackbar.LENGTH_SHORT).show()
+                getString(R.string.update_failed), Snackbar.LENGTH_SHORT).show()
         }
 
     }
@@ -192,11 +192,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         if(isSuccess){
             AppSnackBarBuilder.buildInfoSnackBar(requireContext().applicationContext, this.requireView(),
-                getString(R.string.deleted_database), Snackbar.LENGTH_SHORT).show()
+                getString(R.string.deleted), Snackbar.LENGTH_SHORT).show()
         }
         else{
             AppSnackBarBuilder.buildAlertSnackBar(requireContext().applicationContext, this.requireView(),
-                getString(R.string.deleting_failed), Snackbar.LENGTH_SHORT).show()
+                getString(R.string.delete_failed), Snackbar.LENGTH_SHORT).show()
         }
 
     }

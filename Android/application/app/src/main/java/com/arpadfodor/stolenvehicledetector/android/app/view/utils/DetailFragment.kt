@@ -26,14 +26,15 @@ class DetailFragment : Fragment(){
 
         var sendSucceedSnackBarText = ""
         var sendFailedSnackBarText = ""
-        var deletedSnackBarText = ""
         var alreadySentSnackBarText = ""
+        var deletedSnackBarText = ""
+        var deleteFailedSnackBarText = ""
         var updateSucceedSnackBarText = ""
         var updateFailedSnackBarText = ""
 
         fun setParams(viewModel: MasterDetailViewModel, title: String,
-                      sendSucceedSnackBarText: String, sendFailedSnackBarText: String,
-                      deletedSnackBarText: String, alreadySentSnackBarText: String,
+                      sendSucceedSnackBarText: String, sendFailedSnackBarText: String, alreadySentSnackBarText: String,
+                      deletedSnackBarText: String, deleteFailedSnackBarText: String,
                       updateSucceedSnackBarText: String, updateFailedSnackBarText: String){
 
             this.viewModel = viewModel
@@ -41,8 +42,9 @@ class DetailFragment : Fragment(){
 
             this.sendSucceedSnackBarText = sendSucceedSnackBarText
             this.sendFailedSnackBarText = sendFailedSnackBarText
-            this.deletedSnackBarText = deletedSnackBarText
             this.alreadySentSnackBarText = alreadySentSnackBarText
+            this.deletedSnackBarText = deletedSnackBarText
+            this.deleteFailedSnackBarText = deleteFailedSnackBarText
             this.updateSucceedSnackBarText = updateSucceedSnackBarText
             this.updateFailedSnackBarText = updateFailedSnackBarText
 
@@ -102,21 +104,37 @@ class DetailFragment : Fragment(){
 
                 recognitionDeleteButton?.setOnClickListener {
 
-                    viewModel.deleteRecognition(recognition.artificialId){
+                    viewModel.deleteRecognition(recognition.artificialId){isSuccess ->
 
                         val currentContext = context
                         val currentView = view
                         currentContext ?: return@deleteRecognition
                         currentView ?: return@deleteRecognition
 
-                        viewModel.deselectRecognition()
+                        when(isSuccess){
+                            true -> {
 
-                        AppSnackBarBuilder.buildInfoSnackBar(
-                            currentContext,
-                            currentView,
-                            deletedSnackBarText,
-                            Snackbar.LENGTH_SHORT
-                        ).show()
+                                viewModel.deselectRecognition()
+
+                                AppSnackBarBuilder.buildInfoSnackBar(
+                                    currentContext,
+                                    currentView,
+                                    deletedSnackBarText,
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+
+                            }
+                            else -> {
+
+                                AppSnackBarBuilder.buildAlertSnackBar(
+                                    currentContext,
+                                    currentView,
+                                    deleteFailedSnackBarText,
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+
+                            }
+                        }
 
                     }
 
@@ -160,26 +178,30 @@ class DetailFragment : Fragment(){
 
                             when(isSuccess){
                                 true -> {
+
+                                    viewModel.deselectRecognition()
+
                                     AppSnackBarBuilder.buildSuccessSnackBar(
                                         currentContext,
                                         currentView,
                                         sendSucceedSnackBarText,
                                         Snackbar.LENGTH_SHORT
                                     ).show()
+
                                 }
                                 else -> {
+
                                     AppSnackBarBuilder.buildAlertSnackBar(
                                         currentContext,
                                         currentView,
                                         sendFailedSnackBarText,
                                         Snackbar.LENGTH_SHORT
                                     ).show()
+
                                 }
                             }
 
                         }
-
-                        viewModel.deselectRecognition()
 
                     }
 
