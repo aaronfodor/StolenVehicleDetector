@@ -1,5 +1,8 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model.api
 
+import com.arpadfodor.stolenvehicledetector.android.app.model.api.dataclasses.ApiMetaData
+import com.arpadfodor.stolenvehicledetector.android.app.model.api.dataclasses.ApiReport
+import com.arpadfodor.stolenvehicledetector.android.app.model.api.dataclasses.ApiVehicle
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -31,12 +34,12 @@ interface StolenVehicleAPI {
     fun getVehiclesMeta(): Call<ApiMetaData>
 
     @GET(GET_REPORTS)
-    fun getReportsData(): Call<List<ApiVehicleReport>>
+    fun getReportsData(): Call<List<ApiReport>>
 
     @GET(GET_REPORTS_META)
     fun getReportsMeta(): Call<ApiMetaData>
 
     @POST(POST_REPORT)
-    fun postReport(@Body report: ApiVehicleReport): Call<String>
+    fun postReport(@Body report: ApiReport): Call<String>
 
 }

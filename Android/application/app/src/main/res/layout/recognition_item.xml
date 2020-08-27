@@ -6,7 +6,7 @@
     <data>
         <variable
             name="recognition_item"
-            type="com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition"/>
+            type="com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition"/>
         <variable
             name="clickListener"
             type="com.arpadfodor.stolenvehicledetector.android.app.view.utils.RecognitionEventListener" />

@@ -5,12 +5,12 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.MasterDetailViewModel
 import com.google.android.material.navigation.NavigationView
 
 abstract class MasterDetailActivity() : AppActivity() {
 
-    open lateinit var viewModel: RecognitionViewModel
+    open lateinit var viewModel: MasterDetailViewModel
 
     var listName = ""
     var detailName = ""

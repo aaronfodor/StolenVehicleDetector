@@ -10,7 +10,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.MetaProvider
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 import kotlin.math.min
 
 class LoadViewModel : ViewModel(){
@@ -60,8 +60,8 @@ class LoadViewModel : ViewModel(){
     /**
      * List of recognitions from the last inference
      **/
-    val recognitions: MutableLiveData<Array<Recognition>> by lazy {
-        MutableLiveData<Array<Recognition>>()
+    val recognitions: MutableLiveData<Array<UserRecognition>> by lazy {
+        MutableLiveData<Array<UserRecognition>>()
     }
 
     fun loadImage(selectedImageUri: Uri, callback: (Boolean) -> Unit){
@@ -119,13 +119,13 @@ class LoadViewModel : ViewModel(){
             requiredOutputImageSize, 0,
             numRecognitionsToShow, minimumPredictionCertaintyToShow) {arrayOfIdImagePairs ->
 
-            val recognitions = arrayListOf<Recognition>()
+            val recognitions = arrayListOf<UserRecognition>()
             val user = AuthenticationService.userName
 
             var i = 1
             for(pair in arrayOfIdImagePairs){
                 recognitions.add(
-                    Recognition(i, false, pair.first, pair.second,
+                    UserRecognition(i, false, pair.first, pair.second,
                         imageMeta[0], imageMeta[1], imageMeta[2], user)
                 )
                 i++

@@ -7,7 +7,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.db.ApplicationDB
 import java.io.Serializable
 
 @Entity(tableName = ApplicationDB.VEHICLE_TABLE_NAME)
-data class Vehicle(
+data class DbVehicle(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "license_id")
     val licenseId: String = "",

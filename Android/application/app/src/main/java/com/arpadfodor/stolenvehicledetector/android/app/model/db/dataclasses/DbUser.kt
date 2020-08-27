@@ -7,7 +7,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.db.ApplicationDB
 import java.io.Serializable
 
 @Entity(tableName = ApplicationDB.VEHICLE_TABLE_NAME)
-data class User(
+data class DbUser(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "email")
     var email: String = "",

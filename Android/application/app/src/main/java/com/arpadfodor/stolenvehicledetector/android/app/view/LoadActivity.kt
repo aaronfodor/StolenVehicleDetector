@@ -17,7 +17,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBu
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.appearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.disappearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.LoadViewModel
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -110,7 +110,7 @@ class LoadActivity : AppActivity() {
         }
 
         // Create the suspicious Id observer which notifies when suspicious element has been recognized
-        val recognitionsObserver = Observer<Array<Recognition>> { recognitions ->
+        val recognitionsObserver = Observer<Array<UserRecognition>> { recognitions ->
 
             val alertButton = alert_loaded_button
             val circularAlertButton = circular_alert_load_button

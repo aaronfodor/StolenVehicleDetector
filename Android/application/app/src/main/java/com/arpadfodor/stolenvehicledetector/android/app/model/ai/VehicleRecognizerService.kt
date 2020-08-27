@@ -5,8 +5,8 @@ import android.graphics.RectF
 import android.util.Size
 import com.arpadfodor.stolenvehicledetector.android.app.model.BoundingBoxDrawer
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
-import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Vehicle
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.VehicleRepository
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.Vehicle
 import java.util.*
 
 class VehicleRecognizerService {
@@ -76,7 +76,7 @@ class VehicleRecognizerService {
             .replace("_", "").toUpperCase(Locale.ROOT)
 
         for(element in stolenVehicles){
-            if(element.licenseId == clearedLicenseId){
+            if(element.licenseId.toUpperCase(Locale.ROOT) == clearedLicenseId){
                 return true
             }
         }

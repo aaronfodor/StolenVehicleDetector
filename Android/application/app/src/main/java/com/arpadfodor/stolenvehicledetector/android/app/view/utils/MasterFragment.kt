@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.MasterDetailViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_list.*
 
@@ -19,7 +19,7 @@ class MasterFragment : Fragment(){
 
         const val TAG = "Recognition list fragment"
 
-        lateinit var viewModel: RecognitionViewModel
+        lateinit var viewModel: MasterDetailViewModel
         var title = ""
 
         var sendSucceedSnackBarText = ""
@@ -27,7 +27,7 @@ class MasterFragment : Fragment(){
         var deletedSnackBarText = ""
         var alreadySentSnackBarText = ""
 
-        fun setParams(viewModel: RecognitionViewModel, title: String,
+        fun setParams(viewModel: MasterDetailViewModel, title: String,
                       sendSucceedSnackBarText: String, sendFailedSnackBarText: String,
                       deletedSnackBarText: String, alreadySentSnackBarText: String, ){
 
@@ -63,7 +63,7 @@ class MasterFragment : Fragment(){
     private fun subscribeToViewModel() {
 
         // Create the observer
-        val listObserver = Observer<List<Recognition>> { list ->
+        val listObserver = Observer<List<UserRecognition>> { list ->
             adapter.submitList(list)
         }
 

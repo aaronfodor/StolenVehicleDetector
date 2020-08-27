@@ -10,7 +10,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.MasterDetailViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_recognition_detail.*
@@ -21,7 +21,7 @@ class DetailFragment : Fragment(){
 
         const val TAG = "Recognition detail fragment"
 
-        lateinit var viewModel: RecognitionViewModel
+        lateinit var viewModel: MasterDetailViewModel
         var title = ""
 
         var sendSucceedSnackBarText = ""
@@ -31,7 +31,7 @@ class DetailFragment : Fragment(){
         var updateSucceedSnackBarText = ""
         var updateFailedSnackBarText = ""
 
-        fun setParams(viewModel: RecognitionViewModel, title: String,
+        fun setParams(viewModel: MasterDetailViewModel, title: String,
                       sendSucceedSnackBarText: String, sendFailedSnackBarText: String,
                       deletedSnackBarText: String, alreadySentSnackBarText: String,
                       updateSucceedSnackBarText: String, updateFailedSnackBarText: String){

@@ -1,13 +1,11 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
-import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.UserReport
-import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserReportRepository
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.RecognitionViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserRecognitionRepository
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.MasterDetailViewModel
 
-class AlertViewModel : RecognitionViewModel(){
+class AlertViewModel : MasterDetailViewModel(){
 
     companion object{
 
@@ -15,19 +13,19 @@ class AlertViewModel : RecognitionViewModel(){
          * Use it to pass list parameter to an instance of this activity before starting it.
          * Used because passing custom objects between activities can be problematic via intents.
          **/
-        fun setParameter(list: List<Recognition>){
+        fun setParameter(list: List<UserRecognition>){
             listParam = list
         }
 
-        private var listParam = listOf<Recognition>()
+        private var listParam = listOf<UserRecognition>()
 
     }
 
     /**
      * List of recognition elements
      **/
-    override val recognitions: MutableLiveData<List<Recognition>> by lazy {
-        MutableLiveData<List<Recognition>>(listParam)
+    override val recognitions: MutableLiveData<List<UserRecognition>> by lazy {
+        MutableLiveData<List<UserRecognition>>(listParam)
     }
 
     override fun sendRecognition(id: Int, callback: (Boolean) -> Unit){
@@ -36,12 +34,7 @@ class AlertViewModel : RecognitionViewModel(){
 
         Thread{
 
-            val userReport =
-                UserReport(null, recognition.licenseId, recognition.reporter,
-                    recognition.latitude.toDouble(), recognition.longitude.toDouble(),
-                    recognition.message, recognition.date, false, null)
-
-            UserReportRepository.postUserReport(userReport, recognition.image) { isSuccess ->
+            UserRecognitionRepository.postUserRecognition(recognition) { isSuccess ->
 
                 if(isSuccess){
                     deleteRecognition(id){ isSuccess ->

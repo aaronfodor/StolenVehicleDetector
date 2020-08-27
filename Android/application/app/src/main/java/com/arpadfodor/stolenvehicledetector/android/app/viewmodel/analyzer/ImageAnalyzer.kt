@@ -5,7 +5,7 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.MetaProvider
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
@@ -92,13 +92,13 @@ class ImageAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewM
             requiredOutputImageSize, deviceOrientation, CameraViewModel.numRecognitionsToShow,
             CameraViewModel.minimumPredictionCertaintyToShow) { arrayOfIdImagePairs ->
 
-            val recognitions = arrayListOf<Recognition>()
+            val recognitions = arrayListOf<UserRecognition>()
             val user = AuthenticationService.userName
 
             var i = 1
             for(pair in arrayOfIdImagePairs){
                 recognitions.add(
-                    Recognition(i, false, pair.first, pair.second,
+                    UserRecognition(i, false, pair.first, pair.second,
                         imageMeta[0], imageMeta[1], imageMeta[2], user)
                 )
                 i++

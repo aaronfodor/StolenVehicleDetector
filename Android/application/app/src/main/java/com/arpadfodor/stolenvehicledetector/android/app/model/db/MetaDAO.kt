@@ -4,16 +4,16 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.MetaData
+import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.DbMetaData
 
 @Dao
 interface MetaDAO {
 
     @Query("SELECT * FROM ${ApplicationDB.META_TABLE_NAME}")
-    fun getAll(): List<MetaData>?
+    fun getAll(): List<DbMetaData>?
 
     @Query("SELECT * FROM ${ApplicationDB.META_TABLE_NAME} WHERE id=:key ")
-    fun getByKey(key: String): MetaData?
+    fun getByKey(key: String): DbMetaData?
 
     @Query("DELETE FROM ${ApplicationDB.META_TABLE_NAME} WHERE id=:key ")
     fun deleteByKey(key: String)
@@ -22,6 +22,6 @@ interface MetaDAO {
     fun deleteAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(vararg meta: MetaData)
+    fun insert(vararg meta: DbMetaData)
 
 }

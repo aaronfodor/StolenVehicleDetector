@@ -3,14 +3,15 @@ package com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils
 import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 
-abstract class RecognitionViewModel : ViewModel(){
+abstract class MasterDetailViewModel : ViewModel(){
 
     /**
      * List of recognition elements
      **/
-    open val recognitions: MutableLiveData<List<Recognition>> by lazy {
-        MutableLiveData<List<Recognition>>()
+    open val recognitions: MutableLiveData<List<UserRecognition>> by lazy {
+        MutableLiveData<List<UserRecognition>>()
     }
 
     /**
@@ -47,7 +48,7 @@ abstract class RecognitionViewModel : ViewModel(){
         showDetails.postValue(false)
     }
 
-    fun getRecognitionById(id: Int) : Recognition?{
+    fun getRecognitionById(id: Int) : UserRecognition?{
         return recognitions.value?.find { it.artificialId == id }
     }
 

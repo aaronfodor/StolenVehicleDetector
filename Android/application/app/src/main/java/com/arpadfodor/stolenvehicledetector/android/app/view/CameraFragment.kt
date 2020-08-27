@@ -35,7 +35,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.LocationService
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.appearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.disappearingAnimation
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 import com.google.android.material.snackbar.Snackbar
 
 /** Helper type alias used for analysis use case callbacks */
@@ -401,7 +401,7 @@ class CameraFragment : Fragment() {
         val circularAlertButton = controls.findViewById<ImageButton>(R.id.circular_alert_live_button)
 
         // Create the recognitions observer which notifies when element has been recognized
-        val recognitionsObserver = Observer<Array<Recognition>> { recognitions ->
+        val recognitionsObserver = Observer<Array<UserRecognition>> { recognitions ->
 
             if(recognitions.isNotEmpty()){
 

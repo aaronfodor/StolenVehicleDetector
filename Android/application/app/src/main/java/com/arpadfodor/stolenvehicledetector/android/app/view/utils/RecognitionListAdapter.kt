@@ -9,11 +9,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.arpadfodor.stolenvehicledetector.android.app.databinding.RecognitionItemBinding
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
-import java.util.*
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 
 class RecognitionListAdapter(context: Context, clickListener: RecognitionEventListener) :
-    ListAdapter<Recognition, RecognitionListAdapter.RecognitionViewHolder>(RecognitionDiffCallback())
+    ListAdapter<UserRecognition, RecognitionListAdapter.RecognitionViewHolder>(RecognitionDiffCallback())
 {
 
     private val context = context
@@ -38,7 +37,7 @@ class RecognitionListAdapter(context: Context, clickListener: RecognitionEventLi
 
         }
 
-        fun bind(item: Recognition, clickListener: RecognitionEventListener?) {
+        fun bind(item: UserRecognition, clickListener: RecognitionEventListener?) {
             binding.recognitionItem = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
@@ -67,13 +66,13 @@ class RecognitionListAdapter(context: Context, clickListener: RecognitionEventLi
 
 }
 
-class RecognitionDiffCallback : DiffUtil.ItemCallback<Recognition>() {
+class RecognitionDiffCallback : DiffUtil.ItemCallback<UserRecognition>() {
 
-    override fun areItemsTheSame(oldItem: Recognition, newItem: Recognition): Boolean {
+    override fun areItemsTheSame(oldItem: UserRecognition, newItem: UserRecognition): Boolean {
         return oldItem.licenseId == newItem.licenseId
     }
 
-    override fun areContentsTheSame(oldItem: Recognition, newItem: Recognition): Boolean {
+    override fun areContentsTheSame(oldItem: UserRecognition, newItem: UserRecognition): Boolean {
         return oldItem == newItem
     }
 
@@ -84,7 +83,7 @@ class RecognitionEventListener(
     val sendClickListener: (id: Int) -> Unit,
     val deleteClickListener: (id: Int) -> Unit
 ){
-    fun onEditClick(recognition: Recognition) = editClickListener(recognition.artificialId)
-    fun onSendClick(recognition: Recognition) = sendClickListener(recognition.artificialId)
-    fun onDeleteClick(recognition: Recognition) = deleteClickListener(recognition.artificialId)
+    fun onEditClick(recognition: UserRecognition) = editClickListener(recognition.artificialId)
+    fun onSendClick(recognition: UserRecognition) = sendClickListener(recognition.artificialId)
+    fun onDeleteClick(recognition: UserRecognition) = deleteClickListener(recognition.artificialId)
 }

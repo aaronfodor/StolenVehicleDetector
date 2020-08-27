@@ -1,8 +1,8 @@
-package com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils
+package com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses
 
 import android.graphics.Bitmap
 
-data class Recognition(
+data class UserRecognition(
     val artificialId: Int,
     var isSent: Boolean,
     val licenseId: String,

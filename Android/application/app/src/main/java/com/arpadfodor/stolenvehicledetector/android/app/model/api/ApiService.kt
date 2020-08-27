@@ -1,9 +1,10 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model.api
 
+import com.arpadfodor.stolenvehicledetector.android.app.model.api.dataclasses.ApiMetaData
+import com.arpadfodor.stolenvehicledetector.android.app.model.api.dataclasses.ApiReport
+import com.arpadfodor.stolenvehicledetector.android.app.model.api.dataclasses.ApiVehicle
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Vehicle
-import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Report
 import okhttp3.OkHttpClient
 
 object ApiService{
@@ -29,19 +30,49 @@ object ApiService{
 
     }
 
-    fun getVehiclesData(callback: (List<Vehicle>) -> Unit) {
+    fun getVehiclesData(callback: (List<ApiVehicle>) -> Unit) {
 
         Thread {
+
             try {
                 val dataCall = stolenVehicleAPI.getVehiclesData()
-                val dataResponse = dataCall.execute().body() ?: emptyList<ApiVehicle>()
-                val transformedDataResponse = apiVehicleResponseTransform(dataResponse)
-                callback(transformedDataResponse)
+                val dataResponse = dataCall.execute().body() ?: emptyList()
+
+                //TODO: just for testing
+                val responseWithAddedElements = dataResponse.toMutableList()
+
+                responseWithAddedElements.add(
+                    ApiVehicle(
+                        "HJC-759",
+                        "car",
+                        "Opel",
+                        "black",
+                    )
+                )
+                responseWithAddedElements.add(
+                    ApiVehicle(
+                        "Samsung",
+                        "device",
+                        "Samsung",
+                        "many",
+                    )
+                )
+                responseWithAddedElements.add(
+                    ApiVehicle(
+                        "Acer",
+                        "device",
+                        "Acer",
+                        "many",
+                    )
+                )
+
+                callback(responseWithAddedElements)
             }
             catch (e: Exception) {
                 e.printStackTrace()
                 callback(emptyList())
             }
+
         }.start()
 
     }
@@ -67,19 +98,47 @@ object ApiService{
 
     }
 
-    fun getReportsData(callback: (List<Report>) -> Unit) {
+    fun getReportsData(callback: (List<ApiReport>) -> Unit) {
 
         Thread {
+
             try {
                 val dataCall = stolenVehicleAPI.getReportsData()
-                val dataResponse = dataCall.execute().body() ?: emptyList<ApiVehicleReport>()
-                val transformedDataResponse = apiReportResponseTransform(dataResponse)
-                callback(transformedDataResponse)
+                val dataResponse = dataCall.execute().body() ?: emptyList()
+
+                //TODO: just for testing
+                val responseWithAddedElements = dataResponse.toMutableList()
+
+                responseWithAddedElements.add(
+                    ApiReport(
+                        1,
+                        "SAMSUNG",
+                        "aaa@bbb.com",
+                        47.519959,
+                        19.079840,
+                        "I never thought I will find it there!",
+                        "2020-07-18 06:00:00"
+                    )
+                )
+                responseWithAddedElements.add(
+                    ApiReport(
+                        2,
+                        "HJC759",
+                        "aaa@bbb.com",
+                        47.496686,
+                        19.039277,
+                        "Wow! Such a finding!",
+                        "2020-07-30 16:12:34"
+                    )
+                )
+
+                callback(responseWithAddedElements)
             }
             catch (e: Exception) {
                 e.printStackTrace()
                 callback(emptyList())
             }
+
         }.start()
 
     }
@@ -109,7 +168,7 @@ object ApiService{
 
     }
 
-    fun postReport(report: ApiVehicleReport, callback: (Boolean) -> Unit){
+    fun postReport(report: ApiReport, callback: (Boolean) -> Unit){
 
         Thread {
 
@@ -133,97 +192,6 @@ object ApiService{
             }
 
         }.start()
-
-    }
-
-    private fun apiVehicleResponseTransform(content: List<ApiVehicle>) : List<Vehicle>{
-
-        val vehiclesList = mutableListOf<Vehicle>()
-
-        for(i in content.indices){
-
-            val current = content[i]
-
-            //TODO: new server will provide data in a better format
-            val constructed =
-                Vehicle(
-                    current.name.replace("rendszám", "", true)
-                        .replace(":", "").replace(" ", ""),
-                    current.type.replace("jármű fajta", "", true)
-                        .replace(":", "").replace(" ", ""),
-                    current.manufacturer.replace("gyártmány", "", true)
-                        .replace(":", "").replace(" ", ""),
-                    current.color.replace("szín", "", true)
-                        .replace(":", "").replace(" ", "")
-                )
-
-            if(constructed.licenseId.isNotBlank()){
-                vehiclesList.add(constructed)
-            }
-        }
-
-        //TODO: just for testing
-        vehiclesList.add(
-            Vehicle(
-                "SAMSUNG",
-                "phone",
-                "Samsung",
-                "black"
-            )
-        )
-        vehiclesList.add(
-            Vehicle(
-                "HJC759",
-                "car",
-                "Opel",
-                "black"
-            )
-        )
-
-        return vehiclesList
-
-    }
-
-    private fun apiReportResponseTransform(content: List<ApiVehicleReport>) : List<Report>{
-
-        val reportsList = mutableListOf<Report>()
-
-        for(i in content.indices){
-
-            val current = content[i]
-
-            val constructed = Report(current.Id, current.Vehicle, current.Reporter,
-                current.latitude, current.longitude, current.message, current.timestampUTC)
-
-            reportsList.add(constructed)
-
-        }
-
-        //TODO: just for testing
-        reportsList.add(
-            Report(
-                1,
-                "SAMSUNG",
-                "aaa@bbb.com",
-                47.519959,
-                19.079840,
-                "I never thought I will find it there!",
-                "2020-07-18 06:00:00"
-            )
-        )
-        reportsList.add(
-            Report(
-                2,
-                "HJC759",
-                "aaa@bbb.com",
-                47.496686,
-                19.039277,
-                "Wow! Such a finding!",
-                "2020-07-30 16:12:34"
-            )
-        )
-
-        return reportsList
 
     }
 

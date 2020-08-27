@@ -1,15 +1,17 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model.repository
 
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
+import com.arpadfodor.stolenvehicledetector.android.app.model.api.dataclasses.ApiVehicle
 import com.arpadfodor.stolenvehicledetector.android.app.model.db.ApplicationDB
-import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.MetaData
-import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Vehicle
+import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.DbMetaData
+import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.DbVehicle
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.Vehicle
 
 object VehicleRepository {
 
     private const val VEHICLES_META_ID = "vehicles"
 
-    private fun setVehicles(vehicles : List<Vehicle>, vehiclesMeta: MetaData,
+    private fun setVehicles(vehicles : List<Vehicle>, vehiclesMeta: DbMetaData,
                             callback: (Boolean) -> Unit){
 
         Thread {
@@ -19,11 +21,13 @@ object VehicleRepository {
 
             try {
 
+                val dbVehicleList = vehicleListToDbVehicleList(vehicles)
+
                 // run delete, insert, etc. in an atomic transaction
                 database.runInTransaction {
 
                     database.vehicleTable().deleteAll()
-                    database.vehicleTable().insert(vehicles)
+                    database.vehicleTable().insert(dbVehicleList)
 
                     database.metaTable().deleteByKey(VEHICLES_META_ID)
                     database.metaTable().insert(vehiclesMeta)
@@ -51,17 +55,15 @@ object VehicleRepository {
 
         Thread {
 
-            val vehicles = mutableListOf<Vehicle>()
             val database = ApplicationDB.getDatabase(GeneralRepository.context)
+            var vehicles: List<Vehicle> = listOf()
 
             try {
 
                 // run delete, insert, etc. in an atomic transaction
                 database.runInTransaction {
                     val dbContent = database.vehicleTable().getAll() ?: listOf()
-                    for (element in dbContent) {
-                        vehicles.add(element)
-                    }
+                    vehicles = dbVehicleListToVehicleList(dbContent)
                 }
 
             }
@@ -80,14 +82,15 @@ object VehicleRepository {
 
         Thread {
 
-            var rows : List<Vehicle> = listOf()
             val database = ApplicationDB.getDatabase(GeneralRepository.context)
+            var rows : List<Vehicle> = listOf()
 
             try {
 
                 // run delete, insert, etc. in an atomic transaction
                 database.runInTransaction {
-                    rows = database.vehicleTable().getByLicenseId(licenseId) ?: listOf()
+                    val dbContent = database.vehicleTable().getByLicenseId(licenseId) ?: listOf()
+                    rows = dbVehicleListToVehicleList(dbContent)
                 }
 
             }
@@ -102,18 +105,18 @@ object VehicleRepository {
 
     }
 
-    private fun getMeta(callback: (MetaData) -> Unit){
+    private fun getMeta(callback: (DbMetaData) -> Unit){
 
         Thread {
 
-            var metaData = MetaData()
+            var metaData = DbMetaData()
             val database = ApplicationDB.getDatabase(GeneralRepository.context)
 
             try {
 
                 // run delete, insert, etc. in an atomic transaction
                 database.runInTransaction {
-                    metaData = database.metaTable().getByKey(VEHICLES_META_ID) ?: MetaData()
+                    metaData = database.metaTable().getByKey(VEHICLES_META_ID) ?: DbMetaData()
                 }
 
             }
@@ -128,9 +131,6 @@ object VehicleRepository {
 
     }
 
-    /**
-     * Update from API
-     **/
     fun updateFromApi(callback: (isSuccess: Boolean) -> Unit){
 
         ApiService.getVehiclesMeta { size, apiTimestamp ->
@@ -140,13 +140,17 @@ object VehicleRepository {
                 //is the API data fresh compared to app DB content?
                 if(isNewer){
                     //get content from API
-                    ApiService.getVehiclesData { vehicles ->
+                    ApiService.getVehiclesData { apiVehicles ->
 
-                        if(vehicles.isNotEmpty()){
-                            val vehiclesMeta = MetaData(VEHICLES_META_ID, size, apiTimestamp)
-                            setVehicles(vehicles, vehiclesMeta){ result ->
+                        if(apiVehicles.isNotEmpty()){
+
+                            val vehiclesMeta = DbMetaData(VEHICLES_META_ID, size, apiTimestamp)
+                            val transformedVehicles = apiVehicleListToVehicleList(apiVehicles)
+
+                            setVehicles(transformedVehicles, vehiclesMeta){ result ->
                                 callback(result)
                             }
+
                         }
                         //empty content means fetching data was unsuccessful
                         else{
@@ -172,6 +176,45 @@ object VehicleRepository {
             val result = GeneralRepository.isFreshTimestamp(meta, currentTimestampUTC)
             callback(result)
         }
+    }
+
+    private fun vehicleToDbVehicle(source: Vehicle) : DbVehicle {
+        return DbVehicle(source.licenseId, source.type, source.manufacturer, source.color)
+    }
+
+    private fun dbVehicleToVehicle(source: DbVehicle) : Vehicle {
+        return Vehicle(source.licenseId, source.type, source.manufacturer, source.color)
+    }
+
+    private fun apiVehicleToVehicle(source: ApiVehicle) : Vehicle {
+        return Vehicle(source.name, source.type, source.manufacturer, source.color)
+    }
+
+    private fun vehicleListToDbVehicleList(sourceList: List<Vehicle>) : List<DbVehicle>{
+        val dbVehicleList = mutableListOf<DbVehicle>()
+        for(element in sourceList){
+            val constructed = vehicleToDbVehicle(element)
+            dbVehicleList.add(constructed)
+        }
+        return dbVehicleList
+    }
+
+    private fun dbVehicleListToVehicleList(sourceList: List<DbVehicle>) : List<Vehicle>{
+        val vehicleList = mutableListOf<Vehicle>()
+        for(element in sourceList){
+            val constructed = dbVehicleToVehicle(element)
+            vehicleList.add(constructed)
+        }
+        return vehicleList
+    }
+
+    private fun apiVehicleListToVehicleList(sourceList: List<ApiVehicle>) : List<Vehicle>{
+        val vehicleList = mutableListOf<Vehicle>()
+        for(element in sourceList){
+            val constructed = apiVehicleToVehicle(element)
+            vehicleList.add(constructed)
+        }
+        return vehicleList
     }
 
 }

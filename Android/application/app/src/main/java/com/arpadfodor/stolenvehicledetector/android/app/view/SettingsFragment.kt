@@ -8,10 +8,9 @@ import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
-import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.GeneralRepository
-import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserReportRepository
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserRecognitionRepository
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
@@ -80,7 +79,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
             val user = AuthenticationService.userName
 
-            UserReportRepository.deleteAllFromUser(user){ isSuccess ->
+            UserRecognitionRepository.deleteAllFromUser(user){ isSuccess ->
                 dbDeleteResultSnackBar(isSuccess)
             }
 

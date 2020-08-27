@@ -4,21 +4,21 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.Report
+import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.DbReport
 
 @Dao
 interface ReportDAO {
 
     @Query("SELECT * FROM ${ApplicationDB.REPORT_TABLE_NAME}")
-    fun getAll(): List<Report>?
+    fun getAll(): List<DbReport>?
 
     @Query("DELETE FROM ${ApplicationDB.REPORT_TABLE_NAME}")
     fun deleteAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(vararg report: Report)
+    fun insert(vararg report: DbReport)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(report_list: List<Report>)
+    fun insert(report_list: List<DbReport>)
 
 }

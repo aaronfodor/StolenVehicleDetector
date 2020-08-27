@@ -8,7 +8,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.db.ApplicationDB
 import java.io.Serializable
 
 @Entity(tableName = ApplicationDB.META_TABLE_NAME)
-data class MetaData(
+data class DbMetaData(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")
     var Id: String = "",

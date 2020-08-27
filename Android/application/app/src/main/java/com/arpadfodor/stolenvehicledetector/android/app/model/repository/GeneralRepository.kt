@@ -2,7 +2,7 @@ package com.arpadfodor.stolenvehicledetector.android.app.model.repository
 
 import android.content.Context
 import com.arpadfodor.stolenvehicledetector.android.app.model.DateHandler
-import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.MetaData
+import com.arpadfodor.stolenvehicledetector.android.app.model.db.dataclasses.DbMetaData
 
 object GeneralRepository {
 
@@ -20,7 +20,7 @@ object GeneralRepository {
         }
     }
 
-    fun isFreshTimestamp(meta: MetaData, currentTimestampUTC: String) : Boolean{
+    fun isFreshTimestamp(meta: DbMetaData, currentTimestampUTC: String) : Boolean{
         val currentDate = DateHandler.stringToDate(currentTimestampUTC)
         val dbDate = DateHandler.stringToDate(meta.modificationTimestampUTC)
         return currentDate.after(dbDate)

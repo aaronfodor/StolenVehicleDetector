@@ -5,25 +5,25 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.Recognition
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 
 @BindingAdapter("recognitionId")
-fun TextView.setRecognitionId(item: Recognition) {
+fun TextView.setRecognitionId(item: UserRecognition) {
     text = item.licenseId
 }
 
 @BindingAdapter("recognitionDate")
-fun TextView.setRecognitionDate(item: Recognition) {
+fun TextView.setRecognitionDate(item: UserRecognition) {
     text = context.getString(R.string.recognition_item_timestamp, item.date)
 }
 
 @BindingAdapter("recognitionLocation")
-fun TextView.setRecognitionLocation(item: Recognition) {
+fun TextView.setRecognitionLocation(item: UserRecognition) {
     text = context.getString(R.string.recognition_item_location, item.longitude, item.latitude)
 }
 
 @BindingAdapter("recognitionMessage")
-fun TextView.setRecognitionMessage(item: Recognition) {
+fun TextView.setRecognitionMessage(item: UserRecognition) {
 
     visibility = if(item.message.isEmpty()){
         View.GONE
@@ -37,7 +37,7 @@ fun TextView.setRecognitionMessage(item: Recognition) {
 }
 
 @BindingAdapter("recognitionEditButton")
-fun ImageButton.setRecognitionEditButton(item: Recognition) {
+fun ImageButton.setRecognitionEditButton(item: UserRecognition) {
 
     if(item.isSent){
         this.setImageResource(android.R.drawable.ic_menu_info_details)
@@ -49,7 +49,7 @@ fun ImageButton.setRecognitionEditButton(item: Recognition) {
 }
 
 @BindingAdapter("recognitionSendButton")
-fun ImageButton.setRecognitionSendButton(item: Recognition) {
+fun ImageButton.setRecognitionSendButton(item: UserRecognition) {
 
     if(item.isSent){
         this.setImageResource(R.drawable.icon_tick)
