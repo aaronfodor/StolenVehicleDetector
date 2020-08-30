@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/fragment_detail_parent_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -30,17 +31,17 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/glVerticalMiddle"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:padding="@dimen/paragraph_padding"
+            app:layout_constraintBottom_toTopOf="@+id/recognition_back_button"
             android:layout_margin="@dimen/paragraph_margin"
             android:gravity="top">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/recognition_details_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="@dimen/paragraph_padding">
 
                 <androidx.cardview.widget.CardView
                     xmlns:card_view="http://schemas.android.com/tools"
@@ -60,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/image_placeholder"
+                        app:srcCompat="@drawable/icon_image"
                         android:contentDescription="@string/recognition_image" />
 
                 </androidx.cardview.widget.CardView>
@@ -160,9 +161,9 @@
             android:layout_margin="@dimen/button_margin"
             android:backgroundTint="@color/colorButtonNeutral"
             app:srcCompat="@android:drawable/ic_menu_revert"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/glHorizontalMiddle1st"/>
+            app:layout_constraintEnd_toStartOf="@+id/glHorizontalMiddle1st"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/recognitionDeleteButton"
@@ -171,9 +172,9 @@
             android:layout_margin="@dimen/button_margin"
             android:backgroundTint="@color/colorButtonNeutral"
             app:srcCompat="@android:drawable/ic_menu_delete"
-            app:layout_constraintTop_toBottomOf="@+id/glHorizontalMiddle1st"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/glHorizontalMiddle2nd"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/glHorizontalMiddle1st"
+            app:layout_constraintEnd_toStartOf="@+id/glHorizontalMiddle2nd"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/recognitionSendButton"
@@ -182,29 +183,22 @@
             android:layout_margin="@dimen/button_margin"
             android:backgroundTint="@color/colorButtonPositive"
             app:srcCompat="@android:drawable/ic_menu_send"
-            app:layout_constraintTop_toBottomOf="@+id/glHorizontalMiddle2nd"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/glHorizontalMiddle2nd" />
 
         <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/glHorizontalMiddle1st"
             app:layout_constraintGuide_percent="0.33"
-            android:orientation="horizontal"/>
+            android:orientation="vertical"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/glHorizontalMiddle2nd"
             app:layout_constraintGuide_percent="0.66"
-            android:orientation="horizontal"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/glVerticalMiddle"
-            app:layout_constraintGuide_percent="@dimen/button_vs_text_land_layout_ratio"
             android:orientation="vertical"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

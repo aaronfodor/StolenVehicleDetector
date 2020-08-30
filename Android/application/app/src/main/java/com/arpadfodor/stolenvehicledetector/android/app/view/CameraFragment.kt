@@ -454,11 +454,11 @@ class CameraFragment : Fragment() {
 
         if(isSuccess){
             AppSnackBarBuilder.buildInfoSnackBar(requireContext().applicationContext, this.requireView(),
-                getString(R.string.image_captured), Snackbar.LENGTH_SHORT).show()
+                getString(R.string.image_saved), Snackbar.LENGTH_SHORT).show()
         }
         else{
             AppSnackBarBuilder.buildAlertSnackBar(requireContext().applicationContext, this.requireView(),
-                getString(R.string.image_capture_failed), Snackbar.LENGTH_SHORT).show()
+                getString(R.string.image_save_failed), Snackbar.LENGTH_SHORT).show()
         }
 
     }

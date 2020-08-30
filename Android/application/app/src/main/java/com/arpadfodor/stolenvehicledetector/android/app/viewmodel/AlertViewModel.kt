@@ -37,9 +37,14 @@ class AlertViewModel : MasterDetailViewModel(){
             UserRecognitionRepository.postUserRecognition(recognition) { isSuccess ->
 
                 if(isSuccess){
-                    deleteRecognition(id){ isSuccess ->
-                        callback(isSuccess)
+
+                    deleteRecognition(id){ deleteSuccess ->
+                        if(deleteSuccess){
+                            deselectRecognition()
+                        }
+                        callback(deleteSuccess)
                     }
+
                 }
                 else{
                     callback(false)

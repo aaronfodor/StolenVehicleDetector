@@ -11,13 +11,13 @@ import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.MasterDetailViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_recognition_list.*
+import kotlinx.android.synthetic.main.fragment_master.*
 
 class MasterFragment : Fragment(){
 
     companion object{
 
-        const val TAG = "Recognition list fragment"
+        const val TAG = "Master fragment"
 
         lateinit var viewModel: MasterDetailViewModel
         var title = ""
@@ -48,7 +48,7 @@ class MasterFragment : Fragment(){
     private lateinit var adapter: RecognitionListAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_recognition_list, container, false)
+        return inflater.inflate(R.layout.fragment_master, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
@@ -57,8 +57,8 @@ class MasterFragment : Fragment(){
         recognition_list_title.text = title
 
         adapter = RecognitionListAdapter(requireContext(), createEventListener())
-        alert_list.adapter = adapter
-        alert_list.layoutManager = LinearLayoutManager(requireContext())
+        recognition_list.adapter = adapter
+        recognition_list.layoutManager = LinearLayoutManager(requireContext())
 
     }
 

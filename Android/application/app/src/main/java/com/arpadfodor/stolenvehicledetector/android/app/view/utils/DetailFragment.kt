@@ -13,13 +13,13 @@ import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.MasterDetailViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_recognition_detail.*
+import kotlinx.android.synthetic.main.fragment_detail.*
 
 class DetailFragment : Fragment(){
 
     companion object{
 
-        const val TAG = "Recognition detail fragment"
+        const val TAG = "Detail fragment"
 
         lateinit var viewModel: MasterDetailViewModel
         var title = ""
@@ -53,7 +53,7 @@ class DetailFragment : Fragment(){
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_recognition_detail, container, false)
+        return inflater.inflate(R.layout.fragment_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,7 +72,14 @@ class DetailFragment : Fragment(){
         val selectedRecognitionObserver = Observer<Int> { id ->
 
             val currentRecognition = viewModel.getRecognitionById(id)
+
+            if(currentRecognition == null){
+                fragment_detail_parent_layout?.visibility = View.GONE
+            }
+
             currentRecognition?.let { recognition ->
+
+                fragment_detail_parent_layout?.visibility = View.VISIBLE
 
                 val image = recognition.image
                 image?.let { bitmap ->
@@ -82,7 +89,7 @@ class DetailFragment : Fragment(){
                         Glide
                             .with(this)
                             .load(bitmap)
-                            .error(R.drawable.image_placeholder)
+                            .error(R.drawable.icon_image)
                             .into(it)
                         it.appearingAnimation(requireContext())
                     }
@@ -253,6 +260,8 @@ class DetailFragment : Fragment(){
                 }
 
             }
+
+            fragment_detail_parent_layout?.invalidate()
 
         }
 

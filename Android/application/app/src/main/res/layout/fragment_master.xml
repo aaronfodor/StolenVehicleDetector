@@ -17,7 +17,7 @@
         android:text="@string/recognition_list"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/alert_list"
+        android:id="@+id/recognition_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -9,8 +9,8 @@
     <corners android:radius="@dimen/card_corner_radius" />
     <corners android:radius="@dimen/card_corner_radius" />
     <padding
-        android:bottom="@dimen/dialog_vertical_padding"
-        android:left="@dimen/dialog_horizontal_padding"
-        android:right="@dimen/dialog_horizontal_padding"
-        android:top="@dimen/dialog_vertical_padding" />
+        android:bottom="@dimen/card_vertical_padding"
+        android:left="@dimen/card_horizontal_padding"
+        android:right="@dimen/card_horizontal_padding"
+        android:top="@dimen/card_vertical_padding" />
 </shape>

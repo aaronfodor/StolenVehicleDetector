@@ -13,10 +13,12 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/listElementContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        style="@style/ListElementContainer">
+        style="@style/ListElementContainer"
+        android:onClick="@{() -> clickListener.onEditClick(recognition_item)}">
 
         <TextView
             android:id="@+id/recognitionId"

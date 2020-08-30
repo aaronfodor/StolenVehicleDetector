@@ -25,13 +25,10 @@ class UserReportViewModel : MasterDetailViewModel(){
 
             var isSelectedRecognitionExists = false
 
-
             userRecognitionList.forEach { element ->
-
                 if(element.artificialId == selectedRecognitionId.value){
                     isSelectedRecognitionExists = true
                 }
-
             }
 
             recognitions.postValue(userRecognitionList)
@@ -101,6 +98,7 @@ class UserReportViewModel : MasterDetailViewModel(){
 
             UserRecognitionRepository.deleteByIdAndUser(id, user){ isSuccess ->
                 if(isSuccess){
+                    deselectRecognition()
                     updateDataFromDb()
                 }
                 callback(isSuccess)

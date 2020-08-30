@@ -20,9 +20,9 @@ object MediaHandler {
 
     private const val TAG = "Media handler"
 
-    private const val TIMESTAMP_FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+    private const val TIMESTAMP_FILENAME_FORMAT = "yyyy-MM-dd_HH-mm-ss-SSS"
     private const val PHOTO_EXTENSION = ".jpg"
-    private const val DB_IMAGES_ALBUM = "dbImages"
+    private const val DB_IMAGES_ALBUM = "User Recognition Images"
 
     private lateinit var appContext: Context
     private lateinit var appName: String
@@ -46,7 +46,7 @@ object MediaHandler {
 
         try{
 
-            val fileName = SimpleDateFormat(TIMESTAMP_FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())
+            val fileName = SimpleDateFormat(TIMESTAMP_FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis()) + PHOTO_EXTENSION
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 

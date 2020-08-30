@@ -58,8 +58,8 @@
     <dimen name="navigation_menu_icon_vertical_spacing">36dp</dimen>
 
     <dimen name="dialog_corner_radius">10dp</dimen>
-    <dimen name="dialog_horizontal_padding">40dp</dimen>
-    <dimen name="dialog_vertical_padding">20dp</dimen>
+    <dimen name="card_horizontal_padding">40dp</dimen>
+    <dimen name="card_vertical_padding">20dp</dimen>
     <dimen name="dialog_margin">8dp</dimen>
 
     <dimen name="card_corner_radius">10dp</dimen>
@@ -75,6 +75,7 @@
     <dimen name="snack_bar_margin_horizontal">32dp</dimen>
     <dimen name="snack_bar_margin_vertical">8dp</dimen>
 
-    <dimen name="button_vs_text_land_layout_ratio">0.33</dimen>
+    <dimen name="button_vs_text_land_layout_ratio">0.4</dimen>
+    <dimen name="detail_content_layout_ratio">0.5</dimen>
 
 </resources>

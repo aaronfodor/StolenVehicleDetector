@@ -33,7 +33,7 @@
             app:menu="@menu/dashboard_menu" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/recognition_container"
+            android:id="@+id/master_detail_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </androidx.constraintlayout.widget.ConstraintLayout>

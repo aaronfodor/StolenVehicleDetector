@@ -1,6 +1,5 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils
 
-import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
@@ -13,6 +12,11 @@ abstract class MasterDetailViewModel : ViewModel(){
     open val recognitions: MutableLiveData<List<UserRecognition>> by lazy {
         MutableLiveData<List<UserRecognition>>()
     }
+
+    /**
+     * Whether or not the UI is in two-pane mode, i.e. running on a tablet device
+     */
+    var twoPane = false
 
     /**
      * The current, selected recognition
@@ -34,6 +38,7 @@ abstract class MasterDetailViewModel : ViewModel(){
         val filteredAlerts = recognitions.value?.filter {
             it.artificialId != id
         }
+        deselectRecognition()
         recognitions.postValue(filteredAlerts)
         callback(true)
     }
@@ -53,21 +58,14 @@ abstract class MasterDetailViewModel : ViewModel(){
     }
 
     open fun updateRecognitionMessage(id: Int, message: String, callback: (Boolean) -> Unit){
-
-        val updatedList = recognitions.value ?: return
-
-        for(recognition in updatedList){
-            if(recognition.artificialId != id){
-                continue
+        val recognitionList = recognitions.value ?: return
+        recognitionList.forEach {
+            if(it.artificialId == id){
+                it.message = message
             }
-            recognition.message = message
         }
-
-        recognitions.postValue(updatedList)
+        recognitions.postValue(recognitionList)
         callback(true)
-
     }
-
-    open fun loadImage(imagePath: String, callback: (Bitmap) -> Unit){}
 
 }

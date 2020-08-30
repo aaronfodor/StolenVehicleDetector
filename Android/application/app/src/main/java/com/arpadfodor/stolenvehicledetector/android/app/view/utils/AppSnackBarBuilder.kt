@@ -24,24 +24,48 @@ object AppSnackBarBuilder {
     }
 
     fun buildInfoSnackBar(context: Context, view: View, text: String, duration: Int): Snackbar{
+
         val snackBar = buildAppSnackBar(view, text, duration)
         snackBar.setBackgroundTint(ContextCompat.getColor(context, R.color.colorAppSnackBarBackground))
         snackBar.setTextColor(ContextCompat.getColor(context, R.color.colorAppSnackBarLightText))
+
+        val dismissButtonText = context.getString(R.string.hide_button)
+        snackBar.setAction(dismissButtonText) {
+            snackBar.dismiss()
+        }.setActionTextColor(context.getColor(R.color.colorAppSnackBarLightText))
+
         return snackBar
+
     }
 
     fun buildSuccessSnackBar(context: Context, view: View, text: String, duration: Int): Snackbar{
+
         val snackBar = buildAppSnackBar(view, text, duration)
         snackBar.setBackgroundTint(ContextCompat.getColor(context, R.color.colorSuccessSnackBarBackground))
         snackBar.setTextColor(ContextCompat.getColor(context, R.color.colorAppSnackBarLightText))
+
+        val dismissButtonText = context.getString(R.string.hide_button)
+        snackBar.setAction(dismissButtonText) {
+            snackBar.dismiss()
+        }.setActionTextColor(context.getColor(R.color.colorAppSnackBarLightText))
+
         return snackBar
+
     }
 
     fun buildAlertSnackBar(context: Context, view: View, text: String, duration: Int): Snackbar{
+
         val snackBar = buildAppSnackBar(view, text, duration)
         snackBar.setBackgroundTint(ContextCompat.getColor(context, R.color.colorAlertSnackBarBackground))
         snackBar.setTextColor(ContextCompat.getColor(context, R.color.colorAppSnackBarLightText))
+
+        val dismissButtonText = context.getString(R.string.hide_button)
+        snackBar.setAction(dismissButtonText) {
+            snackBar.dismiss()
+        }.setActionTextColor(context.getColor(R.color.colorAppSnackBarLightText))
+
         return snackBar
+
     }
 
 }

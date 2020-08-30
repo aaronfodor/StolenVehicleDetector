@@ -44,7 +44,7 @@ class LoadActivity : AppActivity() {
         ivLoadedImage.clipToOutline = true
         Glide
             .with(this)
-            .load(R.drawable.image_placeholder)
+            .load(R.drawable.icon_image)
             .into(ivLoadedImage)
 
     }
@@ -92,8 +92,8 @@ class LoadActivity : AppActivity() {
                 .with(this)
                 .load(newImage)
                 .centerCrop()
-                .error(R.drawable.image_placeholder)
-                .placeholder(R.drawable.image_placeholder)
+                .error(R.drawable.icon_image)
+                .placeholder(R.drawable.icon_image)
                 .into(ivLoadedImage)
             ivLoadedImage.appearingAnimation(this)
 
@@ -159,7 +159,9 @@ class LoadActivity : AppActivity() {
     override fun subscribeListeners() {
 
         ivLoadedImage.setOnClickListener {
-            loadImage()
+            if(viewModel.loadedImage.value == null){
+                loadImage()
+            }
         }
 
         load_image_button.setOnClickListener {
@@ -208,7 +210,7 @@ class LoadActivity : AppActivity() {
 
     private fun imageLoadFailedNotification(){
         AppSnackBarBuilder.buildInfoSnackBar(this, container,
-            getString(R.string.load_image_failed), Snackbar.LENGTH_SHORT).show()
+            getString(R.string.image_load_failed), Snackbar.LENGTH_SHORT).show()
     }
 
 }
