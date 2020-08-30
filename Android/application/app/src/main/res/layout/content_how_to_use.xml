@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
             android:backgroundTint="@color/colorButtonNeutral"
-            app:srcCompat="@android:drawable/ic_media_play"
+            app:srcCompat="@drawable/icon_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 

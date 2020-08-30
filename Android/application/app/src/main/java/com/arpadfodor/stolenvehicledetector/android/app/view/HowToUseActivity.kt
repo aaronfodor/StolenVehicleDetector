@@ -1,7 +1,6 @@
 package com.arpadfodor.stolenvehicledetector.android.app.view
 
 import android.os.Bundle
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -36,10 +35,10 @@ class HowToUseActivity : AppActivity() {
         val speakObserver = Observer<Boolean> { isSpeaking ->
             // Update the UI, in this case, the FAB
             if(isSpeaking){
-                fabRead.setImageResource(android.R.drawable.ic_media_pause)
+                fabRead.setImageResource(R.drawable.icon_stop)
             }
             else{
-                fabRead.setImageResource(android.R.drawable.ic_media_play)
+                fabRead.setImageResource(R.drawable.icon_play)
             }
         }
         // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
