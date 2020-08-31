@@ -17,7 +17,7 @@ class InvalidCredentials(message: String = "User has not been authorized.") : Ba
  * For example, thrown when an Id/payload has not been found on the server.
  * HTTP 404
  */
-class NotFound(message: String = "Invalid key has been provided / element not found on the server.") : BadRequest(message)
+class NotFound(message: String = "Invalid key has been provided / item not found on the server.") : BadRequest(message)
 
 /**
  * Indicates that the provided element already exists on the server.

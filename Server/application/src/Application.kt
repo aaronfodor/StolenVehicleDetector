@@ -164,38 +164,29 @@ fun Application.module(testing: Boolean = false) {
 
                         h1 { +"Stolen vehicles" }
                         ul {
-                            h2 { +"Get stolen vehicles" }
+                            h2 { +"Get vehicles" }
                             h3 { +"*/vehicles" }
                             h3 { +"*/vehicles/meta" }
                             li { +"Permission needed: ${AppModel.PERMISSION_API_GET}" }
                             li { +"Response type: json" }
-                            h2 { +"Put stolen vehicles list" }
+                            h2 { +"Put vehicles list" }
                             h3 { +"*/vehicles" }
                             li { +"Permission needed: ${AppModel.PERMISSION_ADMIN}" }
-                            li { +"Rewrites existing stolen vehicles database." }
+                            li { +"Rewrites existing vehicles database." }
                             li { +"Required payload: json" }
-                            h2 { +"Delete stolen vehicles" }
+                            h2 { +"Delete vehicles" }
                             h3 { +"*/vehicles" }
                             li { +"Permission needed: ${AppModel.PERMISSION_ADMIN}" }
-                            li { +"Deletes existing stolen vehicles, reports and coordinates "
-                                + "(because reports & coordinates requires stolen vehicles data)." }
-                        }
-
-                        h1 { +"Coordinates" }
-                        ul {
-                            h2 { +"Get coordinates" }
-                            h3 { +"*/coordinates" }
-                            h3 { +"*/coordinates/meta" }
-                            li { +"Permission needed: ${AppModel.PERMISSION_API_GET}" }
-                            li { +"Response type: json" }
+                            li { +"Deletes existing vehicles, reports and report history "
+                                + "(because reports & history requires vehicles data)." }
                         }
 
                         h1 { +"Reports" }
                         ul {
                             h2 { +"Get reports" }
-                            h3{ +"*/reports" }
+                            h3 { +"*/reports" }
                             h3 { +"*/reports/meta" }
-                            li { +"Permission needed: ${AppModel.PERMISSION_ADMIN}" }
+                            li { +"Permission needed: ${AppModel.PERMISSION_API_GET}" }
                             li { +"Response type: json" }
                             h2 { +"Post report" }
                             h3 { +"*/report" }
@@ -204,8 +195,20 @@ fun Application.module(testing: Boolean = false) {
                             h2 { +"Delete reports" }
                             h3{ +"*/reports" }
                             li { +"Permission needed: ${AppModel.PERMISSION_ADMIN}" }
-                            li { +"Deletes existing reports and coordinates "
-                                + "(because coordinates requires reports data)." }
+                            li { +"Deletes existing reports." }
+                        }
+
+                        h1 { +"Report history" }
+                        ul {
+                            h2 { +"Get report history" }
+                            h3{ +"*/report_history" }
+                            h3 { +"*/report_history/meta" }
+                            li { +"Permission needed: ${AppModel.PERMISSION_ADMIN}" }
+                            li { +"Response type: json" }
+                            h2 { +"Delete report history" }
+                            h3{ +"*/report_history" }
+                            li { +"Permission needed: ${AppModel.PERMISSION_ADMIN}" }
+                            li { +"Deletes existing report history." }
                         }
 
                         h1 { +"Self" }
@@ -254,12 +257,12 @@ fun Application.module(testing: Boolean = false) {
                             h2 { +"Vehicles" }
                             li { +"Last update (UTC): ${model.getTableModificationTimestamp(AppModel.VEHICLES)}" }
                             li { +"Number of stolen vehicles: ${model.getTableSize(AppModel.VEHICLES)}" }
-                            h2 { +"Coordinates" }
-                            li { +"Last update (UTC): ${model.getTableModificationTimestamp(AppModel.CURRENTS)}" }
-                            li { +"Number of vehicles with coordinates: ${model.getTableSize(AppModel.CURRENTS)}" }
                             h2 { +"Reports" }
                             li { +"Last update (UTC): ${model.getTableModificationTimestamp(AppModel.REPORTS)}" }
-                            li { +"Number of reports: ${model.getTableSize(AppModel.REPORTS)}" }
+                            li { +"Report number (distinct vehicles): ${model.getTableSize(AppModel.REPORTS)}" }
+                            h2 { +"Report history" }
+                            li { +"Last update (UTC): ${model.getTableModificationTimestamp(AppModel.REPORT_HISTORY)}" }
+                            li { +"Number of report history items: ${model.getTableSize(AppModel.REPORT_HISTORY)}" }
                             h2 { +"Users" }
                             li { +"Last update (UTC): ${model.getTableModificationTimestamp(AppModel.USERS)}" }
                             li { +"Number of users: ${model.getTableSize(AppModel.USERS)}" }
@@ -304,7 +307,7 @@ fun Application.module(testing: Boolean = false) {
                 put("/vehicles") {
 
                     val stringPayload = call.receive<String>()
-                    val statusCode = model.rawStolenVehiclesToDatabase(stringPayload)
+                    val statusCode = model.rawVehiclesToDatabase(stringPayload)
                     if (ExceptionHandler.isNoException(statusCode)) {
                         call.respond(HttpStatusCode.Created, "MODIFIED")
                     } else {
@@ -317,8 +320,8 @@ fun Application.module(testing: Boolean = false) {
 
                     val stringPayload = call.receive<String>()
                     val statusCode = model.deleteVehicles()
-                    model.deleteCoordinates()
                     model.deleteReports()
+                    model.deleteReportHistory()
                     if (ExceptionHandler.isNoException(statusCode)) {
                         call.respond(HttpStatusCode.OK, "DELETED")
                     } else {
@@ -331,12 +334,12 @@ fun Application.module(testing: Boolean = false) {
 
             authenticate(configurations = *arrayOf(AppModel.PERMISSION_API_GET)) {
 
-                route("/coordinates"){
+                route("/reports"){
 
                     get("") {
                         var jsonContent = ""
                         try {
-                            jsonContent =  model.getDataAsJson(AppModel.CURRENTS)
+                            jsonContent =  model.getDataAsJson(AppModel.REPORTS)
                         }
                         catch (e: Exception){
                             throw InternalServerError()
@@ -348,7 +351,7 @@ fun Application.module(testing: Boolean = false) {
                     get("/meta") {
                         var jsonContent = ""
                         try {
-                            jsonContent = model.getMetaDataAsJson(AppModel.CURRENTS)
+                            jsonContent = model.getMetaDataAsJson(AppModel.REPORTS)
                         }
                         catch (e: Exception){
                             throw InternalServerError()
@@ -381,12 +384,29 @@ fun Application.module(testing: Boolean = false) {
 
             authenticate(configurations = *arrayOf(AppModel.PERMISSION_ADMIN)) {
 
-                route("/reports"){
+                delete("/reports"){
+
+                    val stringPayload = call.receive<String>()
+                    val statusCode = model.deleteReports()
+                    if (ExceptionHandler.isNoException(statusCode)){
+                        call.respond(HttpStatusCode.OK, "DELETED")
+                    }
+                    else{
+                        ExceptionHandler.throwAppropriateException(statusCode)
+                    }
+
+                }
+
+            }
+
+            authenticate(configurations = *arrayOf(AppModel.PERMISSION_ADMIN)) {
+
+                route("/report_history"){
 
                     get("") {
                         var jsonContent = ""
                         try {
-                            jsonContent =  model.getDataAsJson(AppModel.REPORTS)
+                            jsonContent =  model.getDataAsJson(AppModel.REPORT_HISTORY)
                         }
                         catch (e: Exception){
                             throw InternalServerError()
@@ -398,7 +418,7 @@ fun Application.module(testing: Boolean = false) {
                     get("/meta") {
                         var jsonContent = ""
                         try {
-                            jsonContent = model.getMetaDataAsJson(AppModel.REPORTS)
+                            jsonContent = model.getMetaDataAsJson(AppModel.REPORT_HISTORY)
                         }
                         catch (e: Exception){
                             throw InternalServerError()
@@ -409,11 +429,10 @@ fun Application.module(testing: Boolean = false) {
 
                 }
 
-                delete("/reports"){
+                delete("/report_history"){
 
                     val stringPayload = call.receive<String>()
-                    model.deleteReports()
-                    val statusCode = model.deleteCoordinates()
+                    val statusCode = model.deleteReportHistory()
                     if (ExceptionHandler.isNoException(statusCode)){
                         call.respond(HttpStatusCode.OK, "DELETED")
                     }

@@ -1,6 +1,6 @@
 package com.arpadfodor.ktor.model.dataclasses
 
-data class VehicleReport(
+data class Report(
     var Id: Int,
     var Vehicle: String,
     var Reporter: String,
