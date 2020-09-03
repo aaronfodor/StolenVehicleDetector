@@ -57,13 +57,6 @@ class CameraViewModel : ViewModel(){
     var lensFacing: Int = CameraSelector.LENS_FACING_BACK
 
     /**
-     * Whether the permissions has been granted
-     **/
-    val hasPermissionsGranted: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
-
-    /**
      * List of recognitions from the last inference
      **/
     val recognitions: MutableLiveData<Array<UserRecognition>> by lazy {

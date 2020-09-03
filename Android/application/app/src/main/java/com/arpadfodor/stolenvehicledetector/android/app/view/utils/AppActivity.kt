@@ -176,9 +176,4 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         }
     }
 
-    fun showMissingPermissionNotification(){
-        AppSnackBarBuilder.buildInfoSnackBar(this.applicationContext, activityDrawerLayout,
-            getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show()
-    }
-
 }

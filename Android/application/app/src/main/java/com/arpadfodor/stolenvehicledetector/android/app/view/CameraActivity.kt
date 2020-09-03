@@ -8,7 +8,6 @@ import android.view.OrientationEventListener
 import android.view.View.*
 import android.widget.FrameLayout
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
@@ -35,8 +34,7 @@ class CameraActivity : AppActivity() {
         initUi(drawer, navigation)
 
         viewModel = ViewModelProvider(this).get(CameraViewModel::class.java)
-
-        showPermissionFragment()
+        showCameraFragment()
 
         deviceOrientationListener = object : OrientationEventListener(this,
             SensorManager.SENSOR_DELAY_NORMAL) {
@@ -66,16 +64,6 @@ class CameraActivity : AppActivity() {
         CameraViewModel.minimumPredictionCertaintyToShow = minimumPredictionCertaintyToShow.toFloat()
         CameraViewModel.settingsShowReceptiveField = settingsShowReceptiveField
 
-        // Create the observer which updates the UI in case of value change
-        val hasPermissionsGranted = Observer<Boolean> { permissionsGranted ->
-            if(!permissionsGranted){
-                showMissingPermissionNotification()
-            }
-        }
-
-        // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
-        viewModel.hasPermissionsGranted.observe(this, hasPermissionsGranted)
-
     }
 
     override fun subscribeListeners() {
@@ -96,10 +84,10 @@ class CameraActivity : AppActivity() {
         deviceOrientationListener.disable()
     }
 
-    private fun showPermissionFragment(){
+    private fun showCameraFragment(){
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.camera_container, PermissionsFragment())
+            .replace(R.id.camera_container, CameraFragment())
             .commit()
     }
 

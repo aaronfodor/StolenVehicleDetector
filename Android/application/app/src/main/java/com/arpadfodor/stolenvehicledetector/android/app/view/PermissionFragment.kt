@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.CameraViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.StartViewModel
 
 private const val PERMISSIONS_REQUEST_CODE = 10
 private val PERMISSIONS_REQUIRED = ApplicationRoot.requiredPermissions
@@ -19,7 +19,7 @@ private val PERMISSIONS_REQUIRED = ApplicationRoot.requiredPermissions
  */
 class PermissionsFragment : Fragment() {
 
-    private val viewModel: CameraViewModel by activityViewModels()
+    private val viewModel: StartViewModel by activityViewModels()
 
     companion object {
         /** Convenience method used to check if all permissions required by this app are granted */
@@ -66,9 +66,9 @@ class PermissionsFragment : Fragment() {
 
     private fun proceedToNextFragment(){
         // If permissions have already been granted, proceed
-        val nextFragment = CameraFragment()
+        val nextFragment = LoginFragment()
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.camera_container, nextFragment, "cameraFragment")
+            ?.replace(R.id.start_container, nextFragment, "loginFragment")
             ?.addToBackStack(null)
             ?.commit()
     }
