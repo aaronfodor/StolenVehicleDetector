@@ -339,20 +339,20 @@ class CameraFragment : Fragment() {
                     isReversedHorizontal = (viewModel.lensFacing == CameraSelector.LENS_FACING_FRONT)
                 }
 
+                val currentRotation = CameraViewModel.deviceOrientation
+                val surfaceRotationCode = when(currentRotation){
+                    0 -> Surface.ROTATION_0
+                    90 -> Surface.ROTATION_270
+                    180 -> Surface.ROTATION_180
+                    270 -> Surface.ROTATION_90
+                    else -> Surface.ROTATION_0
+                }
+                imageCapture.targetRotation = surfaceRotationCode
+
                 // Create output options object which contains file stream + metadata
                 val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFileStream)
                     .setMetadata(metadata)
                     .build()
-
-                val currentRotation = CameraViewModel.deviceOrientation
-                val surfaceRotationCode = when(currentRotation){
-                    0 -> 0
-                    90 -> 1
-                    180 -> 2
-                    270 -> 3
-                    else -> 0
-                }
-                imageCapture.targetRotation = surfaceRotationCode
 
                 // Setup image capture listener which is triggered after photo has been taken
                 imageCapture.takePicture(

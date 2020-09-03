@@ -17,6 +17,7 @@
         android:background="@drawable/loaded_image"
         android:contentDescription="@string/loaded_image_description"
         android:scaleType="center"
+        app:srcCompat="@drawable/icon_image"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

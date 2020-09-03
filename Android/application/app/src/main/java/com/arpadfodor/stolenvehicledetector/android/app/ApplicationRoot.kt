@@ -69,7 +69,7 @@ class ApplicationRoot : Application() {
         ApiService.initialize()
 
         ObjectDetectionService.initialize(assets, NUM_THREADS)
-        TextRecognitionService.initialize(applicationContext)
+        TextRecognitionService.initialize()
 
         val radius = resources.getDimension(R.dimen.bounding_box_radius)
         val width = resources.getDimension(R.dimen.bounding_box_line_width)
