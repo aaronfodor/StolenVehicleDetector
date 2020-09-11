@@ -45,6 +45,13 @@
         <item name="android:background">@drawable/card_background</item>
     </style>
 
+    <style name="ExtendedFabHelp" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
+        <item name="android:layout_margin">@dimen/margin_xxsmall</item>
+        <item name="android:textColor">@color/colorFabText</item>
+        <item name="android:textSize">@dimen/fab_text_size</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
     <style name="TitleText">
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textSize">@dimen/title_text_size</item>
@@ -112,6 +119,15 @@
     <style name="ButtonLabel" parent="ParagraphBody">
         <item name="android:textAlignment">textStart</item>
         <item name="android:gravity">start</item>
+    </style>
+
+    <style name="AppButton" parent="AppTheme">
+        <item name="android:layout_margin">@dimen/button_margin</item>
+        <item name="android:paddingTop">@dimen/button_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/button_padding_vertical</item>
+        <item name="android:paddingStart">@dimen/button_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/button_padding_horizontal</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

@@ -5,7 +5,8 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.OrientationEventListener
-import android.view.View.*
+import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+import android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 import android.widget.FrameLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -14,8 +15,10 @@ import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppActivity
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.overshootAppearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.CameraViewModel
 import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.camera_ui_container.*
 
 class CameraActivity : AppActivity() {
 
@@ -76,6 +79,7 @@ class CameraActivity : AppActivity() {
          */
         container.postDelayed({
             container.systemUiVisibility = (SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN and SYSTEM_UI_FLAG_LAYOUT_STABLE)
+            appearingAnimations()
         }, ApplicationRoot.IMMERSIVE_FLAG_TIMEOUT)
 
     }
@@ -113,6 +117,11 @@ class CameraActivity : AppActivity() {
 
         }
 
+    }
+
+    override fun appearingAnimations() {
+        camera_switch_button?.overshootAppearingAnimation(this)
+        camera_capture_button?.overshootAppearingAnimation(this)
     }
 
 }

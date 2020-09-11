@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/alert_live_button"
+    android:id="@+id/alertLiveButton"
     android:layout_height="match_parent"
     android:layout_width="@dimen/round_button_medium"
     android:layout_marginTop="@dimen/margin_xxsmall"
@@ -25,6 +25,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         style="@style/TitleText"
-        android:text="@string/view_alert_button" />
+        android:text="@string/view_alert" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

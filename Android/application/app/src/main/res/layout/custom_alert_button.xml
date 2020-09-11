@@ -25,6 +25,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         style="@style/TitleText"
-        android:text="@string/view_alert_button" />
+        android:text="@string/view_alert" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

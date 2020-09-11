@@ -17,7 +17,7 @@
         android:background="@drawable/loaded_image"
         android:contentDescription="@string/loaded_image_description"
         android:scaleType="center"
-        app:srcCompat="@drawable/icon_image"
+        app:srcCompat="@drawable/icon_photo_library"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,27 +45,12 @@
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
         android:background="@android:color/transparent"
-        app:srcCompat="@drawable/icon_image"
+        app:srcCompat="@drawable/icon_photo_library"
         android:contentDescription="@string/load_image"
         android:padding="@dimen/spacing_small"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
-
-    <ImageButton
-        android:id="@+id/circular_alert_load_button"
-        android:layout_width="@dimen/round_button_large"
-        android:layout_height="@dimen/round_button_large"
-        android:layout_marginBottom="@dimen/margin_xsmall"
-        android:scaleType="fitCenter"
-        android:padding="@dimen/padding_xsmall"
-        android:background="@drawable/alert_circle_button"
-        app:srcCompat="@android:drawable/ic_dialog_alert"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:contentDescription="@string/view_alert_button"
-        android:visibility="gone"/>
 
     <ImageButton
         android:id="@+id/loaded_image_rotate_button"
@@ -81,9 +66,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/extendedFabLoadHelp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ExtendedFabHelp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/load_image_button"
+        android:visibility="gone"/>
+
     <include
         layout="@layout/custom_alert_button"
-        android:id="@+id/alert_loaded_button"
+        android:id="@+id/alertLoadedButton"
         android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

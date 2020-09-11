@@ -1,7 +1,7 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
+import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.dataclasses.ApiReport
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserRecognitionRepository
@@ -19,7 +19,7 @@ class UserReportViewModel : MasterDetailViewModel(){
 
     fun updateDataFromDb(){
 
-        val user = AuthenticationService.userName
+        val user = AccountService.userId
 
         UserRecognitionRepository.getByUser(user){ userRecognitionList ->
 
@@ -55,7 +55,7 @@ class UserReportViewModel : MasterDetailViewModel(){
 
             if(isPostSuccess){
 
-                val user = AuthenticationService.userName
+                val user = AccountService.userId
                 UserRecognitionRepository.updateSentFlagByIdAndUser(id, user, true){ isDbSuccess ->
 
                     if(isDbSuccess){
@@ -79,7 +79,7 @@ class UserReportViewModel : MasterDetailViewModel(){
 
     override fun updateRecognitionMessage(id: Int, message: String, callback: (Boolean) -> Unit){
 
-        val user = AuthenticationService.userName
+        val user = AccountService.userId
 
         UserRecognitionRepository.updateMessageByIdAndUser(id, user, message){ isSuccess ->
             if(isSuccess){
@@ -94,7 +94,7 @@ class UserReportViewModel : MasterDetailViewModel(){
 
         Thread{
 
-            val user = AuthenticationService.userName
+            val user = AccountService.userId
 
             UserRecognitionRepository.deleteByIdAndUser(id, user){ isSuccess ->
                 if(isSuccess){

@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppActivity
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.overshootAppearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.HowToUseViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.content_about.*
 import kotlinx.android.synthetic.main.content_how_to_use.*
 
 class HowToUseActivity : AppActivity() {
@@ -55,6 +57,10 @@ class HowToUseActivity : AppActivity() {
             }
         )
 
+    }
+
+    override fun appearingAnimations() {
+        fabRead.overshootAppearingAnimation(this)
     }
 
     override fun subscribeListeners(){

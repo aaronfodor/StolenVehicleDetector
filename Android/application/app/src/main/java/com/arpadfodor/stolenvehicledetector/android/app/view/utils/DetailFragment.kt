@@ -7,15 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import androidx.fragment.app.Fragment
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.MasterDetailViewModel
 import com.bumptech.glide.Glide
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_detail.*
 
-class DetailFragment : Fragment(){
+class DetailFragment : AppFragment(){
 
     companion object{
 
@@ -52,21 +56,41 @@ class DetailFragment : Fragment(){
 
     }
 
+    private lateinit var container: ConstraintLayout
+    private lateinit var recognition_detail_title: TextView
+    private lateinit var recognitionDetailImage: ImageView
+    private lateinit var recognitionDetailMessage: EditText
+    private lateinit var recognitionDetailLicenseId: TextView
+    private lateinit var recognitionDetailDate: TextView
+    private lateinit var recognitionDetailLocation: TextView
+    private lateinit var detail_back_button: FloatingActionButton
+    private lateinit var detail_delete_button: FloatingActionButton
+    private lateinit var detail_send_button: FloatingActionButton
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
+
+        container = view as ConstraintLayout
+        recognition_detail_title = container.findViewById(R.id.recognition_detail_title)
+        recognitionDetailImage = container.findViewById(R.id.recognitionDetailImage)
+        recognitionDetailMessage = container.findViewById(R.id.recognitionDetailMessage)
+        recognitionDetailLicenseId = container.findViewById(R.id.recognitionDetailLicenseId)
+        recognitionDetailDate = container.findViewById(R.id.recognitionDetailDate)
+        recognitionDetailLocation = container.findViewById(R.id.recognitionDetailLocation)
+        detail_back_button = container.findViewById(R.id.detail_back_button)
+        detail_delete_button = container.findViewById(R.id.detail_delete_button)
+        detail_send_button = container.findViewById(R.id.detail_send_button)
+
         recognition_detail_title.text = title
+
     }
 
-    override fun onResume() {
-        super.onResume()
-        subscribeToViewModel()
-    }
-
-    private fun subscribeToViewModel() {
+    override fun subscribeToViewModel() {
 
         // Create the observer
         val selectedRecognitionObserver = Observer<Int> { id ->
@@ -84,7 +108,7 @@ class DetailFragment : Fragment(){
                 val image = recognition.image
                 image?.let { bitmap ->
 
-                    recognitionDetailImage?.let {
+                    recognitionDetailImage.let {
                         it.disappearingAnimation(requireContext())
                         Glide
                             .with(this)
@@ -96,20 +120,27 @@ class DetailFragment : Fragment(){
 
                 }
 
-                //force done button on keyboard instead of the new line button
-                recognitionDetailMessage?.setRawInputType(InputType.TYPE_CLASS_TEXT)
-                recognitionDetailMessage?.text = SpannableStringBuilder(recognition.message)
+                if(recognition.isAlert){
+                    detail_send_button.setImageResource(android.R.drawable.ic_input_add)
+                }
+                else{
+                    detail_send_button.setImageResource(android.R.drawable.ic_menu_send)
+                }
 
-                recognitionDetailLicenseId?.text = recognition.licenseId
-                recognitionDetailDate?.text = recognition.date
-                recognitionDetailLocation?.text =
+                //force done button on keyboard instead of the new line button
+                recognitionDetailMessage.setRawInputType(InputType.TYPE_CLASS_TEXT)
+                recognitionDetailMessage.text = SpannableStringBuilder(recognition.message)
+
+                recognitionDetailLicenseId.text = recognition.licenseId
+                recognitionDetailDate.text = recognition.date
+                recognitionDetailLocation.text =
                     requireContext().getString(R.string.recognition_item_location, recognition.longitude, recognition.latitude)
 
-                recognition_back_button?.setOnClickListener {
+                detail_back_button.setOnClickListener {
                     viewModel.deselectRecognition()
                 }
 
-                recognitionDeleteButton?.setOnClickListener {
+                detail_delete_button.setOnClickListener {
 
                     viewModel.deleteRecognition(recognition.artificialId){isSuccess ->
 
@@ -150,7 +181,7 @@ class DetailFragment : Fragment(){
                 // if the recognition has been sent -> hide send button, disable editing message
                 if(recognition.isSent){
 
-                    recognitionSendButton?.setOnClickListener {
+                    detail_send_button.setOnClickListener {
 
                         val currentContext = context
                         val currentView = view
@@ -163,18 +194,19 @@ class DetailFragment : Fragment(){
                             alreadySentSnackBarText,
                             Snackbar.LENGTH_SHORT
                         ).show()
+
                     }
 
-                    recognitionDetailMessage?.isFocusable = false
-                    recognitionDetailMessage?.isClickable = false
-                    recognitionDetailMessage?.setOnEditorActionListener { textView, actionId, event ->
+                    recognitionDetailMessage.isFocusable = false
+                    recognitionDetailMessage.isClickable = false
+                    recognitionDetailMessage.setOnEditorActionListener { textView, actionId, event ->
                         true
                     }
 
                 }
                 else{
 
-                    recognitionSendButton?.setOnClickListener {
+                    detail_send_button.setOnClickListener {
 
                         viewModel.sendRecognition(recognition.artificialId){ isSuccess ->
 
@@ -212,9 +244,9 @@ class DetailFragment : Fragment(){
 
                     }
 
-                    recognitionDetailMessage?.isFocusable = true
-                    recognitionDetailMessage?.isClickable = true
-                    recognitionDetailMessage?.setOnEditorActionListener { textView, actionId, event ->
+                    recognitionDetailMessage.isFocusable = true
+                    recognitionDetailMessage.isClickable = true
+                    recognitionDetailMessage.setOnEditorActionListener { textView, actionId, event ->
 
                         val message = textView.text.toString()
 
@@ -262,6 +294,7 @@ class DetailFragment : Fragment(){
             }
 
             fragment_detail_parent_layout?.invalidate()
+            appearingAnimations()
 
         }
 
@@ -269,5 +302,14 @@ class DetailFragment : Fragment(){
         viewModel.selectedRecognitionId.observe(requireActivity(), selectedRecognitionObserver)
 
     }
+
+    override fun appearingAnimations(){
+        detail_send_button.overshootAppearingAnimation(this.requireContext())
+        detail_delete_button.overshootAppearingAnimation(this.requireContext())
+        detail_back_button.overshootAppearingAnimation(this.requireContext())
+    }
+
+    override fun subscribeListeners(){}
+    override fun unsubscribe(){}
 
 }

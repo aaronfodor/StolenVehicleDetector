@@ -27,6 +27,11 @@
         android:title="@string/menu_settings" />
 
     <item
+        android:id="@+id/navigation_account"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/menu_account" />
+
+    <item
         android:id="@+id/navigation_how_to_use"
         android:icon="@android:drawable/ic_menu_help"
         android:title="@string/menu_how_to_use" />

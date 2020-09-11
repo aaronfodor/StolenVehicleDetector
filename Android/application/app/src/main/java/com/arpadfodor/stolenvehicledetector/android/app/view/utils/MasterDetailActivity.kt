@@ -86,6 +86,7 @@ abstract class MasterDetailActivity() : AppActivity() {
 
     }
 
+    override fun appearingAnimations(){}
     override fun subscribeListeners(){}
     override fun unsubscribe(){}
 

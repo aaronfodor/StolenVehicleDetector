@@ -38,7 +38,7 @@
             android:value="true" />
 
         <activity
-            android:name="com.arpadfodor.stolenvehicledetector.android.app.view.StartActivity"
+            android:name="com.arpadfodor.stolenvehicledetector.android.app.view.AccountActivity"
             android:clearTaskOnLaunch="true"
             android:icon="@mipmap/ic_launcher"
             android:rotationAnimation="seamless"

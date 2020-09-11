@@ -11,13 +11,13 @@
     android:background="@color/colorPrimaryDark">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/start_container"
+        android:id="@+id/account_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:context=".view.StartActivity"/>
+        tools:context=".view.AccountActivity"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

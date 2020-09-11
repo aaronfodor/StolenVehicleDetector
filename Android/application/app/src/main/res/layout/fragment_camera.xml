@@ -30,4 +30,17 @@
         app:layout_constraintStart_toStartOf="@+id/view_finder"
         app:layout_constraintTop_toTopOf="@+id/view_finder"/>
 
+    <ImageView
+        android:id="@+id/ivBoundingBoxesBck"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/loaded_image"
+        android:contentDescription="@string/ivBoundingBoxes_description"
+        android:scaleType="center"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintBottom_toBottomOf="@+id/view_finder"
+        app:layout_constraintEnd_toEndOf="@+id/view_finder"
+        app:layout_constraintStart_toStartOf="@+id/view_finder"
+        app:layout_constraintTop_toTopOf="@+id/view_finder"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

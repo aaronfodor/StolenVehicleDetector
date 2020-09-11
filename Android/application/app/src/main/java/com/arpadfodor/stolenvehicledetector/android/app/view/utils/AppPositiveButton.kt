@@ -2,6 +2,7 @@ package com.arpadfodor.stolenvehicledetector.android.app.view.utils
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.core.content.ContextCompat
 import com.arpadfodor.stolenvehicledetector.android.app.R
 
 /**
@@ -14,7 +15,7 @@ class AppPositiveButton : AppButton {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
-        this.background = context.getDrawable(R.drawable.app_positive_button)
+        this.background = ContextCompat.getDrawable(context, R.drawable.app_positive_button)
     }
 
 }

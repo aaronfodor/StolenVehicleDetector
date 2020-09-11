@@ -30,7 +30,7 @@
             app:itemBackground="@color/colorPrimaryDark"
             app:itemIconTint="@color/colorText"
             app:itemTextColor="@color/colorText"
-            app:menu="@menu/dashboard_menu" />
+            app:menu="@menu/dashboard_menu"/>
 
         <include
             layout="@layout/load_ui_container"

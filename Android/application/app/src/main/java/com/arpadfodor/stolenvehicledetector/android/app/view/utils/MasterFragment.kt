@@ -13,7 +13,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.repository.datacla
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_master.*
 
-class MasterFragment : Fragment(){
+class MasterFragment : AppFragment(){
 
     companion object{
 
@@ -62,7 +62,7 @@ class MasterFragment : Fragment(){
 
     }
 
-    private fun subscribeToViewModel() {
+    override fun subscribeToViewModel() {
 
         // Create the observer
         val listObserver = Observer<List<UserRecognition>> { list ->
@@ -74,10 +74,9 @@ class MasterFragment : Fragment(){
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        subscribeToViewModel()
-    }
+    override fun appearingAnimations(){}
+    override fun subscribeListeners(){}
+    override fun unsubscribe(){}
 
     private fun createEventListener() : RecognitionEventListener {
 

@@ -1,5 +1,7 @@
 package com.arpadfodor.stolenvehicledetector.android.app.view.utils
 
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
 import android.content.Context
 import android.os.Build
 import android.view.DisplayCutout
@@ -7,6 +9,7 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import androidx.annotation.RequiresApi
+import androidx.core.animation.addListener
 import com.arpadfodor.stolenvehicledetector.android.app.R
 
 /**
@@ -63,4 +66,35 @@ fun View.appearingAnimation(context: Context){
     visibility = View.VISIBLE
     animation = anim
     animation?.start()
+}
+
+fun View.overshootAppearingAnimation(context: Context){
+    visibility = View.VISIBLE
+    val view = this
+    val animator = AnimatorInflater.loadAnimator(context, R.animator.overshoot_enter) as AnimatorSet
+    animator.apply {
+        setTarget(view)
+        start()
+    }
+}
+
+fun View.startInfiniteAnimation(context: Context){
+
+    val view = this
+    val animator = AnimatorInflater.loadAnimator(context, R.animator.highlight) as AnimatorSet
+    animator.apply {
+        this.addListener(
+            onEnd = {
+                it.startDelay = 1000
+                start()
+            }
+        )
+        setTarget(view)
+        start()
+    }
+
+}
+
+fun View.removeAnimation(){
+    clearAnimation()
 }

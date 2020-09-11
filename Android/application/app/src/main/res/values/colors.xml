@@ -8,9 +8,17 @@
 
     <color name="colorText">#DFFFFF</color>
 
+    <color name="colorIcon">#DFFFFF</color>
+
     <color name="colorAlert">#FF0000</color>
     <color name="colorAlertBoundingBox">#FF0000</color>
     <color name="colorReceptiveFieldMarker">#80FFFFFF</color>
+
+    <color name="colorFabNormal">#33333D</color>
+    <color name="colorFabPressed">#252529</color>
+    <color name="colorAlertFabNormal">#FF0000</color>
+    <color name="colorAlertFabPressed">#AA0000</color>
+    <color name="colorFabText">#DFFFFF</color>
 
     <color name="optionsBackground">#33333D</color>
     <color name="colorDialogBackground">#B3000000</color>

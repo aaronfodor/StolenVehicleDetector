@@ -4,9 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import com.arpadfodor.stolenvehicledetector.android.app.R
 
 /**
@@ -14,15 +13,13 @@ import com.arpadfodor.stolenvehicledetector.android.app.R
  */
 open class AppButton : AppCompatButton {
 
-    private val appearingAnimation : Animation? = AnimationUtils.loadAnimation(context, R.anim.abc_slide_in_top)
-
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
 
-        this.background = context.getDrawable(R.drawable.app_button)
+        this.background = ContextCompat.getDrawable(context, R.drawable.app_button)
         this.setTextColor(context.getColor(R.color.colorText))
         this.setPadding(15,25,15,25)
         this.gravity = Gravity.CENTER
@@ -43,15 +40,6 @@ open class AppButton : AppCompatButton {
         this.setOnClickListener {
             func()
         }
-    }
-
-    /**
-     * Starts the Button's appearing animation
-     */
-    fun startAppearingAnimation(){
-        this.animation = appearingAnimation
-        this.animation?.start()
-        this.animation?.fillAfter = true
     }
 
 }

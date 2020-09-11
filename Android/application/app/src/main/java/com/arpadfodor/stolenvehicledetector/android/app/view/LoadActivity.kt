@@ -6,18 +6,16 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppActivity
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.appearingAnimation
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.disappearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.LoadViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.*
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -44,8 +42,17 @@ class LoadActivity : AppActivity() {
         ivLoadedImage.clipToOutline = true
         Glide
             .with(this)
-            .load(R.drawable.icon_image)
+            .load(R.drawable.icon_photo_library)
             .into(ivLoadedImage)
+
+        extendedFabLoadHelp.setOnClickListener {
+            loadImage()
+        }
+
+        extendedFabLoadHelp.text = getString(R.string.load_an_image)
+        extendedFabLoadHelp.icon = ContextCompat.getDrawable(this, R.drawable.icon_photo_library)
+        extendedFabLoadHelp.iconTint = ContextCompat.getColorStateList(this, R.color.selector_ic)
+        extendedFabLoadHelp.backgroundTintList = ContextCompat.getColorStateList(this, R.color.selector_fab_normal_color)
 
     }
 
@@ -92,8 +99,8 @@ class LoadActivity : AppActivity() {
                 .with(this)
                 .load(newImage)
                 .centerCrop()
-                .error(R.drawable.icon_image)
-                .placeholder(R.drawable.icon_image)
+                .error(R.drawable.icon_photo_library)
+                .placeholder(R.drawable.icon_photo_library)
                 .into(ivLoadedImage)
             ivLoadedImage.appearingAnimation(this)
 
@@ -112,38 +119,55 @@ class LoadActivity : AppActivity() {
         // Create the suspicious Id observer which notifies when suspicious element has been recognized
         val recognitionsObserver = Observer<Array<UserRecognition>> { recognitions ->
 
-            val alertButton = alert_loaded_button
-            val circularAlertButton = circular_alert_load_button
-
             if(recognitions.isNotEmpty()){
 
-                alertButton.setOnClickListener {
-                    viewModel.setAlertActivityParams()
-                    val intent = Intent(this, AlertActivity::class.java)
-                    startActivity(intent)
-                }
-                circularAlertButton.setOnClickListener {
+                alertLoadedButton.setOnClickListener {
                     viewModel.setAlertActivityParams()
                     val intent = Intent(this, AlertActivity::class.java)
                     startActivity(intent)
                 }
 
-                if(alertButton.visibility == View.GONE){
-                    alertButton.appearingAnimation(this)
+                extendedFabLoadHelp.setOnClickListener {
+                    viewModel.setAlertActivityParams()
+                    val intent = Intent(this, AlertActivity::class.java)
+                    startActivity(intent)
                 }
-                if(circularAlertButton.visibility == View.GONE){
-                    circularAlertButton.appearingAnimation(this)
+
+                if(alertLoadedButton.visibility == View.GONE){
+                    alertLoadedButton.appearingAnimation(this)
                 }
+
+                extendedFabLoadHelp.text = getString(R.string.view_alert)
+                extendedFabLoadHelp.icon = ContextCompat.getDrawable(this, android.R.drawable.ic_dialog_alert)
+                extendedFabLoadHelp.iconTint = ContextCompat.getColorStateList(this, R.color.selector_ic)
+                extendedFabLoadHelp.backgroundTintList = ContextCompat.getColorStateList(this, R.color.selector_fab_alert_color)
 
             }
             else{
 
-                if(alertButton.visibility == View.VISIBLE){
-                    alertButton.disappearingAnimation(this)
+                if(alertLoadedButton.visibility == View.VISIBLE){
+                    alertLoadedButton.disappearingAnimation(this)
                 }
-                if(circularAlertButton.visibility == View.VISIBLE){
-                    circularAlertButton.disappearingAnimation(this)
+
+                if(viewModel.loadedImage.value != null){
+
+                    extendedFabLoadHelp.setOnClickListener {}
+                    extendedFabLoadHelp.text = getString(R.string.inspected)
+                    extendedFabLoadHelp.icon = ContextCompat.getDrawable(this, R.drawable.icon_done)
+
                 }
+                else{
+
+                    extendedFabLoadHelp.setOnClickListener {
+                        loadImage()
+                    }
+                    extendedFabLoadHelp.text = getString(R.string.load_an_image)
+                    extendedFabLoadHelp.icon = ContextCompat.getDrawable(this, R.drawable.icon_photo_library)
+
+                }
+
+                extendedFabLoadHelp.iconTint = ContextCompat.getColorStateList(this, R.color.selector_ic)
+                extendedFabLoadHelp.backgroundTintList = ContextCompat.getColorStateList(this, R.color.selector_fab_normal_color)
 
             }
 
@@ -211,6 +235,12 @@ class LoadActivity : AppActivity() {
     private fun imageLoadFailedNotification(){
         AppSnackBarBuilder.buildInfoSnackBar(this, container,
             getString(R.string.image_load_failed), Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun appearingAnimations(){
+        load_image_button.overshootAppearingAnimation(this)
+        loaded_image_rotate_button.overshootAppearingAnimation(this)
+        extendedFabLoadHelp.overshootAppearingAnimation(this)
     }
 
 }

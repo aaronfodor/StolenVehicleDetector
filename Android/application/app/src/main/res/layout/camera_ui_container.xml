@@ -24,21 +24,6 @@
         android:contentDescription="@string/switch_camera" />
 
     <ImageButton
-        android:id="@+id/circular_alert_live_button"
-        android:layout_width="@dimen/round_button_large"
-        android:layout_height="@dimen/round_button_large"
-        android:layout_marginBottom="@dimen/margin_xsmall"
-        android:scaleType="fitCenter"
-        android:padding="@dimen/padding_xsmall"
-        android:background="@drawable/alert_circle_button"
-        app:srcCompat="@android:drawable/ic_dialog_alert"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:contentDescription="@string/view_alert_button"
-        android:visibility="gone"/>
-
-    <ImageButton
         android:id="@+id/camera_capture_button"
         android:layout_width="@dimen/round_button_medium"
         android:layout_height="@dimen/round_button_medium"
@@ -51,9 +36,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:contentDescription="@string/capture" />
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/extendedFabLiveHelp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ExtendedFabHelp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/camera_switch_button"
+        android:visibility="gone"/>
+
     <include
         layout="@layout/custom_alert_button"
-        android:id="@+id/alert_live_button"
+        android:id="@+id/alertLiveButton"
         android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

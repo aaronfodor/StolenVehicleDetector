@@ -49,6 +49,7 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         subscribeToViewModel()
         subscribeListeners()
         setKeepScreenOnFlag()
+        appearingAnimations()
     }
 
     override fun onPause() {
@@ -56,6 +57,7 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         super.onPause()
     }
 
+    abstract fun appearingAnimations()
     abstract fun subscribeToViewModel()
     abstract fun subscribeListeners()
     abstract fun unsubscribe()
@@ -106,6 +108,16 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
                     return false
                 }
                 val intent = Intent(this, toStartActivity)
+                startActivity(intent)
+            }
+
+            R.id.navigation_account -> {
+                val toStartActivity = AccountActivity::class.java
+                if(toStartActivity == this::class.java){
+                    return false
+                }
+                val intent = Intent(this, toStartActivity)
+                intent.putExtra("show account manage", true)
                 startActivity(intent)
             }
 

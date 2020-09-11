@@ -7,7 +7,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
+import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.GeneralRepository
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserRecognitionRepository
@@ -77,7 +77,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         deleteUserReportsButton?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
 
-            val user = AuthenticationService.userName
+            val user = AccountService.userId
 
             UserRecognitionRepository.deleteAllFromUser(user){ isSuccess ->
                 dbDeleteResultSnackBar(isSuccess)

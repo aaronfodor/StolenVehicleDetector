@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.camera.core.*
@@ -27,18 +26,18 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.CameraViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.analyzer.ImageAnalyzer
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.simulateClick
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.model.LocationService
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.appearingAnimation
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.disappearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.*
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 
-/** Helper type alias used for analysis use case callbacks */
+/**
+ * Helper type alias used for analysis use case callbacks
+ */
 typealias DetectionListener = (recognition: Bitmap) -> Unit
 
 /**
@@ -47,7 +46,7 @@ typealias DetectionListener = (recognition: Bitmap) -> Unit
  * -Photo taking
  * -Image analysis
  */
-class CameraFragment : Fragment() {
+class CameraFragment : AppFragment() {
 
     companion object{
         private const val TAG = "Camera fragment"
@@ -58,6 +57,8 @@ class CameraFragment : Fragment() {
     private lateinit var container: ConstraintLayout
     private lateinit var viewFinder: PreviewView
     private lateinit var boundingBoxesImageView: ImageView
+    private lateinit var boundingBoxesImageViewBckg: ImageView
+
     private lateinit var broadcastManager: LocalBroadcastManager
 
     private var displayId: Int = -1
@@ -65,6 +66,9 @@ class CameraFragment : Fragment() {
     private var imageCapture: ImageCapture? = null
     private var imageAnalyzer: ImageAnalysis? = null
     private var camera: Camera? = null
+
+    //UI of the parent
+    private var controls: View? = null
 
     private val displayManager by lazy {
         requireContext().getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
@@ -120,6 +124,7 @@ class CameraFragment : Fragment() {
         container = view as ConstraintLayout
         viewFinder = container.findViewById(R.id.view_finder)
         boundingBoxesImageView = container.findViewById(R.id.ivBoundingBoxes)
+        boundingBoxesImageViewBckg = container.findViewById(R.id.ivBoundingBoxesBck)
 
         // Initialize the background executor
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -192,13 +197,6 @@ class CameraFragment : Fragment() {
         val screenMetrics = DisplayMetrics()
         requireActivity().windowManager.defaultDisplay.getMetrics(screenMetrics)
         viewModel.setScreenProperties(metrics.widthPixels, metrics.heightPixels)
-
-        if(CameraViewModel.settingsShowReceptiveField){
-            boundingBoxesImageView.background = ContextCompat.getDrawable(requireActivity().applicationContext, R.drawable.receptive_field_marker)
-        }
-        else{
-            boundingBoxesImageView.background = null
-        }
 
         // bind CameraProvider to the LifeCycleOwner
         val cameraSelector = CameraSelector.Builder().requireLensFacing(viewModel.lensFacing).build()
@@ -314,17 +312,19 @@ class CameraFragment : Fragment() {
         }
 
         // Inflate a new view containing all UI for controlling the camera
-        val controls = View.inflate(requireContext(), R.layout.camera_ui_container, container)
+        controls = View.inflate(requireContext(), R.layout.camera_ui_container, container)
 
-        setButtonListeners(controls)
-        subscribeToViewModel(controls)
+        setButtonListeners()
+        subscribeToViewModel()
 
     }
 
-    private fun setButtonListeners(controls: View) {
+    private fun setButtonListeners() {
+
+        controls ?: return
 
         // Listener for button used to capture photo
-        controls.findViewById<ImageButton>(R.id.camera_capture_button).setOnClickListener {
+        controls?.findViewById<ImageButton>(R.id.camera_capture_button)?.setOnClickListener {
 
             // Get a stable reference of the modifiable image capture use case
             imageCapture?.let { imageCapture ->
@@ -382,7 +382,7 @@ class CameraFragment : Fragment() {
         }
 
         // Listener for button used to switch camera
-        controls.findViewById<ImageButton>(R.id.camera_switch_button).setOnClickListener {
+        controls?.findViewById<ImageButton>(R.id.camera_switch_button)?.setOnClickListener {
             viewModel.lensFacing = if (CameraSelector.LENS_FACING_FRONT == viewModel.lensFacing) {
                 CameraSelector.LENS_FACING_BACK
             }
@@ -395,17 +395,23 @@ class CameraFragment : Fragment() {
 
     }
 
-    private fun subscribeToViewModel(controls: View) {
+    override fun subscribeToViewModel() {
 
-        val alertButton = controls.findViewById<ConstraintLayout>(R.id.alert_live_button)
-        val circularAlertButton = controls.findViewById<ImageButton>(R.id.circular_alert_live_button)
+        val alertLiveButton = controls?.findViewById<ConstraintLayout>(R.id.alertLiveButton) ?: return
+        val extendedFabLiveHelp = controls?.findViewById<ExtendedFloatingActionButton>(R.id.extendedFabLiveHelp) ?: return
+
+        extendedFabLiveHelp.text = getString(R.string.searching)
+        extendedFabLiveHelp.icon = ContextCompat.getDrawable(requireContext(), R.drawable.icon_image_search)
+        extendedFabLiveHelp.iconTint = ContextCompat.getColorStateList(requireContext(), R.color.selector_ic)
+        extendedFabLiveHelp.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.selector_fab_normal_color)
+        extendedFabLiveHelp.overshootAppearingAnimation(requireContext())
 
         // Create the recognitions observer which notifies when element has been recognized
         val recognitionsObserver = Observer<Array<UserRecognition>> { recognitions ->
 
             if(recognitions.isNotEmpty()){
 
-                alertButton.setOnClickListener {
+                alertLiveButton.setOnClickListener {
 
                     LocationService.updateLocation()
 
@@ -414,7 +420,7 @@ class CameraFragment : Fragment() {
                     startActivity(intent)
 
                 }
-                circularAlertButton.setOnClickListener {
+                extendedFabLiveHelp.setOnClickListener {
 
                     LocationService.updateLocation()
 
@@ -424,22 +430,28 @@ class CameraFragment : Fragment() {
 
                 }
 
-                if(alertButton.visibility == View.GONE){
-                    alertButton.appearingAnimation(requireContext())
+                if(alertLiveButton.visibility == View.GONE){
+                    alertLiveButton.appearingAnimation(requireContext())
                 }
-                if(circularAlertButton.visibility == View.GONE){
-                    circularAlertButton.appearingAnimation(requireContext())
-                }
+
+                extendedFabLiveHelp.text = getString(R.string.view_alert)
+                extendedFabLiveHelp.icon = ContextCompat.getDrawable(requireContext(), android.R.drawable.ic_dialog_alert)
+                extendedFabLiveHelp.iconTint = ContextCompat.getColorStateList(requireContext(), R.color.selector_ic)
+                extendedFabLiveHelp.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.selector_fab_alert_color)
 
             }
             else{
 
-                if(alertButton.visibility == View.VISIBLE){
-                    alertButton.disappearingAnimation(requireContext())
+                extendedFabLiveHelp.setOnClickListener {}
+
+                if(alertLiveButton.visibility == View.VISIBLE){
+                    alertLiveButton.disappearingAnimation(requireContext())
                 }
-                if(circularAlertButton.visibility == View.VISIBLE){
-                    circularAlertButton.disappearingAnimation(requireContext())
-                }
+
+                extendedFabLiveHelp.text = getString(R.string.searching)
+                extendedFabLiveHelp.icon = ContextCompat.getDrawable(requireContext(), R.drawable.icon_image_search)
+                extendedFabLiveHelp.iconTint = ContextCompat.getColorStateList(requireContext(), R.color.selector_ic)
+                extendedFabLiveHelp.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.selector_fab_normal_color)
 
             }
 
@@ -449,6 +461,10 @@ class CameraFragment : Fragment() {
         viewModel.recognitions.observe(this.viewLifecycleOwner, recognitionsObserver)
 
     }
+
+    override fun subscribeListeners(){}
+
+    override fun unsubscribe(){}
 
     private fun takePhotoResultSnackBar(isSuccess: Boolean){
 
@@ -462,5 +478,29 @@ class CameraFragment : Fragment() {
         }
 
     }
+
+    override fun onResume() {
+
+        super.onResume()
+
+        if(CameraViewModel.settingsShowReceptiveField){
+            boundingBoxesImageView.background = ContextCompat.getDrawable(requireActivity().applicationContext, R.drawable.receptive_field_marker)
+            boundingBoxesImageViewBckg.background = ContextCompat.getDrawable(requireActivity().applicationContext, R.drawable.receptive_field_marker)
+        }
+        else{
+            boundingBoxesImageView.background = null
+            boundingBoxesImageViewBckg.background = null
+        }
+
+        boundingBoxesImageViewBckg.startInfiniteAnimation(this.requireContext())
+
+    }
+
+    override fun onPause(){
+        super.onPause()
+        boundingBoxesImageViewBckg.removeAnimation()
+    }
+
+    override fun appearingAnimations(){}
 
 }

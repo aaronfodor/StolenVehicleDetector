@@ -33,7 +33,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/recognition_back_button"
+            app:layout_constraintBottom_toTopOf="@+id/detail_back_button"
             android:layout_margin="@dimen/paragraph_margin"
             android:gravity="top">
 
@@ -155,7 +155,7 @@
         </ScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/recognition_back_button"
+            android:id="@+id/detail_back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
@@ -166,7 +166,7 @@
             app:layout_constraintEnd_toStartOf="@+id/glHorizontalMiddle1st"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/recognitionDeleteButton"
+            android:id="@+id/detail_delete_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
@@ -177,7 +177,7 @@
             app:layout_constraintEnd_toStartOf="@+id/glHorizontalMiddle2nd"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/recognitionSendButton"
+            android:id="@+id/detail_send_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"

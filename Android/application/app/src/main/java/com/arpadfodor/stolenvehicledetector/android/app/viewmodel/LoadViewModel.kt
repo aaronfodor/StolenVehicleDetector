@@ -5,7 +5,7 @@ import android.net.Uri
 import android.util.Size
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.arpadfodor.stolenvehicledetector.android.app.model.AuthenticationService
+import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
@@ -120,12 +120,12 @@ class LoadViewModel : ViewModel(){
             numRecognitionsToShow, minimumPredictionCertaintyToShow) {arrayOfIdImagePairs ->
 
             val recognitions = arrayListOf<UserRecognition>()
-            val user = AuthenticationService.userName
+            val user = AccountService.userId
 
             var i = 1
             for(pair in arrayOfIdImagePairs){
                 recognitions.add(
-                    UserRecognition(i, false, pair.first, pair.second,
+                    UserRecognition(i, false, true, pair.first, pair.second,
                         imageMeta[0], imageMeta[1], imageMeta[2], user)
                 )
                 i++

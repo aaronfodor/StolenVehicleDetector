@@ -56,11 +56,26 @@ fun ImageButton.setRecognitionEditButton(item: UserRecognition) {
 @BindingAdapter("recognitionSendButton")
 fun ImageButton.setRecognitionSendButton(item: UserRecognition) {
 
-    if(item.isSent){
-        this.setImageResource(R.drawable.icon_tick)
+    if(item.isAlert){
+
+        if(item.isSent){
+            this.setImageResource(R.drawable.icon_tick)
+        }
+        else{
+            this.setImageResource(android.R.drawable.ic_input_add)
+        }
+
     }
+
     else{
-        this.setImageResource(android.R.drawable.ic_menu_send)
+
+        if(item.isSent){
+            this.setImageResource(R.drawable.icon_tick)
+        }
+        else{
+            this.setImageResource(android.R.drawable.ic_menu_send)
+        }
+
     }
 
 }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.drawerlayout.widget.DrawerLayout
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppActivity
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.overshootAppearingAnimation
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.content_about.*
 
@@ -39,6 +40,12 @@ class AboutActivity : AppActivity() {
             startActivity(reportIntent)
         }
 
+    }
+
+    override fun appearingAnimations() {
+        fabMoreFromDeveloper.overshootAppearingAnimation(this)
+        fabReview.overshootAppearingAnimation(this)
+        fabBugReport.overshootAppearingAnimation(this)
     }
 
     override fun subscribeToViewModel(){}

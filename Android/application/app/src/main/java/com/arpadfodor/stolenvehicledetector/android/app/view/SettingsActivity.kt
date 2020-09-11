@@ -25,6 +25,7 @@ class SettingsActivity : AppActivity() {
 
     }
 
+    override fun appearingAnimations(){}
     override fun subscribeToViewModel(){}
     override fun subscribeListeners(){}
     override fun unsubscribe(){}

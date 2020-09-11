@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.StartViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppFragment
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AccountViewModel
 
 private const val PERMISSIONS_REQUEST_CODE = 10
 private val PERMISSIONS_REQUIRED = ApplicationRoot.requiredPermissions
@@ -17,9 +17,9 @@ private val PERMISSIONS_REQUIRED = ApplicationRoot.requiredPermissions
  * The only purpose of this fragment is to request permissions.
  * Once granted, proceed.
  */
-class PermissionsFragment : Fragment() {
+class PermissionsFragment : AppFragment() {
 
-    private val viewModel: StartViewModel by activityViewModels()
+    private val viewModel: AccountViewModel by activityViewModels()
 
     companion object {
         /** Convenience method used to check if all permissions required by this app are granted */
@@ -41,6 +41,11 @@ class PermissionsFragment : Fragment() {
         }
 
     }
+
+    override fun appearingAnimations(){}
+    override fun subscribeToViewModel(){}
+    override fun subscribeListeners(){}
+    override fun unsubscribe(){}
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 
@@ -65,12 +70,7 @@ class PermissionsFragment : Fragment() {
     }
 
     private fun proceedToNextFragment(){
-        // If permissions have already been granted, proceed
-        val nextFragment = LoginFragment()
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.start_container, nextFragment, "loginFragment")
-            ?.addToBackStack(null)
-            ?.commit()
+        viewModel.fragmentTagToShow.postValue(AccountLoginFragment.TAG)
     }
 
 }

@@ -48,6 +48,8 @@
     <dimen name="button_padding_horizontal">15dp</dimen>
     <dimen name="button_stroke">4dp</dimen>
 
+    <dimen name="fab_text_size">12sp</dimen>
+
     <dimen name="edit_text_corner_radius">5dp</dimen>
     <dimen name="edit_text_stroke_normal">1dp</dimen>
     <dimen name="edit_text_stroke_focused">1.5dp</dimen>
