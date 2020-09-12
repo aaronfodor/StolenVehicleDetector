@@ -110,7 +110,7 @@
                     android:imeOptions="actionDone"
                     android:background="@drawable/app_edit_background"
                     android:lines="4"
-                    style="@style/ParagraphBodyBottom"/>
+                    style="@style/InputFieldText"/>
 
                 <TextView
                     android:id="@+id/recognitionDetailDateLabel"

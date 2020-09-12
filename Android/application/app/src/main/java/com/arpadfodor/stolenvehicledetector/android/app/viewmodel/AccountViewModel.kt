@@ -3,15 +3,9 @@ package com.arpadfodor.stolenvehicledetector.android.app.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
+import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserRecognitionRepository
 
 class AccountViewModel : ViewModel(){
-
-    /**
-     * Whether the permissions has been granted
-     **/
-    val hasPermissionsGranted: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
 
     /**
      * TAG of the fragment to show
@@ -20,8 +14,8 @@ class AccountViewModel : ViewModel(){
         MutableLiveData<String>()
     }
 
-    fun isCurrentUserUnique() : Boolean {
-        return AccountService.isCurrentUserUnique()
+    fun isCurrentAccountGuest() : Boolean {
+        return AccountService.isCurrentAccountGuest()
     }
 
     fun getAccountName() : String {
@@ -30,6 +24,51 @@ class AccountViewModel : ViewModel(){
 
     fun getAccountEmail() : String {
         return AccountService.userId
+    }
+
+    fun login(email: String, name: String, password: String, rememberAccount: Boolean, success: () -> Unit, error: () -> Unit){
+        AccountService.login(email, name, password, rememberAccount, success, error)
+    }
+
+    fun logout(success: () -> Unit, error: () -> Unit){
+        AccountService.logout(success, error)
+    }
+
+    fun loginAsGuest(success: () -> Unit, error: () -> Unit){
+        AccountService.loginAsGuest(success, error)
+    }
+
+    fun tryAutoLogin(success: () -> Unit, error: () -> Unit){
+        AccountService.tryAutoLogin(success, error)
+    }
+
+    fun forgotPassword(email: String, success: () -> Unit, error: () -> Unit){
+        AccountService.sendPasswordToEmail(email, success, error)
+    }
+
+    fun registerAccount(email: String, name: String,  password: String, rememberAccount:
+    Boolean, success: () -> Unit, error: () -> Unit){
+        AccountService.registerAccount(email, name, password, rememberAccount, success, error)
+    }
+
+    fun deleteAccount(password: String, success: () -> Unit, error: () -> Unit){
+
+        AccountService.deleteAccount(password,
+            success = {
+            UserRecognitionRepository.deleteAllFromUser(AccountService.userId){}
+            success()
+            },
+            error = error)
+
+    }
+
+    fun changeAccountName(newName: String, success:() -> Unit, error:() -> Unit){
+        AccountService.changeAccountName(newName, success, error)
+    }
+
+    fun changeAccountPassword(currentPassword: String, newPassword: String,
+                              success:() -> Unit, error:() -> Unit){
+        AccountService.changeAccountPassword(currentPassword, newPassword, success, error)
     }
 
 }

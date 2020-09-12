@@ -5,14 +5,12 @@ import android.os.Bundle
 import android.view.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppFragment
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.overshootAppearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AccountViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_account_login.*
-import kotlinx.android.synthetic.main.fragment_account_manage.*
 
 class AccountLoginFragment : AppFragment() {
 
@@ -39,7 +37,8 @@ class AccountLoginFragment : AppFragment() {
     }
 
     override fun appearingAnimations(){
-        btnLogin?.overshootAppearingAnimation(requireContext())
+        btnUserLogin?.overshootAppearingAnimation(requireContext())
+        btnForgotPassword?.overshootAppearingAnimation(requireContext())
         btnGuestLogin?.overshootAppearingAnimation(requireContext())
     }
 
@@ -47,7 +46,7 @@ class AccountLoginFragment : AppFragment() {
 
     override fun subscribeListeners() {
 
-        btnLogin?.setOnClickListener {
+        btnUserLogin?.setOnClickListener {
 
             val email = input_login_email.text.toString()
             val password = input_login_password.text.toString()
@@ -61,14 +60,33 @@ class AccountLoginFragment : AppFragment() {
 
             val error = {
                 AppSnackBarBuilder.buildAlertSnackBar(requireContext(), container,
-                    "Login failed", Snackbar.LENGTH_SHORT).show()
+                    getString(R.string.login_failed), Snackbar.LENGTH_SHORT).show()
             }
 
-            AccountService.login(email, password, isRememberEnabled, success, error)
+            viewModel.login(email, "", password, isRememberEnabled, success, error)
 
         }
 
-        btnGuestLogin?.setOnClickEvent {
+        btnForgotPassword?.setOnClickListener {
+
+            //TODO: read email
+            val email = "a@b.com"
+
+            val success = {
+                AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,
+                    getString(R.string.new_password_sent, email), Snackbar.LENGTH_SHORT).show()
+            }
+
+            val error = {
+                AppSnackBarBuilder.buildAlertSnackBar(requireContext(), container,
+                    getString(R.string.new_password_failed, email), Snackbar.LENGTH_SHORT).show()
+            }
+
+            viewModel.forgotPassword(email, success, error)
+
+        }
+
+        btnGuestLogin?.setOnClickListener {
 
             val success = {
                 val toStartActivity = CameraActivity::class.java
@@ -78,15 +96,15 @@ class AccountLoginFragment : AppFragment() {
 
             val error = {
                 AppSnackBarBuilder.buildAlertSnackBar(requireContext(), container,
-                    "Login failed", Snackbar.LENGTH_SHORT).show()
+                    getString(R.string.login_failed), Snackbar.LENGTH_SHORT).show()
             }
 
-            AccountService.loginAsGuest(success, error)
+            viewModel.loginAsGuest(success, error)
 
         }
 
         linkSignUp?.setOnClickListener {
-            viewModel.fragmentTagToShow.postValue(AccountSignUpFragment.TAG)
+            viewModel.fragmentTagToShow.postValue(AccountRegisterFragment.TAG)
         }
 
     }

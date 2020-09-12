@@ -14,6 +14,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_account.*
 
 abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -186,6 +187,18 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         else{
             window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
+    }
+
+    open fun showPermissionFragment(actionFinished: () -> Unit){
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.account_container, PermissionsFragment(actionFinished))
+            .commit()
+    }
+
+    fun showMissingPermissionNotification(){
+        AppSnackBarBuilder.buildInfoSnackBar(this.applicationContext, start_activity_layout,
+            getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show()
     }
 
 }

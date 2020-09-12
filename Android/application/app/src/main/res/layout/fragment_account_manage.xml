@@ -33,12 +33,14 @@
                 android:layout_gravity="center_horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/app_icon" />
 
             <TextView
                 android:id="@+id/account_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/TitleText"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/logo"/>
@@ -47,39 +49,58 @@
                 android:id="@+id/account_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/ParagraphBody"
+                android:gravity="center"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/account_name"/>
+
+            <com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppButton
+                android:id="@+id/btnUpdateName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/AppButton"
+                android:text="@string/change_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/glVerticalMiddle"
+                app:layout_constraintTop_toBottomOf="@id/account_email"/>
+
+            <com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppButton
+                android:id="@+id/btnUpdatePassword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/AppButton"
+                android:text="@string/change_password"
+                app:layout_constraintStart_toStartOf="@+id/glVerticalMiddle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/account_email"/>
+
+            <com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppButton
+                android:id="@+id/btnDelete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/AppButton"
+                android:text="@string/delete_account"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnUpdateName"/>
 
             <com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppPositiveButton
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/AppButton"
-                android:text="Logout"
+                android:text="@string/logout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/account_email"/>
+                app:layout_constraintTop_toBottomOf="@id/btnDelete"/>
 
-            <com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppButton
-                android:id="@+id/btnChangePassword"
-                android:layout_width="match_parent"
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/AppButton"
-                android:text="Change password"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnLogout"/>
-
-            <com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppButton
-                android:id="@+id/btnDelete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/AppButton"
-                android:text="Delete"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnChangePassword"/>
+                android:id="@+id/glVerticalMiddle"
+                app:layout_constraintGuide_percent="0.5"
+                android:orientation="vertical"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

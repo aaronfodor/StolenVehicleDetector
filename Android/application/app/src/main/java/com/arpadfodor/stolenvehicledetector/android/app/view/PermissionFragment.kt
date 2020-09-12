@@ -4,11 +4,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
-import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppFragment
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AccountViewModel
 
 private const val PERMISSIONS_REQUEST_CODE = 10
 private val PERMISSIONS_REQUIRED = ApplicationRoot.requiredPermissions
@@ -17,9 +14,7 @@ private val PERMISSIONS_REQUIRED = ApplicationRoot.requiredPermissions
  * The only purpose of this fragment is to request permissions.
  * Once granted, proceed.
  */
-class PermissionsFragment : AppFragment() {
-
-    private val viewModel: AccountViewModel by activityViewModels()
+class PermissionsFragment(finished: () -> Unit) : AppFragment() {
 
     companion object {
         /** Convenience method used to check if all permissions required by this app are granted */
@@ -27,6 +22,8 @@ class PermissionsFragment : AppFragment() {
             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
     }
+
+    val actionFinished = finished
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -37,7 +34,7 @@ class PermissionsFragment : AppFragment() {
             requestPermissions(PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST_CODE)
         }
         else {
-            proceedToNextFragment()
+            removeThisFragment()
         }
 
     }
@@ -54,23 +51,24 @@ class PermissionsFragment : AppFragment() {
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
 
             if(grantResults.isEmpty()){
-                viewModel.hasPermissionsGranted.postValue(false)
+                //not granted
             }
             if (grantResults.contains(PackageManager.PERMISSION_DENIED)) {
-                viewModel.hasPermissionsGranted.postValue(false)
+                //not granted
             }
             else {
-                viewModel.hasPermissionsGranted.postValue(true)
+                //granted
             }
 
-            proceedToNextFragment()
+            removeThisFragment()
 
         }
 
     }
 
-    private fun proceedToNextFragment(){
-        viewModel.fragmentTagToShow.postValue(AccountLoginFragment.TAG)
+    private fun removeThisFragment(){
+        requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
+        actionFinished()
     }
 
 }

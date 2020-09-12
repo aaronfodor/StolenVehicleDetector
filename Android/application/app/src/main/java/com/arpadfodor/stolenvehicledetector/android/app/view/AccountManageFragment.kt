@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppFragment
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.overshootAppearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AccountViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_account_manage.*
-import kotlinx.android.synthetic.main.fragment_account_sign_up.*
 
 class AccountManageFragment : AppFragment() {
 
@@ -44,7 +42,8 @@ class AccountManageFragment : AppFragment() {
 
     override fun appearingAnimations(){
         btnLogout?.overshootAppearingAnimation(requireContext())
-        btnChangePassword?.overshootAppearingAnimation(requireContext())
+        btnUpdateName?.overshootAppearingAnimation(requireContext())
+        btnUpdatePassword?.overshootAppearingAnimation(requireContext())
         btnDelete?.overshootAppearingAnimation(requireContext())
     }
 
@@ -56,45 +55,25 @@ class AccountManageFragment : AppFragment() {
 
             val success = {
 
+                AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,
+                    getString(R.string.logged_out), Snackbar.LENGTH_SHORT).show()
+
                 viewModel.fragmentTagToShow.postValue(AccountLoginFragment.TAG)
 
-                AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,
-                    "Logged out", Snackbar.LENGTH_SHORT).show()
-
             }
 
             val error = {
                 AppSnackBarBuilder.buildAlertSnackBar(requireContext(), container,
-                    "Logout failed", Snackbar.LENGTH_SHORT).show()
+                    getString(R.string.logout_failed), Snackbar.LENGTH_SHORT).show()
             }
 
-            AccountService.logout(success, error)
-
-        }
-
-        btnChangePassword?.setOnClickListener {
-
-            //TODO: check old password, get new
-            val currentPassword = ""
-            val newPassword = ""
-
-            val success = {
-                AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,
-                    "Password changed", Snackbar.LENGTH_SHORT).show()
-            }
-
-            val error = {
-                AppSnackBarBuilder.buildAlertSnackBar(requireContext(), container,
-                    "Changing password failed", Snackbar.LENGTH_SHORT).show()
-            }
-
-            AccountService.changeAccountPassword(currentPassword, newPassword, success, error)
+            viewModel.logout(success, error)
 
         }
 
         btnDelete?.setOnClickListener {
 
-            //TODO: check password
+            //TODO: read password
             val password = ""
 
             val success = {
@@ -102,16 +81,55 @@ class AccountManageFragment : AppFragment() {
                 viewModel.fragmentTagToShow.postValue(AccountLoginFragment.TAG)
 
                 AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,
-                    "Account deleted", Snackbar.LENGTH_SHORT).show()
+                    getString(R.string.account_deleted), Snackbar.LENGTH_SHORT).show()
 
             }
 
             val error = {
                 AppSnackBarBuilder.buildAlertSnackBar(requireContext(), container,
-                    "Deleting account failed", Snackbar.LENGTH_SHORT).show()
+                    getString(R.string.account_delete_failed), Snackbar.LENGTH_SHORT).show()
             }
 
-            AccountService.deleteAccount(password, success, error)
+            viewModel.deleteAccount(password, success, error)
+
+        }
+
+        btnUpdateName?.setOnClickListener {
+
+            //TODO: read new name
+            val newName = ""
+
+            val success = {
+                AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,
+                    getString(R.string.name_changed), Snackbar.LENGTH_SHORT).show()
+            }
+
+            val error = {
+                AppSnackBarBuilder.buildAlertSnackBar(requireContext(), container,
+                    getString(R.string.name_change_failed), Snackbar.LENGTH_SHORT).show()
+            }
+
+            viewModel.changeAccountName(newName, success, error)
+
+        }
+
+        btnUpdatePassword?.setOnClickListener {
+
+            //TODO: check old password, get new
+            val currentPassword = ""
+            val newPassword = ""
+
+            val success = {
+                AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,
+                    getString(R.string.password_changed), Snackbar.LENGTH_SHORT).show()
+            }
+
+            val error = {
+                AppSnackBarBuilder.buildAlertSnackBar(requireContext(), container,
+                    getString(R.string.password_change_failed), Snackbar.LENGTH_SHORT).show()
+            }
+
+            viewModel.changeAccountPassword(currentPassword, newPassword, success, error)
 
         }
 

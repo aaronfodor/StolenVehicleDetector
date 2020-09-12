@@ -76,6 +76,12 @@
         <item name="android:paddingBottom">@dimen/paragraph_padding</item>
     </style>
 
+    <style name="InputFieldText" parent="ParagraphBody">
+        <item name="android:textSize">@dimen/input_text_size</item>
+        <item name="android:layout_margin">@dimen/margin_xxsmall</item>
+        <item name="android:padding">@dimen/padding_xsmall</item>
+    </style>
+
     <style name="Subtitle" parent="ParagraphBody">
         <item name="android:textSize">@dimen/subtitle_text_size</item>
         <item name="android:textStyle">bold</item>

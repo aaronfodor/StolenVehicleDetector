@@ -8,10 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppDialog
-import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AccountViewModel
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_account.*
 
 class AccountActivity : AppCompatActivity() {
 
@@ -28,11 +25,11 @@ class AccountActivity : AppCompatActivity() {
 
         if(showManageFragment){
 
-            if(viewModel.isCurrentUserUnique()){
-                viewModel.fragmentTagToShow.postValue(AccountManageFragment.TAG)
+            if(viewModel.isCurrentAccountGuest()){
+                viewModel.fragmentTagToShow.postValue(AccountLoginFragment.TAG)
             }
             else{
-                viewModel.fragmentTagToShow.postValue(AccountLoginFragment.TAG)
+                viewModel.fragmentTagToShow.postValue(AccountManageFragment.TAG)
             }
 
         }
@@ -48,19 +45,12 @@ class AccountActivity : AppCompatActivity() {
         subscribeToViewModel()
 
         AccountLoginFragment.setParams(viewModel)
-        AccountSignUpFragment.setParams(viewModel)
+        AccountRegisterFragment.setParams(viewModel)
         AccountManageFragment.setParams(viewModel)
 
     }
 
     fun subscribeToViewModel() {
-
-        // Create the observer which updates the UI in case of value change
-        val hasPermissionsGrantedObserver = Observer<Boolean> { permissionsGranted ->
-            if(!permissionsGranted){
-                showMissingPermissionNotification()
-            }
-        }
 
         // Create the observer which updates the UI in case of value change
         val fragmentTagToShowObserver = Observer<String> { fragmentTag ->
@@ -72,8 +62,8 @@ class AccountActivity : AppCompatActivity() {
                 AccountManageFragment.TAG -> {
                     AccountManageFragment()
                 }
-                AccountSignUpFragment.TAG -> {
-                    AccountSignUpFragment()
+                AccountRegisterFragment.TAG -> {
+                    AccountRegisterFragment()
                 }
                 else -> null
             }
@@ -89,7 +79,6 @@ class AccountActivity : AppCompatActivity() {
         }
 
         // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer
-        viewModel.hasPermissionsGranted.observe(this, hasPermissionsGrantedObserver)
         viewModel.fragmentTagToShow.observe(this, fragmentTagToShowObserver)
 
     }
@@ -97,13 +86,26 @@ class AccountActivity : AppCompatActivity() {
     private fun showPermissionFragment(){
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.account_container, PermissionsFragment())
+            .replace(R.id.account_container, PermissionsFragment {
+                tryAutoLogin()
+            })
             .commit()
     }
 
-    private fun showMissingPermissionNotification(){
-        AppSnackBarBuilder.buildInfoSnackBar(this.applicationContext, start_activity_layout,
-            getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show()
+    private fun tryAutoLogin(){
+
+        val success = {
+            val toStartActivity = CameraActivity::class.java
+            val intent = Intent(this, toStartActivity)
+            startActivity(intent)
+        }
+
+        val error = {
+            viewModel.fragmentTagToShow.postValue(AccountLoginFragment.TAG)
+        }
+
+        viewModel.tryAutoLogin(success, error)
+
     }
 
     override fun onBackPressed() {

@@ -86,7 +86,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/user_settings">
+        android:title="@string/account_settings">
 
         <Preference
             android:key="@string/SETTINGS_DELETE_USER_REPORTS"

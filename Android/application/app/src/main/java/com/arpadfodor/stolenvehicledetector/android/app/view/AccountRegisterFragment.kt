@@ -5,15 +5,14 @@ import android.os.Bundle
 import android.view.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppFragment
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.overshootAppearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AccountViewModel
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_account_sign_up.*
+import kotlinx.android.synthetic.main.fragment_account_register.*
 
-class AccountSignUpFragment : AppFragment() {
+class AccountRegisterFragment : AppFragment() {
 
     companion object{
 
@@ -29,7 +28,7 @@ class AccountSignUpFragment : AppFragment() {
     private lateinit var container: ConstraintLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_account_sign_up, container, false)
+        return inflater.inflate(R.layout.fragment_account_register, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
@@ -47,8 +46,8 @@ class AccountSignUpFragment : AppFragment() {
 
         btnCreateAccount?.setOnClickListener {
 
-            val name = input_create_name.text.toString()
             val email = input_create_email.text.toString()
+            val name = input_create_name.text.toString()
             val password = input_create_password.text.toString()
             val isRememberEnabled = cbSignUpRememberMe.isChecked
 
@@ -60,14 +59,14 @@ class AccountSignUpFragment : AppFragment() {
 
             val error = {
                 AppSnackBarBuilder.buildAlertSnackBar(requireContext(), container,
-                    "Creating account failed", Snackbar.LENGTH_SHORT).show()
+                    getString(R.string.create_account_failed), Snackbar.LENGTH_SHORT).show()
             }
 
-            AccountService.registerAccount(name, email, password, isRememberEnabled, success, error)
+            viewModel.registerAccount(email, name, password, isRememberEnabled, success, error)
 
         }
 
-        linkLogIn?.setOnClickListener {
+        linkLogin?.setOnClickListener {
             viewModel.fragmentTagToShow.postValue(AccountLoginFragment.TAG)
         }
 
