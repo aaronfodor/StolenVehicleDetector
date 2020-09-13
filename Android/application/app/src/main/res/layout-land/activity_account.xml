@@ -24,6 +24,8 @@
         android:id="@+id/account_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
         app:layout_constraintTop_toBottomOf="@+id/glHorizontalMiddle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/glHorizontalMiddle"
-        app:layout_constraintGuide_percent="0.3"
+        app:layout_constraintGuide_percent="0.2"
         android:orientation="horizontal"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

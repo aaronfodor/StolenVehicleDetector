@@ -51,9 +51,9 @@ class AccountViewModel : ViewModel(){
         AccountService.registerAccount(email, name, password, rememberAccount, success, error)
     }
 
-    fun deleteAccount(password: String, success: () -> Unit, error: () -> Unit){
+    fun deleteAccount(success: () -> Unit, error: () -> Unit){
 
-        AccountService.deleteAccount(password,
+        AccountService.deleteAccount(
             success = {
             UserRecognitionRepository.deleteAllFromUser(AccountService.userId){}
             success()
@@ -62,13 +62,8 @@ class AccountViewModel : ViewModel(){
 
     }
 
-    fun changeAccountName(newName: String, success:() -> Unit, error:() -> Unit){
-        AccountService.changeAccountName(newName, success, error)
-    }
-
-    fun changeAccountPassword(currentPassword: String, newPassword: String,
-                              success:() -> Unit, error:() -> Unit){
-        AccountService.changeAccountPassword(currentPassword, newPassword, success, error)
+    fun changeAccount(newName: String, newPassword: String, success:() -> Unit, error:() -> Unit){
+        AccountService.changeAccount(newName, newPassword, success, error)
     }
 
 }

@@ -8,7 +8,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppDialog
+import com.arpadfodor.stolenvehicledetector.android.app.view.utils.overshootAppearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AccountViewModel
+import kotlinx.android.synthetic.main.activity_account.*
 
 class AccountActivity : AppCompatActivity() {
 
@@ -47,6 +49,9 @@ class AccountActivity : AppCompatActivity() {
         AccountLoginFragment.setParams(viewModel)
         AccountRegisterFragment.setParams(viewModel)
         AccountManageFragment.setParams(viewModel)
+        AccountEditFragment.setParams(viewModel)
+
+        accountLogo.overshootAppearingAnimation(this)
 
     }
 
@@ -59,11 +64,14 @@ class AccountActivity : AppCompatActivity() {
                 AccountLoginFragment.TAG -> {
                     AccountLoginFragment()
                 }
+                AccountRegisterFragment.TAG -> {
+                    AccountRegisterFragment()
+                }
                 AccountManageFragment.TAG -> {
                     AccountManageFragment()
                 }
-                AccountRegisterFragment.TAG -> {
-                    AccountRegisterFragment()
+                AccountEditFragment.TAG -> {
+                    AccountEditFragment()
                 }
                 else -> null
             }
@@ -110,11 +118,16 @@ class AccountActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
 
-        if(viewModel.fragmentTagToShow.value == AccountManageFragment.TAG){
-            this.finish()
-        }
-        else{
-            exitDialog()
+        when (viewModel.fragmentTagToShow.value) {
+            AccountManageFragment.TAG -> {
+                this.finish()
+            }
+            AccountEditFragment.TAG -> {
+                viewModel.fragmentTagToShow.postValue(AccountManageFragment.TAG)
+            }
+            else -> {
+                exitDialog()
+            }
         }
 
     }

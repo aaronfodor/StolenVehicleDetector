@@ -31,25 +31,21 @@ class AccountManageFragment : AppFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
-
         super.onViewCreated(view, savedInstanceState)
         container = view as ConstraintLayout
-
-        account_name?.text = viewModel.getAccountName()
-        account_email?.text = viewModel.getAccountEmail()
-
     }
 
     override fun appearingAnimations(){
         btnLogout?.overshootAppearingAnimation(requireContext())
-        btnUpdateName?.overshootAppearingAnimation(requireContext())
-        btnUpdatePassword?.overshootAppearingAnimation(requireContext())
-        btnDelete?.overshootAppearingAnimation(requireContext())
+        btnEdit?.overshootAppearingAnimation(requireContext())
     }
 
     override fun subscribeToViewModel(){}
 
     override fun subscribeListeners() {
+
+        account_name?.text = viewModel.getAccountName()
+        account_email?.text = viewModel.getAccountEmail()
 
         btnLogout?.setOnClickListener {
 
@@ -71,66 +67,8 @@ class AccountManageFragment : AppFragment() {
 
         }
 
-        btnDelete?.setOnClickListener {
-
-            //TODO: read password
-            val password = ""
-
-            val success = {
-
-                viewModel.fragmentTagToShow.postValue(AccountLoginFragment.TAG)
-
-                AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,
-                    getString(R.string.account_deleted), Snackbar.LENGTH_SHORT).show()
-
-            }
-
-            val error = {
-                AppSnackBarBuilder.buildAlertSnackBar(requireContext(), container,
-                    getString(R.string.account_delete_failed), Snackbar.LENGTH_SHORT).show()
-            }
-
-            viewModel.deleteAccount(password, success, error)
-
-        }
-
-        btnUpdateName?.setOnClickListener {
-
-            //TODO: read new name
-            val newName = ""
-
-            val success = {
-                AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,
-                    getString(R.string.name_changed), Snackbar.LENGTH_SHORT).show()
-            }
-
-            val error = {
-                AppSnackBarBuilder.buildAlertSnackBar(requireContext(), container,
-                    getString(R.string.name_change_failed), Snackbar.LENGTH_SHORT).show()
-            }
-
-            viewModel.changeAccountName(newName, success, error)
-
-        }
-
-        btnUpdatePassword?.setOnClickListener {
-
-            //TODO: check old password, get new
-            val currentPassword = ""
-            val newPassword = ""
-
-            val success = {
-                AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,
-                    getString(R.string.password_changed), Snackbar.LENGTH_SHORT).show()
-            }
-
-            val error = {
-                AppSnackBarBuilder.buildAlertSnackBar(requireContext(), container,
-                    getString(R.string.password_change_failed), Snackbar.LENGTH_SHORT).show()
-            }
-
-            viewModel.changeAccountPassword(currentPassword, newPassword, success, error)
-
+        btnEdit?.setOnClickListener {
+            viewModel.fragmentTagToShow.postValue(AccountEditFragment.TAG)
         }
 
     }

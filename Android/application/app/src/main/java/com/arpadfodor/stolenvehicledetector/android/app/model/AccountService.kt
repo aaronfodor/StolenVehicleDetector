@@ -96,37 +96,26 @@ object AccountService {
 
     }
 
-    fun deleteAccount(password: String, success: () -> Unit, error: () -> Unit){
-
-        if(password != userPassword || isCurrentAccountGuest){
-            error()
-            return
-        }
-
+    fun deleteAccount(success: () -> Unit, error: () -> Unit){
         //TODO: API delete call
-
         logout(success, error)
-
     }
 
-    fun changeAccountName(newName: String, success: () -> Unit, error: () -> Unit){
+    fun changeAccount(newName: String = "", newPassword: String = "", success: () -> Unit, error: () -> Unit){
 
-        //TODO: API change name call
+        var nameToSet = userDisplayName
+        var passwordToSet = userPassword
 
-        login(userId, newName, userPassword, false, success, error)
-
-    }
-
-    fun changeAccountPassword(currentPassword: String, newPassword: String, success: () -> Unit, error: () -> Unit){
-
-        if(currentPassword == newPassword || userPassword != currentPassword){
-            error()
-            return
+        if(newName.isNotEmpty()){
+            nameToSet = newName
         }
 
-        //TODO: API change password call
+        if(newPassword.isNotEmpty()){
+            passwordToSet = newPassword
+        }
 
-        login(userId, userDisplayName, newPassword, false, success, error)
+        //TODO: API change call
+        login(userId, nameToSet, passwordToSet, false, success, error)
 
     }
 

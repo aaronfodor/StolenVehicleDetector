@@ -24,18 +24,6 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/paragraph_padding">
 
-            <ImageView
-                android:id="@+id/logo"
-                android:src="@drawable/icon_app"
-                android:layout_width="wrap_content"
-                android:layout_height="72dp"
-                android:layout_marginBottom="24dp"
-                android:layout_gravity="center_horizontal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/app_icon"/>
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/name_input_login_layout"
                 android:layout_width="match_parent"
@@ -44,15 +32,13 @@
                 android:layout_marginBottom="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/logo">
+                app:layout_constraintTop_toTopOf="parent"
+                android:hint="@string/email">
 
                 <EditText android:id="@+id/input_login_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    style="@style/InputFieldText"
-                    android:hint="@string/email"
-                    android:autofillHints="@string/email"/>
+                    android:inputType="textEmailAddress"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,15 +50,13 @@
                 android:layout_marginBottom="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/name_input_login_layout">
+                app:layout_constraintTop_toBottomOf="@id/name_input_login_layout"
+                android:hint="@string/password">
 
                 <EditText android:id="@+id/input_login_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    style="@style/InputFieldText"
-                    android:hint="@string/password"
-                    android:autofillHints="@string/password"/>
+                    android:inputType="textPassword"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -80,7 +64,6 @@
                 android:id="@+id/btnForgotPassword"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
                 android:text="@string/forgot_password"
                 style="@style/AppButton"
                 app:layout_constraintStart_toStartOf="parent"
@@ -91,7 +74,6 @@
                 android:id="@+id/btnGuestLogin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
                 android:text="@string/continue_as_guest"
                 style="@style/AppButton"
                 app:layout_constraintStart_toStartOf="@+id/glVerticalMiddle"
@@ -113,6 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/remember_me"
+                style="@style/Subtitle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnUserLogin"/>
@@ -120,10 +103,9 @@
             <TextView android:id="@+id/linkSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
                 android:text="@string/no_account_yet"
                 android:gravity="center"
-                android:textSize="16sp"
+                style="@style/Subtitle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cbLoginRememberMe"/>

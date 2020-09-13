@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/login_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -24,18 +25,6 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/paragraph_padding">
 
-            <ImageView
-                android:id="@+id/logo"
-                android:src="@drawable/icon_app"
-                android:layout_width="wrap_content"
-                android:layout_height="72dp"
-                android:layout_marginBottom="24dp"
-                android:layout_gravity="center_horizontal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/app_icon"/>
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/name_input_create_layout"
                 android:layout_width="match_parent"
@@ -44,16 +33,14 @@
                 android:layout_marginBottom="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/logo">
+                app:layout_constraintTop_toTopOf="parent"
+                android:hint="@string/name">
 
                 <EditText
                     android:id="@+id/input_create_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
-                    style="@style/InputFieldText"
-                    android:hint="@string/name"
-                    android:autofillHints="@string/name"/>
+                    android:inputType="textCapWords"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -65,16 +52,14 @@
                 android:layout_marginBottom="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/name_input_create_layout">
+                app:layout_constraintTop_toBottomOf="@id/name_input_create_layout"
+                android:hint="@string/email">
 
                 <EditText
                     android:id="@+id/input_create_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    style="@style/InputFieldText"
-                    android:hint="@string/email"
-                    android:autofillHints="@string/email"/>
+                    android:inputType="textEmailAddress"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -86,16 +71,14 @@
                 android:layout_marginBottom="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/email_input_create_layout">
+                app:layout_constraintTop_toBottomOf="@id/email_input_create_layout"
+                android:hint="@string/password">
 
                 <EditText
                     android:id="@+id/input_create_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    style="@style/InputFieldText"
-                    android:hint="@string/password"
-                    android:autofillHints="@string/password"/>
+                    android:inputType="textPassword"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,6 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/remember_me"
+                style="@style/Subtitle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnCreateAccount"/>
@@ -122,10 +106,9 @@
                 android:id="@+id/linkLogin"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
                 android:text="@string/already_member"
                 android:gravity="center"
-                android:textSize="16sp"
+                style="@style/Subtitle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cbSignUpRememberMe"/>

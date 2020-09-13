@@ -77,12 +77,16 @@
     </style>
 
     <style name="InputFieldText" parent="ParagraphBody">
-        <item name="android:textSize">@dimen/input_text_size</item>
+        <item name="android:textSize">@dimen/subtitle_text_size</item>
         <item name="android:layout_margin">@dimen/margin_xxsmall</item>
         <item name="android:padding">@dimen/padding_xsmall</item>
     </style>
 
     <style name="Subtitle" parent="ParagraphBody">
+        <item name="android:textSize">@dimen/subtitle_text_size</item>
+    </style>
+
+    <style name="SubtitleBold" parent="ParagraphBody">
         <item name="android:textSize">@dimen/subtitle_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -128,7 +132,10 @@
     </style>
 
     <style name="AppButton" parent="AppTheme">
-        <item name="android:layout_margin">@dimen/button_margin</item>
+        <item name="android:layout_marginStart">@dimen/button_margin_horizontal</item>
+        <item name="android:layout_marginEnd">@dimen/button_margin_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/button_margin_vertical</item>
+        <item name="android:layout_marginBottom">@dimen/button_margin_vertical</item>
         <item name="android:paddingTop">@dimen/button_padding_vertical</item>
         <item name="android:paddingBottom">@dimen/button_padding_vertical</item>
         <item name="android:paddingStart">@dimen/button_padding_horizontal</item>

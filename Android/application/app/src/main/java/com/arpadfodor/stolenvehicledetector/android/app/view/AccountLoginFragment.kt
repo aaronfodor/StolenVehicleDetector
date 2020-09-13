@@ -69,8 +69,13 @@ class AccountLoginFragment : AppFragment() {
 
         btnForgotPassword?.setOnClickListener {
 
-            //TODO: read email
-            val email = "a@b.com"
+            val email = input_login_email?.text.toString()
+
+            if(email.isEmpty()){
+                AppSnackBarBuilder.buildInfoSnackBar(requireContext(), container,
+                    getString(R.string.empty_email), Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             val success = {
                 AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,

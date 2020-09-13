@@ -150,14 +150,16 @@
     <string name="continue_as_guest">Continue as guest</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
+    <string name="apply">Apply</string>
     <string name="remember_me">Remember me</string>
     <string name="no_account_yet">No account yet? Create one</string>
     <string name="name">Name</string>
+    <string name="change_name">Type to change name</string>
+    <string name="change_password">Type to change password</string>
     <string name="create_account">Create Account</string>
     <string name="delete_account">Delete Account</string>
     <string name="already_member">Already a member? Login</string>
-    <string name="change_name">Change name</string>
-    <string name="change_password">Change password</string>
+    <string name="edit_account">Edit</string>
 
     <string name="new_password_sent">Password sent to %1$s</string>
     <string name="new_password_failed">Generating password for %1$s failed</string>
@@ -165,10 +167,10 @@
     <string name="create_account_failed">Creating account failed</string>
     <string name="logged_out">Logged out</string>
     <string name="logout_failed">Logout failed</string>
-    <string name="password_changed">Password changed</string>
-    <string name="password_change_failed">Password change failed</string>
-    <string name="name_changed">Name changed</string>
-    <string name="name_change_failed">Name change failed</string>
+    <string name="change_applied">Change applied</string>
+    <string name="change_failed">Change failed</string>
+    <string name="empty_change">Nothing to change</string>
+    <string name="empty_email">Empty email address</string>
     <string name="account_deleted">Account deleted</string>
     <string name="account_delete_failed">Account delete failed</string>
 

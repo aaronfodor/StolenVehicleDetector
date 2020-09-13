@@ -36,16 +36,15 @@
     <dimen name="title_padding">6dp</dimen>
     <dimen name="title_margin">6dp</dimen>
 
-    <dimen name="input_text_size">16sp</dimen>
-
     <dimen name="subtitle_text_size">16sp</dimen>
-    <dimen name="paragraph_text_size">14sp</dimen>
+    <dimen name="paragraph_text_size">12sp</dimen>
     <dimen name="paragraph_padding">4dp</dimen>
     <dimen name="paragraph_margin">4dp</dimen>
 
     <dimen name="button_corner_radius">5dp</dimen>
     <dimen name="button_text_size">14sp</dimen>
-    <dimen name="button_margin">16dp</dimen>
+    <dimen name="button_margin_vertical">24dp</dimen>
+    <dimen name="button_margin_horizontal">16dp</dimen>
     <dimen name="button_padding_vertical">25dp</dimen>
     <dimen name="button_padding_horizontal">15dp</dimen>
     <dimen name="button_stroke">4dp</dimen>

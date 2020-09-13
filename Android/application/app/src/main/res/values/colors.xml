@@ -4,6 +4,7 @@
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="colorAccentBlue">#336699</color>
     <color name="colorTransparent">#00000000</color>
 
     <color name="colorText">#DFFFFF</color>
@@ -29,8 +30,8 @@
     <color name="colorAlertSnackBarBackground">#B3FF0000</color>
     <color name="colorAppSnackBarLightText">#DFFFFF</color>
 
-    <color name="colorCardBackground">#B333333D</color>
-    <color name="colorCardBackgroundDark">#B3252529</color>
+    <color name="colorCardBackground">#33333D</color>
+    <color name="colorCardBackgroundDark">#252529</color>
     <color name="colorCardText">#DFFFFF</color>
 
     <color name="colorButtonPositive">#03DAC5</color>
