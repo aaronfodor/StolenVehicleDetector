@@ -64,6 +64,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
     //Navigation library
     def nav_version = "2.3.0"

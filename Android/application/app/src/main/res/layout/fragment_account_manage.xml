@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/account_delete_content"
+    android:id="@+id/account_manage_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView
-        android:id="@+id/account_delete_scrollview"
+        android:id="@+id/account_manage_scrollview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/paragraph_margin"
@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/login_scrollable_container"
+            android:id="@+id/manage_scrollable_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/paragraph_padding">

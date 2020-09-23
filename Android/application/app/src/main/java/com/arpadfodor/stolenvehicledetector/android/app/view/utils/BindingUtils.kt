@@ -24,7 +24,7 @@ fun TextView.setRecognitionDate(item: UserRecognition) {
 
 @BindingAdapter("recognitionLocation")
 fun TextView.setRecognitionLocation(item: UserRecognition) {
-    text = context.getString(R.string.recognition_item_location, item.longitude, item.latitude)
+    text = context.getString(R.string.recognition_item_location, item.longitude.toFloat(), item.latitude.toFloat())
 }
 
 @BindingAdapter("recognitionMessage")

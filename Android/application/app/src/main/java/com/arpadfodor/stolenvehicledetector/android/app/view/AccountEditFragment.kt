@@ -1,5 +1,6 @@
 package com.arpadfodor.stolenvehicledetector.android.app.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -73,19 +74,14 @@ class AccountEditFragment : AppFragment() {
                     getString(R.string.change_failed), Snackbar.LENGTH_SHORT).show()
             }
 
-            viewModel.changeAccount(newName, newPassword, success, error)
+            viewModel.editAccount(newName, newPassword, success, error)
 
         }
 
         linkDelete?.setOnClickListener {
 
             val success = {
-
-                viewModel.fragmentTagToShow.postValue(AccountLoginFragment.TAG)
-
-                AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,
-                    getString(R.string.account_deleted), Snackbar.LENGTH_SHORT).show()
-
+                startActivity(Intent(requireActivity(), LoginActivity::class.java))
             }
 
             val error = {

@@ -3,6 +3,10 @@ package com.arpadfodor.stolenvehicledetector.android.app.view.utils
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.DisplayCutout
 import android.view.View
@@ -97,4 +101,19 @@ fun View.startInfiniteAnimation(context: Context){
 
 fun View.removeAnimation(){
     clearAnimation()
+}
+
+fun Drawable.toBitmap(): Bitmap {
+
+    if (this is BitmapDrawable) {
+        return this.bitmap
+    }
+
+    val bitmap = Bitmap.createBitmap(this.intrinsicWidth, this.intrinsicHeight, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    this.setBounds(0, 0, canvas.width, canvas.height)
+    this.draw(canvas)
+
+    return bitmap
+
 }

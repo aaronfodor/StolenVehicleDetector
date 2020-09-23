@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:background="@color/colorPrimaryDark">
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+app:layout_behavior="@string/appbar_scrolling_view_behavior"
+android:background="@color/colorPrimaryDark">
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/accountActivityDrawerLayout"
+        android:id="@+id/mapActivityDrawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorTransparent"
@@ -20,7 +20,7 @@
         tools:openDrawer="start">
 
         <com.google.android.material.navigation.NavigationView
-            android:id="@+id/account_navigation"
+            android:id="@+id/map_navigation"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
@@ -33,13 +33,13 @@
             app:menu="@menu/dashboard_menu" />
 
         <include
-            layout="@layout/content_account"
-            android:id="@+id/account_container"
+            layout="@layout/content_map"
+            android:id="@+id/map_container"
             app:layout_constraintBottom_toTopOf="parent"/>
 
         <include
             layout="@layout/custom_toolbar"
-            android:id="@+id/account_toolbar"
+            android:id="@+id/map_toolbar"
             app:layout_constraintBottom_toTopOf="parent"/>
 
     </androidx.drawerlayout.widget.DrawerLayout>

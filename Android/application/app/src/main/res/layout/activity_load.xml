@@ -33,7 +33,7 @@
             app:menu="@menu/dashboard_menu"/>
 
         <include
-            layout="@layout/load_ui_container"
+            layout="@layout/content_load"
             android:id="@+id/loaded_image_container"
             app:layout_constraintBottom_toTopOf="parent"/>
 

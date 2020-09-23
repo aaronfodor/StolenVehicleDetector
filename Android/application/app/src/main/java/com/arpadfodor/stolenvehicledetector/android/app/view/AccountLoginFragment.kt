@@ -8,7 +8,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppFragment
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.overshootAppearingAnimation
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AccountViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.LoginViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_account_login.*
 
@@ -17,9 +17,9 @@ class AccountLoginFragment : AppFragment() {
     companion object{
 
         const val TAG = "account login fragment"
-        private lateinit var viewModel: AccountViewModel
+        private lateinit var viewModel: LoginViewModel
 
-        fun setParams(viewModel: AccountViewModel){
+        fun setParams(viewModel: LoginViewModel){
             this.viewModel = viewModel
         }
 
@@ -48,6 +48,17 @@ class AccountLoginFragment : AppFragment() {
 
         btnUserLogin?.setOnClickListener {
 
+            if(input_login_email.text.toString().isEmpty()){
+                input_login_email.requestFocus()
+                input_login_email.error = getString(R.string.enter_your_email)
+                return@setOnClickListener
+            }
+            else if(input_login_password.text.toString().isEmpty()){
+                input_login_password.requestFocus()
+                input_login_password.error = getString(R.string.enter_your_password)
+                return@setOnClickListener
+            }
+
             val email = input_login_email.text.toString()
             val password = input_login_password.text.toString()
             val isRememberEnabled = cbLoginRememberMe.isChecked
@@ -64,6 +75,7 @@ class AccountLoginFragment : AppFragment() {
             }
 
             viewModel.login(email, "", password, isRememberEnabled, success, error)
+
 
         }
 

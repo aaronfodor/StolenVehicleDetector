@@ -19,7 +19,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.view.utils.*
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.load_ui_container.*
+import kotlinx.android.synthetic.main.content_load.*
 
 class LoadActivity : AppActivity() {
 

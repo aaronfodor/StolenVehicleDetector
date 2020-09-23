@@ -312,7 +312,7 @@ class CameraFragment : AppFragment() {
         }
 
         // Inflate a new view containing all UI for controlling the camera
-        controls = View.inflate(requireContext(), R.layout.camera_ui_container, container)
+        controls = View.inflate(requireContext(), R.layout.content_camera, container)
 
         setButtonListeners()
         subscribeToViewModel()

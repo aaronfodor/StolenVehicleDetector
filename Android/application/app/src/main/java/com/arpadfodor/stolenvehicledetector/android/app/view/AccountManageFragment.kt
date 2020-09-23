@@ -1,5 +1,6 @@
 package com.arpadfodor.stolenvehicledetector.android.app.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -50,12 +51,7 @@ class AccountManageFragment : AppFragment() {
         btnLogout?.setOnClickListener {
 
             val success = {
-
-                AppSnackBarBuilder.buildSuccessSnackBar(requireContext(), container,
-                    getString(R.string.logged_out), Snackbar.LENGTH_SHORT).show()
-
-                viewModel.fragmentTagToShow.postValue(AccountLoginFragment.TAG)
-
+                startActivity(Intent(this.requireActivity(), LoginActivity::class.java))
             }
 
             val error = {

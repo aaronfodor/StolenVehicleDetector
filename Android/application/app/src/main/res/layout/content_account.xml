@@ -4,11 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/start_activity_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:background="@drawable/account_background">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/accountLogo"
@@ -17,15 +14,12 @@
         android:layout_height="72dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/glHorizontalMiddle"
-        android:contentDescription="@string/app_icon"/>
+        app:layout_constraintBottom_toBottomOf="@+id/glHorizontalMiddle" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/account_container"
+        android:id="@+id/account_fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/margin_large"
-        android:layout_marginEnd="@dimen/margin_large"
         app:layout_constraintTop_toBottomOf="@+id/glHorizontalMiddle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/glHorizontalMiddle"
-        app:layout_constraintGuide_percent="0.2"
+        app:layout_constraintGuide_percent="0.3"
         android:orientation="horizontal"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

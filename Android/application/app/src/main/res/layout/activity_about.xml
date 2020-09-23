@@ -39,7 +39,7 @@
 
         <include
             layout="@layout/custom_toolbar"
-            android:id="@+id/load_toolbar"
+            android:id="@+id/about_toolbar"
             app:layout_constraintBottom_toTopOf="parent"/>
 
     </androidx.drawerlayout.widget.DrawerLayout>

@@ -8,7 +8,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppFragment
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.overshootAppearingAnimation
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AccountViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.LoginViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_account_register.*
 
@@ -16,10 +16,10 @@ class AccountRegisterFragment : AppFragment() {
 
     companion object{
 
-        const val TAG = "account sign up fragment"
-        private lateinit var viewModel: AccountViewModel
+        const val TAG = "account register fragment"
+        private lateinit var viewModel: LoginViewModel
 
-        fun setParams(viewModel: AccountViewModel){
+        fun setParams(viewModel: LoginViewModel){
             this.viewModel = viewModel
         }
 
@@ -45,6 +45,22 @@ class AccountRegisterFragment : AppFragment() {
     override fun subscribeListeners() {
 
         btnCreateAccount?.setOnClickListener {
+
+            if(input_create_name.text.toString().isEmpty()){
+                input_create_name.requestFocus()
+                input_create_name.error = getString(R.string.enter_your_name)
+                return@setOnClickListener
+            }
+            else if(input_create_email.text.toString().isEmpty()){
+                input_create_email.requestFocus()
+                input_create_email.error = getString(R.string.enter_your_email)
+                return@setOnClickListener
+            }
+            else if(input_create_password.text.toString().isEmpty()){
+                input_create_password.requestFocus()
+                input_create_password.error = getString(R.string.enter_your_password)
+                return@setOnClickListener
+            }
 
             val email = input_create_email.text.toString()
             val name = input_create_name.text.toString()

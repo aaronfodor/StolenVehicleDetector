@@ -134,7 +134,7 @@ class DetailFragment : AppFragment(){
                 recognitionDetailLicenseId.text = recognition.licenseId
                 recognitionDetailDate.text = recognition.date
                 recognitionDetailLocation.text =
-                    requireContext().getString(R.string.recognition_item_location, recognition.longitude, recognition.latitude)
+                    requireContext().getString(R.string.recognition_item_location_long, recognition.longitude, recognition.latitude)
 
                 detail_back_button.setOnClickListener {
                     viewModel.deselectRecognition()
@@ -150,8 +150,8 @@ class DetailFragment : AppFragment(){
                         currentView ?: return@deleteRecognition
 
                         when(isSuccess){
-                            true -> {
 
+                            true -> {
                                 viewModel.deselectRecognition()
 
                                 AppSnackBarBuilder.buildInfoSnackBar(
@@ -160,17 +160,14 @@ class DetailFragment : AppFragment(){
                                     deletedSnackBarText,
                                     Snackbar.LENGTH_SHORT
                                 ).show()
-
                             }
                             else -> {
-
                                 AppSnackBarBuilder.buildAlertSnackBar(
                                     currentContext,
                                     currentView,
                                     deleteFailedSnackBarText,
                                     Snackbar.LENGTH_SHORT
                                 ).show()
-
                             }
                         }
 
@@ -260,14 +257,7 @@ class DetailFragment : AppFragment(){
                                     currentView ?: return@updateRecognitionMessage
 
                                     when(isSuccess){
-                                        true -> {
-                                            AppSnackBarBuilder.buildInfoSnackBar(
-                                                currentContext,
-                                                currentView,
-                                                updateSucceedSnackBarText,
-                                                Snackbar.LENGTH_SHORT
-                                            ).show()
-                                        }
+                                        true -> {}
                                         else -> {
                                             AppSnackBarBuilder.buildAlertSnackBar(
                                                 currentContext,

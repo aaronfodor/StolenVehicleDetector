@@ -3,42 +3,42 @@
 
     <item
         android:id="@+id/navigation_live"
-        android:icon="@android:drawable/ic_menu_camera"
+        android:icon="@drawable/icon_camera"
         android:title="@string/menu_live" />
 
     <item
         android:id="@+id/navigation_load"
-        android:icon="@android:drawable/ic_menu_gallery"
+        android:icon="@drawable/icon_image"
         android:title="@string/menu_load" />
 
     <item
-        android:id="@+id/navigation_reports"
-        android:icon="@android:drawable/ic_menu_mapmode"
-        android:title="@string/menu_reports" />
+        android:id="@+id/navigation_map"
+        android:icon="@drawable/icon_map"
+        android:title="@string/menu_map" />
 
     <item
-        android:id="@+id/navigation_user_reports"
-        android:icon="@android:drawable/ic_menu_myplaces"
+        android:id="@+id/navigation_user_recognitions"
+        android:icon="@drawable/icon_my_recognition"
         android:title="@string/menu_user_recognitions" />
 
     <item
         android:id="@+id/navigation_settings"
-        android:icon="@android:drawable/ic_menu_manage"
+        android:icon="@drawable/icon_settings"
         android:title="@string/menu_settings" />
 
     <item
-        android:id="@+id/navigation_account"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/menu_account" />
-
-    <item
         android:id="@+id/navigation_how_to_use"
-        android:icon="@android:drawable/ic_menu_help"
+        android:icon="@drawable/icon_help"
         android:title="@string/menu_how_to_use" />
 
     <item
         android:id="@+id/navigation_about"
-        android:icon="@android:drawable/ic_menu_info_details"
+        android:icon="@drawable/icon_info"
         android:title="@string/menu_about" />
+
+    <item
+        android:id="@+id/navigation_account"
+        android:icon="@drawable/icon_account"
+        android:title="@string/menu_account" />
 
 </menu>

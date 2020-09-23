@@ -18,7 +18,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppActivity
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.overshootAppearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.CameraViewModel
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.camera_ui_container.*
+import kotlinx.android.synthetic.main.content_camera.*
 
 class CameraActivity : AppActivity() {
 

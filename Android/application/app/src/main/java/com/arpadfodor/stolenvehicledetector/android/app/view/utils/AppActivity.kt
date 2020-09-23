@@ -14,7 +14,6 @@ import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_account.*
 
 abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -91,10 +90,16 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
                 startActivity(intent)
             }
 
-            R.id.navigation_reports -> {
+            R.id.navigation_map -> {
+                val toStartActivity = MapActivity::class.java
+                if(toStartActivity == this::class.java){
+                    return false
+                }
+                val intent = Intent(this, toStartActivity)
+                startActivity(intent)
             }
 
-            R.id.navigation_user_reports -> {
+            R.id.navigation_user_recognitions -> {
                 val toStartActivity = UserRecognitionActivity::class.java
                 if(toStartActivity == this::class.java){
                     return false
@@ -112,16 +117,6 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
                 startActivity(intent)
             }
 
-            R.id.navigation_account -> {
-                val toStartActivity = AccountActivity::class.java
-                if(toStartActivity == this::class.java){
-                    return false
-                }
-                val intent = Intent(this, toStartActivity)
-                intent.putExtra("show account manage", true)
-                startActivity(intent)
-            }
-
             R.id.navigation_how_to_use -> {
                 val toStartActivity = HowToUseActivity::class.java
                 if(toStartActivity == this::class.java){
@@ -133,6 +128,15 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
 
             R.id.navigation_about -> {
                 val toStartActivity = AboutActivity::class.java
+                if(toStartActivity == this::class.java){
+                    return false
+                }
+                val intent = Intent(this, toStartActivity)
+                startActivity(intent)
+            }
+
+            R.id.navigation_account -> {
+                val toStartActivity = AccountActivity::class.java
                 if(toStartActivity == this::class.java){
                     return false
                 }
@@ -197,7 +201,7 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     }
 
     fun showMissingPermissionNotification(){
-        AppSnackBarBuilder.buildInfoSnackBar(this.applicationContext, start_activity_layout,
+        AppSnackBarBuilder.buildInfoSnackBar(this.applicationContext, activityDrawerLayout,
             getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show()
     }
 

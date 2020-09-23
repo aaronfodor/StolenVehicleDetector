@@ -1,6 +1,7 @@
 package com.arpadfodor.stolenvehicledetector.android.app.view
 
 import android.os.Bundle
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -72,5 +73,14 @@ class HowToUseActivity : AppActivity() {
     }
 
     override fun unsubscribe(){}
+
+    override fun onBackPressed() {
+        if(activityDrawerLayout.isDrawerOpen(GravityCompat.START)){
+            activityDrawerLayout.closeDrawer(GravityCompat.START)
+        }
+        else{
+            this.finish()
+        }
+    }
 
 }
