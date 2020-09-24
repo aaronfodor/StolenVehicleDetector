@@ -4,18 +4,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/camera_fragment"
-    android:background="@android:color/black"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
 
     <androidx.camera.view.PreviewView
         android:id="@+id/view_finder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ivBoundingBoxes"
@@ -24,11 +24,11 @@
         android:background="@drawable/loaded_image"
         android:contentDescription="@string/ivBoundingBoxes_description"
         android:scaleType="center"
-        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintBottom_toBottomOf="@+id/view_finder"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/view_finder"
         app:layout_constraintStart_toStartOf="@+id/view_finder"
-        app:layout_constraintTop_toTopOf="@+id/view_finder"/>
+        app:layout_constraintTop_toTopOf="@+id/view_finder" />
 
     <ImageView
         android:id="@+id/ivBoundingBoxesBck"
@@ -37,10 +37,10 @@
         android:background="@drawable/loaded_image"
         android:contentDescription="@string/ivBoundingBoxes_description"
         android:scaleType="center"
-        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintBottom_toBottomOf="@+id/view_finder"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/view_finder"
         app:layout_constraintStart_toStartOf="@+id/view_finder"
-        app:layout_constraintTop_toTopOf="@+id/view_finder"/>
+        app:layout_constraintTop_toTopOf="@+id/view_finder" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

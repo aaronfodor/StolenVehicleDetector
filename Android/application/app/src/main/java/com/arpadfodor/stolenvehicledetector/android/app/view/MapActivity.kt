@@ -39,7 +39,7 @@ class MapActivity : AppActivity(), OnMapReadyCallback {
         val TAG = MapActivity::class.java.simpleName
     }
 
-    private lateinit var viewModel: MapViewModel
+    override lateinit var viewModel: MapViewModel
     private var map: GoogleMap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,9 +47,8 @@ class MapActivity : AppActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_map)
         val drawer = findViewById<DrawerLayout>(R.id.mapActivityDrawerLayout)
         val navigation = findViewById<NavigationView>(R.id.map_navigation)
-        initUi(drawer, navigation)
-
         viewModel = ViewModelProvider(this).get(MapViewModel::class.java)
+        initUi(drawer, navigation)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager

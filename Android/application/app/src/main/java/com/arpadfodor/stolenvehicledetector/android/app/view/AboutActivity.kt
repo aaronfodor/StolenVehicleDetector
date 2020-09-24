@@ -8,10 +8,14 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppActivity
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.overshootAppearingAnimation
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.AppViewModel
 import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.content_about.*
 
 class AboutActivity : AppActivity() {
+
+    override val viewModel: AppViewModel = AppViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

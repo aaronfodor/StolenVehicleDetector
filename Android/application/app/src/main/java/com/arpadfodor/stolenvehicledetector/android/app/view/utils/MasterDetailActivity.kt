@@ -11,7 +11,7 @@ import com.google.android.material.navigation.NavigationView
 
 abstract class MasterDetailActivity() : AppActivity() {
 
-    open lateinit var viewModel: MasterDetailViewModel
+    override lateinit var viewModel: MasterDetailViewModel
     var twoPane = false
 
     var listName = ""

@@ -5,9 +5,12 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppActivity
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.AppViewModel
 import com.google.android.material.navigation.NavigationView
 
 class SettingsActivity : AppActivity() {
+
+    override val viewModel: AppViewModel = AppViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

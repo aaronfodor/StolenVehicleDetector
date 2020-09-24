@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.content_camera.*
 
 class CameraActivity : AppActivity() {
 
-    private lateinit var viewModel: CameraViewModel
+    override lateinit var viewModel: CameraViewModel
     private lateinit var container: FrameLayout
     lateinit var deviceOrientationListener: OrientationEventListener
 

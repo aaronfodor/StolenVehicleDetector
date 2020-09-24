@@ -8,7 +8,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserRec
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.MasterDetailViewModel
 
-class UserReportViewModel : MasterDetailViewModel(){
+class RecognitionViewModel : MasterDetailViewModel(){
 
     /**
      * List of recognition elements

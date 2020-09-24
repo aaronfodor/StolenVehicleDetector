@@ -4,16 +4,16 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Size
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.MetaProvider
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.AppViewModel
 import kotlin.math.min
 
-class LoadViewModel : ViewModel(){
+class LoadViewModel : AppViewModel(){
 
     companion object{
 

@@ -10,12 +10,13 @@ import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppActivity
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.overshootAppearingAnimation
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AccountViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.AppViewModel
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.content_account.*
 
 class AccountActivity : AppActivity() {
 
-    private lateinit var viewModel: AccountViewModel
+    override lateinit var viewModel: AccountViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -23,9 +24,8 @@ class AccountActivity : AppActivity() {
         setContentView(R.layout.activity_account)
         val drawer = findViewById<DrawerLayout>(R.id.accountActivityDrawerLayout)
         val navigation = findViewById<NavigationView>(R.id.account_navigation)
-        initUi(drawer, navigation)
-
         viewModel = ViewModelProvider(this).get(AccountViewModel::class.java)
+        initUi(drawer, navigation)
 
         if(viewModel.isCurrentAccountGuest()){
             startActivity(Intent(this, LoginActivity::class.java))

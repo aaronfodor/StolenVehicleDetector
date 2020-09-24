@@ -30,26 +30,22 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/navigation_menu_vertical_spacing"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:id="@+id/tvDashboardTitle"
+        android:padding="@dimen/navigation_menu_vertical_spacing"
+        android:textAppearance="@style/Subtitle"
+        android:gravity="center"
+        android:id="@+id/tvName"
+        android:maxLines="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivLogo"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/navigation_menu_vertical_spacing"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:id="@+id/tvName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kenBurnsView"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:padding="@dimen/navigation_menu_vertical_spacing"
+        android:textAppearance="@style/ParagraphBody"
         android:id="@+id/tvEmail"
+        android:maxLines="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvName"/>
+        app:layout_constraintBottom_toBottomOf="@+id/kenBurnsView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

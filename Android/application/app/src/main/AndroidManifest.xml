@@ -95,7 +95,7 @@
             android:screenOrientation="fullUser"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".view.UserRecognitionActivity"
+            android:name=".view.RecognitionActivity"
             android:icon="@mipmap/ic_launcher"
             android:rotationAnimation="seamless"
             android:screenOrientation="fullUser"

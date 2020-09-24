@@ -1,10 +1,9 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 
-abstract class MasterDetailViewModel : ViewModel(){
+abstract class MasterDetailViewModel : AppViewModel(){
 
     /**
      * List of recognition elements

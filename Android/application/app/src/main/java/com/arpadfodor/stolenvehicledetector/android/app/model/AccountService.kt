@@ -5,7 +5,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.repository.datacla
 
 object AccountService {
 
-    private const val DEFAULT_USER_EMAIL = "default_user@stolen_vehicle_detector"
+    private const val DEFAULT_USER_ID = "default_user@stolen_vehicle_detector"
     private const val DEFAULT_USER_NAME = "Default User"
     private const val DEFAULT_USER_PASSWORD = "default_user_czka84"
 
@@ -55,7 +55,7 @@ object AccountService {
 
     fun loginAsGuest(success: () -> Unit, error: () -> Unit){
 
-        userId = DEFAULT_USER_EMAIL
+        userId = DEFAULT_USER_ID
         userDisplayName = DEFAULT_USER_NAME
         userPassword = DEFAULT_USER_PASSWORD
 
@@ -134,6 +134,28 @@ object AccountService {
 
     fun isCurrentAccountGuest() : Boolean{
         return isCurrentAccountGuest
+    }
+
+    fun getDisplayUserName() : String{
+
+        return if(userDisplayName == DEFAULT_USER_NAME){
+            ""
+        }
+        else{
+            userDisplayName
+        }
+
+    }
+
+    fun getDisplayUserEmail() : String{
+
+        return if(userId == DEFAULT_USER_ID){
+            ""
+        }
+        else{
+            userId
+        }
+
     }
 
 }

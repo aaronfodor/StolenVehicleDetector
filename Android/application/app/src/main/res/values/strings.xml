@@ -168,6 +168,7 @@
     <string name="enter_your_name">Please enter your name</string>
     <string name="enter_your_email">Please enter your email</string>
     <string name="enter_your_password">Please enter your password</string>
+    <string name="guest_user">Guest user</string>
 
     <string name="normal_map">Normal Map</string>
     <string name="hybrid_map">Hybrid Map</string>

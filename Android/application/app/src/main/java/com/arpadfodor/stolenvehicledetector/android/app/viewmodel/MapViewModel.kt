@@ -1,15 +1,15 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
 import com.arpadfodor.stolenvehicledetector.android.app.model.LocationService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.ReportRepository
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.Report
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.AppViewModel
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 
-class MapViewModel : ViewModel(){
+class MapViewModel : AppViewModel(){
 
     val zoomLevel = 15f
 

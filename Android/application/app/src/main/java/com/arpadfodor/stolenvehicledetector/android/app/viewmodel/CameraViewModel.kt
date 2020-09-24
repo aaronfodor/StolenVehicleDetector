@@ -4,15 +4,15 @@ import android.util.Size
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.CameraSelector
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.AppViewModel
 import java.io.OutputStream
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class CameraViewModel : ViewModel(){
+class CameraViewModel : AppViewModel(){
 
     companion object{
 

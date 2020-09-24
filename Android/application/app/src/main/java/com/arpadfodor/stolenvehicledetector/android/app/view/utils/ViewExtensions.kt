@@ -82,23 +82,6 @@ fun View.overshootAppearingAnimation(context: Context){
     }
 }
 
-fun View.startInfiniteAnimation(context: Context){
-
-    val view = this
-    val animator = AnimatorInflater.loadAnimator(context, R.animator.highlight) as AnimatorSet
-    animator.apply {
-        this.addListener(
-            onEnd = {
-                it.startDelay = 1000
-                start()
-            }
-        )
-        setTarget(view)
-        start()
-    }
-
-}
-
 fun View.removeAnimation(){
     clearAnimation()
 }

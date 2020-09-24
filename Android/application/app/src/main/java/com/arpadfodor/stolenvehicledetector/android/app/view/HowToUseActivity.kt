@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.content_how_to_use.*
 
 class HowToUseActivity : AppActivity() {
 
-    private lateinit var viewModel: HowToUseViewModel
+    override lateinit var viewModel: HowToUseViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -26,9 +26,8 @@ class HowToUseActivity : AppActivity() {
         setContentView(R.layout.activity_how_to_use)
         val drawer = findViewById<DrawerLayout>(R.id.howToUseActivityDrawerLayout)
         val navigation = findViewById<NavigationView>(R.id.how_to_use_navigation)
-        initUi(drawer, navigation)
-
         viewModel = ViewModelProvider(this).get(HowToUseViewModel::class.java)
+        initUi(drawer, navigation)
 
     }
 

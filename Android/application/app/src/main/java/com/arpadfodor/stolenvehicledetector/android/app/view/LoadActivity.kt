@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.content_load.*
 
 class LoadActivity : AppActivity() {
 
-    private lateinit var viewModel: LoadViewModel
+    override lateinit var viewModel: LoadViewModel
     private lateinit var container: ConstraintLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +34,8 @@ class LoadActivity : AppActivity() {
         container = findViewById(R.id.loaded_image_container)
         val drawer = findViewById<DrawerLayout>(R.id.loadActivityDrawerLayout)
         val navigation = findViewById<NavigationView>(R.id.load_navigation)
-        initUi(drawer, navigation)
-
         viewModel = ViewModelProvider(this).get(LoadViewModel::class.java)
+        initUi(drawer, navigation)
 
         //due to an Android bug, setting clip to outline cannot be done from XML
         ivLoadedImage.clipToOutline = true

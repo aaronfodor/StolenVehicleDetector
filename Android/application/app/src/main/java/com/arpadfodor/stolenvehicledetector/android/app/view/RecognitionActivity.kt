@@ -4,14 +4,14 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.MasterDetailActivity
-import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.UserReportViewModel
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.RecognitionViewModel
 
-class UserRecognitionActivity : MasterDetailActivity() {
+class RecognitionActivity : MasterDetailActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this).get(RecognitionViewModel::class.java)
+        (viewModel as RecognitionViewModel).updateDataFromDb()
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(UserReportViewModel::class.java)
-        (viewModel as UserReportViewModel).updateDataFromDb()
 
         listName = getString(R.string.user_recognition_list)
         detailName = getString(R.string.user_recognition_details)
@@ -28,7 +28,7 @@ class UserRecognitionActivity : MasterDetailActivity() {
 
     override fun onResume() {
         super.onResume()
-        (viewModel as UserReportViewModel).updateDataFromDb()
+        (viewModel as RecognitionViewModel).updateDataFromDb()
     }
 
 }

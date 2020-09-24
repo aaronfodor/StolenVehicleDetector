@@ -1,11 +1,11 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserRecognitionRepository
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.AppViewModel
 
-class AccountViewModel : ViewModel(){
+class AccountViewModel : AppViewModel(){
 
     /**
      * TAG of the fragment to show
@@ -16,14 +16,6 @@ class AccountViewModel : ViewModel(){
 
     fun isCurrentAccountGuest() : Boolean {
         return AccountService.isCurrentAccountGuest()
-    }
-
-    fun getAccountName() : String {
-        return AccountService.userDisplayName
-    }
-
-    fun getAccountEmail() : String {
-        return AccountService.userId
     }
 
     fun logout(success: () -> Unit, error: () -> Unit){

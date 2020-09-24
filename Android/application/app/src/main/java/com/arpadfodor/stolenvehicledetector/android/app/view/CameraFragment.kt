@@ -492,8 +492,6 @@ class CameraFragment : AppFragment() {
             boundingBoxesImageViewBckg.background = null
         }
 
-        boundingBoxesImageViewBckg.startInfiniteAnimation(this.requireContext())
-
     }
 
     override fun onPause(){

@@ -1,10 +1,10 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.model.TextToSpeechService
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.AppViewModel
 
-class HowToUseViewModel : ViewModel(){
+class HowToUseViewModel : AppViewModel(){
 
     val isTextToSpeechSpeaking: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()

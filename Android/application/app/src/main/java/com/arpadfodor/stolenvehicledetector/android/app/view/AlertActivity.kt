@@ -4,13 +4,14 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.MasterDetailActivity
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AccountViewModel
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.AlertViewModel
 
 class AlertActivity : MasterDetailActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
+        super.onCreate(savedInstanceState)
 
         listName = getString(R.string.alert_list)
         detailName = getString(R.string.alert_details)

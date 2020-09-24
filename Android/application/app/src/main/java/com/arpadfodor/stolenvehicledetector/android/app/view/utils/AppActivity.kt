@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.WindowManager
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -12,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.view.*
+import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.AppViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 
@@ -19,6 +21,10 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
 
     lateinit var activityDrawerLayout: DrawerLayout
     lateinit var navigation: NavigationView
+    lateinit var tvName: TextView
+    lateinit var tvEmail: TextView
+
+    abstract val viewModel: AppViewModel
 
     fun initUi(activityDrawerLayout: DrawerLayout, navigation: NavigationView){
 
@@ -40,13 +46,17 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         navigation.setNavigationItemSelectedListener(this)
         navigation.bringToFront()
         navigation.parent.requestLayout()
+
         val header = navigation.getHeaderView(0)
+        tvName = header.findViewById(R.id.tvName)
+        tvEmail = header.findViewById(R.id.tvEmail)
 
     }
 
     override fun onResume() {
         super.onResume()
         subscribeToViewModel()
+        showAccountInfo()
         subscribeListeners()
         setKeepScreenOnFlag()
         appearingAnimations()
@@ -100,7 +110,7 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             }
 
             R.id.navigation_user_recognitions -> {
-                val toStartActivity = UserRecognitionActivity::class.java
+                val toStartActivity = RecognitionActivity::class.java
                 if(toStartActivity == this::class.java){
                     return false
                 }
@@ -203,6 +213,16 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     fun showMissingPermissionNotification(){
         AppSnackBarBuilder.buildInfoSnackBar(this.applicationContext, activityDrawerLayout,
             getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun showAccountInfo(){
+
+        var userName = viewModel.getCurrentUserName()
+        if(userName.isEmpty()){
+            userName = getString(R.string.guest_user)
+        }
+        tvName.text = userName
+        tvEmail.text = viewModel.getCurrentUserEmail()
     }
 
 }

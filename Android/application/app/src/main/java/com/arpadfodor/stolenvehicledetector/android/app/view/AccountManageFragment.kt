@@ -45,8 +45,8 @@ class AccountManageFragment : AppFragment() {
 
     override fun subscribeListeners() {
 
-        account_name?.text = viewModel.getAccountName()
-        account_email?.text = viewModel.getAccountEmail()
+        account_name?.text = viewModel.getCurrentUserName()
+        account_email?.text = viewModel.getCurrentUserEmail()
 
         btnLogout?.setOnClickListener {
 
