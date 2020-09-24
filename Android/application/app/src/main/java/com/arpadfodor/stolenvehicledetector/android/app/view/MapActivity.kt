@@ -123,7 +123,7 @@ class MapActivity : AppActivity(), OnMapReadyCallback {
             val defMarkerDesc = BitmapDescriptorFactory.fromBitmap(defMarkerBitmap)
 
             val currentUserMarker = ContextCompat.getDrawable(this, R.drawable.icon_my_recognition)?.toBitmap()
-            val currentUserMarkerDesc = BitmapDescriptorFactory.fromBitmap(defMarkerBitmap)
+            val currentUserMarkerDesc = BitmapDescriptorFactory.fromBitmap(currentUserMarker)
 
             for(report in reports){
 

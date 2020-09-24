@@ -121,10 +121,24 @@ class DetailFragment : AppFragment(){
                 }
 
                 if(recognition.isAlert){
-                    detail_send_button.setImageResource(android.R.drawable.ic_input_add)
+
+                    if(recognition.isSent){
+                        detail_send_button.setImageResource(R.drawable.icon_added_recognition)
+                    }
+                    else{
+                        detail_send_button.setImageResource(R.drawable.icon_add_recognition)
+                    }
+
                 }
                 else{
-                    detail_send_button.setImageResource(android.R.drawable.ic_menu_send)
+
+                    if(recognition.isSent){
+                        detail_send_button.setImageResource(R.drawable.icon_added_recognition)
+                    }
+                    else{
+                        detail_send_button.setImageResource(R.drawable.icon_send)
+                    }
+
                 }
 
                 //force done button on keyboard instead of the new line button

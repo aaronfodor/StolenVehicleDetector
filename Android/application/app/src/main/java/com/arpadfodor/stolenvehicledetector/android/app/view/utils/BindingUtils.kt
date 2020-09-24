@@ -3,11 +3,6 @@ package com.arpadfodor.stolenvehicledetector.android.app.view.utils
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginBottom
-import androidx.core.view.marginEnd
-import androidx.core.view.marginStart
-import androidx.core.view.marginTop
 import androidx.databinding.BindingAdapter
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
@@ -45,10 +40,10 @@ fun TextView.setRecognitionMessage(item: UserRecognition) {
 fun ImageButton.setRecognitionEditButton(item: UserRecognition) {
 
     if(item.isSent){
-        this.setImageResource(android.R.drawable.ic_menu_info_details)
+        this.setImageResource(R.drawable.icon_info)
     }
     else{
-        this.setImageResource(android.R.drawable.ic_menu_edit)
+        this.setImageResource(R.drawable.icon_edit_recognition)
     }
 
 }
@@ -59,10 +54,10 @@ fun ImageButton.setRecognitionSendButton(item: UserRecognition) {
     if(item.isAlert){
 
         if(item.isSent){
-            this.setImageResource(R.drawable.icon_tick)
+            this.setImageResource(R.drawable.icon_added_recognition)
         }
         else{
-            this.setImageResource(android.R.drawable.ic_input_add)
+            this.setImageResource(R.drawable.icon_add_recognition)
         }
 
     }
@@ -70,10 +65,10 @@ fun ImageButton.setRecognitionSendButton(item: UserRecognition) {
     else{
 
         if(item.isSent){
-            this.setImageResource(R.drawable.icon_tick)
+            this.setImageResource(R.drawable.icon_added_recognition)
         }
         else{
-            this.setImageResource(android.R.drawable.ic_menu_send)
+            this.setImageResource(R.drawable.icon_send)
         }
 
     }
