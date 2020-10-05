@@ -43,6 +43,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/navigation_menu_vertical_spacing"
         android:textAppearance="@style/ParagraphBody"
+        android:gravity="center"
         android:id="@+id/tvEmail"
         android:maxLines="1"
         app:layout_constraintStart_toStartOf="parent"

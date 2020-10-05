@@ -34,22 +34,28 @@ abstract class MasterDetailViewModel : AppViewModel(){
     open fun sendRecognition(id: Int, callback: (Boolean) -> Unit){}
 
     open fun deleteRecognition(id: Int, callback: (Boolean) -> Unit){
+
+        deselectRecognition()
+
         val filteredAlerts = recognitions.value?.filter {
             it.artificialId != id
         }
-        deselectRecognition()
         recognitions.postValue(filteredAlerts)
+
         callback(true)
+
     }
 
     fun selectRecognition(id: Int) {
         selectedRecognitionId.postValue(id)
         showDetails.postValue(true)
+        showSelection(id)
     }
 
     fun deselectRecognition() {
         selectedRecognitionId.postValue(0)
         showDetails.postValue(false)
+        showSelection(0)
     }
 
     fun getRecognitionById(id: Int) : UserRecognition?{
@@ -57,6 +63,7 @@ abstract class MasterDetailViewModel : AppViewModel(){
     }
 
     open fun updateRecognitionMessage(id: Int, message: String, callback: (Boolean) -> Unit){
+
         val recognitionList = recognitions.value ?: return
         recognitionList.forEach {
             if(it.artificialId == id){
@@ -65,6 +72,18 @@ abstract class MasterDetailViewModel : AppViewModel(){
         }
         recognitions.postValue(recognitionList)
         callback(true)
+
+    }
+
+    private fun showSelection(id: Int){
+
+        recognitions.value?.let {
+            for(recognition in it){
+                recognition.isSelected = recognition.artificialId == id
+            }
+        }
+        recognitions.postValue(recognitions.value)
+
     }
 
 }

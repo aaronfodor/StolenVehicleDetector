@@ -14,7 +14,7 @@ private val PERMISSIONS_REQUIRED = ApplicationRoot.requiredPermissions
  * The only purpose of this fragment is to request permissions.
  * Once granted, proceed.
  */
-class PermissionsFragment(finished: () -> Unit) : AppFragment() {
+class PermissionsFragment(finished: () -> Unit = {}) : AppFragment() {
 
     companion object {
         /** Convenience method used to check if all permissions required by this app are granted */

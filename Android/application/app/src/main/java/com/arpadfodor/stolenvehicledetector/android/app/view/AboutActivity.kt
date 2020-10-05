@@ -39,9 +39,15 @@ class AboutActivity : AppActivity() {
         }
 
         fabBugReport.setOnClickListener {
-            val reportIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-            "mailto",getString(R.string.maintenance_contact), null))
-            reportIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.maintenance_message_title, packageName))
+            val reportIntent = Intent(Intent.ACTION_SENDTO).apply {
+
+                val appName = getString(R.string.app_name)
+
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, getString(R.string.maintenance_contact))
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.maintenance_message_title, appName))
+
+            }
             startActivity(reportIntent)
         }
 

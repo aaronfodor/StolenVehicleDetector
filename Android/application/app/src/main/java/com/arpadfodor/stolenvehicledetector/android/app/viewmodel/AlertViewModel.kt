@@ -39,9 +39,6 @@ class AlertViewModel : MasterDetailViewModel(){
                 if(isSuccess){
 
                     deleteRecognition(id){ deleteSuccess ->
-                        if(deleteSuccess){
-                            deselectRecognition()
-                        }
                         callback(deleteSuccess)
                     }
 

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arpadfodor.stolenvehicledetector.android.app.R
@@ -17,7 +16,7 @@ class MasterFragment : AppFragment(){
 
     companion object{
 
-        const val TAG = "Master fragment"
+        val TAG = MasterFragment::class.java.simpleName
 
         lateinit var viewModel: MasterDetailViewModel
         var title = ""
@@ -67,6 +66,7 @@ class MasterFragment : AppFragment(){
         // Create the observer
         val listObserver = Observer<List<UserRecognition>> { list ->
             adapter.submitList(list)
+            adapter.notifyDataSetChanged()
         }
 
         // Observe the LiveData, passing in this viewLifeCycleOwner as the LifecycleOwner and the observer

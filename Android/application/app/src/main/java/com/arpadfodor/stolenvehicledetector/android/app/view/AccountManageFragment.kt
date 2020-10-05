@@ -16,7 +16,7 @@ class AccountManageFragment : AppFragment() {
 
     companion object{
 
-        const val TAG = "account manage fragment"
+        val TAG = AccountManageFragment::class.java.simpleName
         private lateinit var viewModel: AccountViewModel
 
         fun setParams(viewModel: AccountViewModel){

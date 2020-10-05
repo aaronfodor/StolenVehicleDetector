@@ -18,7 +18,6 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.repository.datacla
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.*
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.content_load.*
 
 class LoadActivity : AppActivity() {
@@ -222,18 +221,13 @@ class LoadActivity : AppActivity() {
 
                     viewModel.loadImage(selectedImageUri){isSuccess ->
                         if(!isSuccess){
-                            imageLoadFailedNotification()
+                            showErrorSnackBar(getString(R.string.image_load_failed))
                         }
                     }
 
                 }
             }
         }
-    }
-
-    private fun imageLoadFailedNotification(){
-        AppSnackBarBuilder.buildInfoSnackBar(this, container,
-            getString(R.string.image_load_failed), Snackbar.LENGTH_SHORT).show()
     }
 
     override fun appearingAnimations(){

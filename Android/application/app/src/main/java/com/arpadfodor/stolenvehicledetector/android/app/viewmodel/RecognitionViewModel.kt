@@ -27,6 +27,7 @@ class RecognitionViewModel : MasterDetailViewModel(){
 
             userRecognitionList.forEach { element ->
                 if(element.artificialId == selectedRecognitionId.value){
+                    element.isSelected = true
                     isSelectedRecognitionExists = true
                 }
             }
@@ -54,6 +55,8 @@ class RecognitionViewModel : MasterDetailViewModel(){
         ApiService.postReport(apiReport) { isPostSuccess ->
 
             if(isPostSuccess){
+
+                deselectRecognition()
 
                 val user = AccountService.userId
                 UserRecognitionRepository.updateSentFlagByIdAndUser(id, user, true){ isDbSuccess ->

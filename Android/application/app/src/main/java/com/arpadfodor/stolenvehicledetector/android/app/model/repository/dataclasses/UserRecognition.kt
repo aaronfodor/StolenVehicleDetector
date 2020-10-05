@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 
 data class UserRecognition(
     val artificialId: Int,
+    var isSelected: Boolean,
     var isSent: Boolean,
     val isAlert: Boolean,
     val licenseId: String,

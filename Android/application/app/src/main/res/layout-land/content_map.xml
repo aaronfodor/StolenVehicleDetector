@@ -37,7 +37,6 @@
         android:layout_margin="@dimen/margin_medium"
         android:backgroundTint="@color/colorButtonNeutral"
         app:srcCompat="@drawable/icon_map_layer"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/glHorizontalMiddle"
         app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="@string/map_change" />

@@ -20,6 +20,7 @@ import androidx.camera.core.Camera
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.camera.view.PreviewView
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -49,7 +50,7 @@ typealias DetectionListener = (recognition: Bitmap) -> Unit
 class CameraFragment : AppFragment() {
 
     companion object{
-        private const val TAG = "Camera fragment"
+        private val TAG = CameraFragment::class.java.simpleName
     }
 
     private val viewModel: CameraViewModel by activityViewModels()

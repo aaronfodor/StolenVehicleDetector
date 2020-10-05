@@ -56,6 +56,8 @@
     <dimen name="edit_text_stroke_focused">1.5dp</dimen>
     <dimen name="edit_text_padding">8dp</dimen>
 
+    <dimen name="image_corner_radius">20dp</dimen>
+
     <dimen name="navigation_menu_height">180dp</dimen>
     <dimen name="navigation_menu_vertical_spacing">8dp</dimen>
     <dimen name="navigation_menu_icon_vertical_spacing">36dp</dimen>

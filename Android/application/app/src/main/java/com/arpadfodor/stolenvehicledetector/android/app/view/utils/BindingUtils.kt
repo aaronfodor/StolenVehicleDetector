@@ -1,9 +1,10 @@
 package com.arpadfodor.stolenvehicledetector.android.app.view.utils
 
+import androidx.databinding.BindingAdapter
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.databinding.BindingAdapter
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 
@@ -52,25 +53,32 @@ fun ImageButton.setRecognitionEditButton(item: UserRecognition) {
 fun ImageButton.setRecognitionSendButton(item: UserRecognition) {
 
     if(item.isAlert){
-
         if(item.isSent){
             this.setImageResource(R.drawable.icon_added_recognition)
         }
         else{
             this.setImageResource(R.drawable.icon_add_recognition)
         }
-
     }
-
     else{
-
         if(item.isSent){
             this.setImageResource(R.drawable.icon_added_recognition)
         }
         else{
             this.setImageResource(R.drawable.icon_send)
         }
+    }
 
+}
+
+@BindingAdapter("recognitionBackground")
+fun ConstraintLayout.setListElementContainer(item: UserRecognition) {
+
+    if(item.isSelected){
+        this.setBackgroundResource(R.drawable.selected_background)
+    }
+    else{
+        this.setBackgroundResource(R.drawable.card_background)
     }
 
 }

@@ -225,4 +225,25 @@ abstract class AppActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         tvEmail.text = viewModel.getCurrentUserEmail()
     }
 
+    fun showInfoSnackBar(text: String){
+        AppSnackBarBuilder.buildInfoSnackBar(
+            this, activityDrawerLayout,
+            text, Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    fun showSuccessSnackBar(text: String){
+        AppSnackBarBuilder.buildSuccessSnackBar(
+            this, activityDrawerLayout,
+            text, Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    fun showErrorSnackBar(text: String){
+        AppSnackBarBuilder.buildAlertSnackBar(
+            this, activityDrawerLayout,
+            text, Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
 }

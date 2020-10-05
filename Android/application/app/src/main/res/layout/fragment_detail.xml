@@ -43,28 +43,13 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/paragraph_padding">
 
-                <androidx.cardview.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/tools"
-                    android:id="@+id/recognitionDetailImageCardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/paragraph_margin"
+                <ImageView
+                    android:id="@+id/recognitionDetailImage"
+                    app:srcCompat="@drawable/icon_image"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    card_view:cardCornerRadius="@dimen/card_corner_radius"
-                    card_view:cardPreventCornerOverlap="false">
-
-                    <ImageView
-                        android:id="@+id/recognitionDetailImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/icon_image"
-                        android:contentDescription="@string/recognition_image" />
-
-                </androidx.cardview.widget.CardView>
+                    style="@style/RecognitionImage"/>
 
                 <TextView
                     android:id="@+id/recognitionDetailLicenseIdLabel"
@@ -72,7 +57,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recognitionDetailImageCardView"
+                    app:layout_constraintTop_toBottomOf="@+id/recognitionDetailImage"
                     style="@style/ParagraphBodyTop"
                     android:text="@string/license_id_title"/>
 

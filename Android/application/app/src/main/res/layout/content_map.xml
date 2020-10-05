@@ -28,7 +28,7 @@
         app:srcCompat="@drawable/icon_update"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/glVerticalMiddle"
+        app:layout_constraintEnd_toEndOf="@+id/glVerticalMiddle"
         android:contentDescription="@string/map_update" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

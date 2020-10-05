@@ -12,12 +12,12 @@ object AppSnackBarBuilder {
     private fun buildAppSnackBar(view: View, text: String, duration: Int): Snackbar{
 
         val snackBar = Snackbar.make(view, text, duration)
-        val snackBarLayout = snackBar.view
+        //val snackBarLayout = snackBar.view
 
-        val textView = snackBarLayout.findViewById<View>(R.id.snackbar_text) as TextView
+        //val textView = snackBarLayout.findViewById<View>(R.id.snackbar_text) as TextView
         // to set drawable
-        textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-        textView.compoundDrawablePadding = 0
+        //textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+        //textView.compoundDrawablePadding = 0
 
         return snackBar
 

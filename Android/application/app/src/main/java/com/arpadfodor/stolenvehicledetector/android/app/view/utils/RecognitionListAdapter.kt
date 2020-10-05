@@ -12,7 +12,9 @@ import com.arpadfodor.stolenvehicledetector.android.app.databinding.RecognitionI
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 
 class RecognitionListAdapter(context: Context, clickListener: RecognitionEventListener) :
-    ListAdapter<UserRecognition, RecognitionListAdapter.RecognitionViewHolder>(RecognitionDiffCallback())
+    ListAdapter<UserRecognition, RecognitionListAdapter.RecognitionViewHolder>(
+        RecognitionDiffCallback()
+    )
 {
 
     private val context = context

@@ -38,7 +38,9 @@
         <!-- To use multiple models: android:value="ocr,model2,model3" -->
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="ocr" /> <!-- Declare notch support -->
+            android:value="ocr" />
+
+        <!-- Declare notch support -->
         <meta-data
             android:name="android.notch_support"
             android:value="true" />
@@ -54,10 +56,11 @@
             <!-- Main app intent filter -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
         <activity
             android:name=".view.AccountActivity"
             android:clearTaskOnLaunch="true"
@@ -65,6 +68,7 @@
             android:rotationAnimation="seamless"
             android:screenOrientation="fullUser"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".view.CameraActivity"
             android:clearTaskOnLaunch="true"
@@ -77,10 +81,11 @@
             <intent-filter>
                 <action android:name="android.media.action.IMAGE_CAPTURE" />
                 <action android:name="android.media.action.STILL_IMAGE_CAMERA" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
         </activity>
+
         <activity
             android:name=".view.LoadActivity"
             android:clearTaskOnLaunch="true"
@@ -88,36 +93,42 @@
             android:rotationAnimation="seamless"
             android:screenOrientation="fullUser"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".view.AlertActivity"
             android:icon="@mipmap/ic_launcher"
             android:rotationAnimation="seamless"
             android:screenOrientation="fullUser"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".view.RecognitionActivity"
             android:icon="@mipmap/ic_launcher"
             android:rotationAnimation="seamless"
             android:screenOrientation="fullUser"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".view.SettingsActivity"
             android:icon="@mipmap/ic_launcher"
             android:rotationAnimation="seamless"
             android:screenOrientation="fullUser"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/OptionsScreen" />
+
         <activity
             android:name=".view.AboutActivity"
             android:icon="@mipmap/ic_launcher"
             android:rotationAnimation="seamless"
             android:screenOrientation="fullUser"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".view.HowToUseActivity"
             android:icon="@mipmap/ic_launcher"
             android:rotationAnimation="seamless"
             android:screenOrientation="fullUser"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".view.MapActivity"
             android:clearTaskOnLaunch="true"

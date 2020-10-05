@@ -97,11 +97,22 @@ class ImageAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewM
 
             var i = 1
             for(pair in arrayOfIdImagePairs){
+
                 recognitions.add(
-                    UserRecognition(i, false, true, pair.first, pair.second,
-                        imageMeta[0], imageMeta[1], imageMeta[2], user)
+                    UserRecognition(
+                        artificialId = i,
+                        isSelected = false,
+                        isSent = false,
+                        isAlert = true,
+                        licenseId = pair.first,
+                        image = pair.second,
+                        date = imageMeta[0],
+                        latitude = imageMeta[1],
+                        longitude = imageMeta[2],
+                        reporter = user)
                 )
                 i++
+
             }
             viewModel.recognitions.postValue(recognitions.toTypedArray())
 

@@ -217,8 +217,20 @@ object UserRecognitionRepository {
 
     private fun dbUserRecognitionToUserRecognition(source: DbUserRecognition, image: Bitmap?) : UserRecognition {
         val artificialId = source.Id?.toInt() ?: 0
-        return UserRecognition(artificialId, source.isSent, false, source.Vehicle, image, source.timestampUTC,
-            source.latitude.toString(), source.longitude.toString(), source.Reporter, source.message)
+
+        return UserRecognition(
+            artificialId = artificialId,
+            isSelected = false,
+            isSent = source.isSent,
+            isAlert = false,
+            licenseId = source.Vehicle,
+            image = image,
+            date = source.timestampUTC,
+            latitude = source.latitude.toString(),
+            longitude = source.longitude.toString(),
+            reporter = source.Reporter,
+            message = source.message)
+
     }
 
     private fun dbUserRecognitionListToUserRecognitionList(sourceList: List<DbUserRecognition>, sourceImages: List<Bitmap?>) : List<UserRecognition>{

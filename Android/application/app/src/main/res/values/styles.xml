@@ -86,11 +86,6 @@
         <item name="android:textSize">@dimen/subtitle_text_size</item>
     </style>
 
-    <style name="SubtitleBold" parent="ParagraphBody">
-        <item name="android:textSize">@dimen/subtitle_text_size</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
     <style name="ParagraphBodyTop" parent="ParagraphBody">
         <item name="android:layout_marginTop">@dimen/paragraph_margin</item>
         <item name="android:layout_marginBottom">0dp</item>
@@ -141,6 +136,15 @@
         <item name="android:paddingStart">@dimen/button_padding_horizontal</item>
         <item name="android:paddingEnd">@dimen/button_padding_horizontal</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="RecognitionImage" parent="AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/paragraph_margin</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:contentDescription">@string/recognition_image</item>
     </style>
 
 </resources>

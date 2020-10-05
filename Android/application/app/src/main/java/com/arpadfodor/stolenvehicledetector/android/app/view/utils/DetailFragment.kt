@@ -15,15 +15,17 @@ import androidx.lifecycle.Observer
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.MasterDetailViewModel
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_detail.*
+
 
 class DetailFragment : AppFragment(){
 
     companion object{
 
-        const val TAG = "Detail fragment"
+        val TAG = DetailFragment::class.java.simpleName
 
         lateinit var viewModel: MasterDetailViewModel
         var title = ""
@@ -36,10 +38,17 @@ class DetailFragment : AppFragment(){
         var updateSucceedSnackBarText = ""
         var updateFailedSnackBarText = ""
 
-        fun setParams(viewModel: MasterDetailViewModel, title: String,
-                      sendSucceedSnackBarText: String, sendFailedSnackBarText: String, alreadySentSnackBarText: String,
-                      deletedSnackBarText: String, deleteFailedSnackBarText: String,
-                      updateSucceedSnackBarText: String, updateFailedSnackBarText: String){
+        fun setParams(
+            viewModel: MasterDetailViewModel,
+            title: String,
+            sendSucceedSnackBarText: String,
+            sendFailedSnackBarText: String,
+            alreadySentSnackBarText: String,
+            deletedSnackBarText: String,
+            deleteFailedSnackBarText: String,
+            updateSucceedSnackBarText: String,
+            updateFailedSnackBarText: String
+        ){
 
             this.viewModel = viewModel
             this.title = title
@@ -113,6 +122,8 @@ class DetailFragment : AppFragment(){
                         Glide
                             .with(this)
                             .load(bitmap)
+                            .transform(RoundedCorners(requireContext()
+                                .resources.getDimension(R.dimen.image_corner_radius).toInt()))
                             .error(R.drawable.icon_image)
                             .into(it)
                         it.appearingAnimation(requireContext())
@@ -148,7 +159,11 @@ class DetailFragment : AppFragment(){
                 recognitionDetailLicenseId.text = recognition.licenseId
                 recognitionDetailDate.text = recognition.date
                 recognitionDetailLocation.text =
-                    requireContext().getString(R.string.recognition_item_location_long, recognition.longitude, recognition.latitude)
+                    requireContext().getString(
+                        R.string.recognition_item_location_long,
+                        recognition.longitude,
+                        recognition.latitude
+                    )
 
                 detail_back_button.setOnClickListener {
                     viewModel.deselectRecognition()
@@ -156,7 +171,7 @@ class DetailFragment : AppFragment(){
 
                 detail_delete_button.setOnClickListener {
 
-                    viewModel.deleteRecognition(recognition.artificialId){isSuccess ->
+                    viewModel.deleteRecognition(recognition.artificialId){ isSuccess ->
 
                         val currentContext = context
                         val currentView = view
@@ -166,7 +181,6 @@ class DetailFragment : AppFragment(){
                         when(isSuccess){
 
                             true -> {
-                                viewModel.deselectRecognition()
 
                                 AppSnackBarBuilder.buildInfoSnackBar(
                                     currentContext,
@@ -174,14 +188,17 @@ class DetailFragment : AppFragment(){
                                     deletedSnackBarText,
                                     Snackbar.LENGTH_SHORT
                                 ).show()
+
                             }
                             else -> {
+
                                 AppSnackBarBuilder.buildAlertSnackBar(
                                     currentContext,
                                     currentView,
                                     deleteFailedSnackBarText,
                                     Snackbar.LENGTH_SHORT
                                 ).show()
+
                             }
                         }
 
@@ -229,8 +246,6 @@ class DetailFragment : AppFragment(){
                             when(isSuccess){
                                 true -> {
 
-                                    viewModel.deselectRecognition()
-
                                     AppSnackBarBuilder.buildSuccessSnackBar(
                                         currentContext,
                                         currentView,
@@ -262,7 +277,9 @@ class DetailFragment : AppFragment(){
                         val message = textView.text.toString()
 
                         return@setOnEditorActionListener when (actionId){
+
                             EditorInfo.IME_ACTION_DONE ->{
+
                                 viewModel.updateRecognitionMessage(id, message){ isSuccess ->
 
                                     val currentContext = context
@@ -270,25 +287,24 @@ class DetailFragment : AppFragment(){
                                     currentContext ?: return@updateRecognitionMessage
                                     currentView ?: return@updateRecognitionMessage
 
-                                    when(isSuccess){
-                                        true -> {}
-                                        else -> {
-                                            AppSnackBarBuilder.buildAlertSnackBar(
-                                                currentContext,
-                                                currentView,
-                                                updateFailedSnackBarText,
-                                                Snackbar.LENGTH_SHORT
-                                            ).show()
-                                        }
+                                    if(!isSuccess){
+                                        AppSnackBarBuilder.buildAlertSnackBar(
+                                            currentContext,
+                                            currentView,
+                                            updateFailedSnackBarText,
+                                            Snackbar.LENGTH_SHORT
+                                        ).show()
                                     }
 
                                 }
                                 recognitionDetailMessage.clearFocus()
                                 false
+
                             }
                             else -> {
                                 false
                             }
+
                         }
 
                     }

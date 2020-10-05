@@ -8,10 +8,11 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.repository.datacla
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils.AppViewModel
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 
 class MapViewModel : AppViewModel(){
 
-    val zoomLevel = 15f
+    var zoomLevel = 15f
 
     /**
      * List of reports to show on map
@@ -21,6 +22,11 @@ class MapViewModel : AppViewModel(){
     }
 
     /**
+     * Mutable list of markers - use it to remove them from the map
+     **/
+    val markers: MutableList<Marker> = mutableListOf()
+
+    /**
      * MapType code
      **/
     val mapType: MutableLiveData<Int> by lazy {
@@ -28,8 +34,18 @@ class MapViewModel : AppViewModel(){
     }
 
     fun getLocation() : LatLng{
-        val locationArray = LocationService.getLocation()
-        return LatLng(locationArray[0], locationArray[1])
+
+        val location = LocationService.getLocation()
+
+        // if location is full of 0s (probably invalid), show the globe
+        if(location[0] == 0.0 && location[1] == 0.0){
+            zoomLevel = 1f
+            location[0] = 49.118196
+            location[1] = -8.761787
+        }
+
+        return LatLng(location[0], location[1])
+
     }
 
     fun getCurrentUserId() : String{
@@ -61,6 +77,16 @@ class MapViewModel : AppViewModel(){
         }
 
         mapType.postValue(newType)
+
+    }
+
+    fun removeMapMarkers(){
+
+        for(marker in markers){
+            marker.remove()
+        }
+
+        markers.clear()
 
     }
 
