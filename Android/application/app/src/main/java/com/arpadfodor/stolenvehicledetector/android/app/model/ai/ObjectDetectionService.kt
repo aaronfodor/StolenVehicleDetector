@@ -11,7 +11,7 @@ class ObjectDetectionService {
         var model: ObjectDetector? = null
 
         fun initialize(assets: AssetManager, numThreads: Int){
-            model = MobileNetV3Coco(assets, numThreads)
+            model = MobileNetV2(assets, numThreads)
         }
 
         fun close(){
