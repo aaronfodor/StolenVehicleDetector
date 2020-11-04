@@ -1,0 +1,25 @@
+Model: ssd_efficientdet_d1_fpnlite_640x640_coco17_tpu-32_trained_at_2020-10-27_adam_lr002_step20k_mAP392
+
+File size: 36.707 MB
+----------
+Input: 
+(1, 640, 640, 3), type: DT_FLOAT - channels_last RGB
+non-quantized: 4 bytes/channels/pixel, [-1,1). This typically means mapping each pixel (linearly)
+to a value between [-1, 1]. Input image values between 0 and 255 are scaled by (1/128.0) and then a value of -1 is added to them to ensure the range is [-1,1).
+----------
+Output: 
+HashMap<Int, Any>, type: DT_FLOAT - Use labelmap.txt to interpret output indices
+
+The model outputs four arrays, mapped to the indices 0-4. Arrays 0, 1, and 2 describe 100 detected objects, with one element in each array corresponding to each object. There will always be 100 objects detected.
+
+0:	detection_boxes
+Multidimensional float32 tensor of shape [1, num_boxes, 4] with box locations. Floating point values between 0 and 1, the inner arrays representing bounding boxes in the form [top, left, bottom, right].
+
+1:	detection_classes
+A float32 tensor of shape [1, num_boxes] with class indices, each indicating the index of a class label from the labels file. 100 values.
+
+2	detection_scores
+A float32 tensor of shape [1, num_boxes] with class scores. Values between 0 and 1 representing probability that a class was detected. 100 values.
+
+3	num_boxes	
+float32 tensor of size 1 containing the number of detected boxes.
