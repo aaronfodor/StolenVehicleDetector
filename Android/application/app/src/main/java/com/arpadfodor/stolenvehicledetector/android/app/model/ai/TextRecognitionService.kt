@@ -2,12 +2,16 @@ package com.arpadfodor.stolenvehicledetector.android.app.model.ai
 
 import android.graphics.Bitmap
 import android.graphics.RectF
+import android.os.SystemClock
+import android.os.Trace
+import android.util.Log
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlin.math.min
 
 class TextRecognitionService {
 
@@ -19,59 +23,82 @@ class TextRecognitionService {
             model = TextRecognition.getClient()
         }
 
+        private const val MAX_RECOGNITIONS_PER_IMAGE = 2
+
     }
+
+    // enable logging for debugging purposes
+    var enableLogging = true
 
     /**
      * Suspend function - as the caller already runs on a background thread, this is not a problem.
      * The model inference method retrieves results in an async way, thus waiting is needed before returning.
      **/
-    private suspend fun process(input: InputImage) : RecognizedText{
+    private suspend fun process(input: InputImage) : List<RecognizedText>{
 
-        var recognizedText = RecognizedText("", "")
+        var recognizedTexts = mutableListOf<RecognizedText>()
 
         return suspendCoroutine { continuation ->
+
+            // Run model inference
+            Trace.beginSection("Inference")
+            val startInferenceTime = SystemClock.uptimeMillis()
 
             model.process(input)
                 .addOnSuccessListener {
 
                     val rawResult = it
-                    val recognitions = mutableListOf<RecognizedText>()
 
                     for(block in rawResult.textBlocks){
                         for(line in block.lines){
-                            for(element in line.elements){
-                                val recognition = RecognizedText(element.text, element.recognizedLanguage, RectF(element.boundingBox))
-                                recognitions.add(recognition)
-                            }
+                            val recognition = RecognizedText(line.text, line.recognizedLanguage, RectF(line.boundingBox))
+                            recognizedTexts.add(recognition)
                         }
                     }
 
-                    if(recognitions.isNotEmpty()){
-                        recognizedText = recognitions[0]
+                    if(recognizedTexts.isNotEmpty()){
+                        val takeFirstN = min(recognizedTexts.size, MAX_RECOGNITIONS_PER_IMAGE)
+                        recognizedTexts = recognizedTexts.take(takeFirstN).toMutableList()
                     }
 
-                    continuation.resume(recognizedText)
+                    continuation.resume(recognizedTexts)
+
+                    val inferenceDuration = SystemClock.uptimeMillis() - startInferenceTime
+                    log("Inference duration: $inferenceDuration")
+                    Trace.endSection()
+
+                    log("Text recognition results: ${recognizedTexts}")
+
 
                 }
                 .addOnFailureListener {
-                    continuation.resume(recognizedText)
+                    continuation.resume(recognizedTexts)
+
+                    log("Inference error")
+                    Trace.endSection()
                 }
 
         }
 
     }
 
-    fun recognizeText(image: Bitmap) : RecognizedText{
+    fun recognizeText(image: Bitmap) : List<RecognizedText>{
 
         val input = InputImage.fromBitmap(image, 0)
-        var recognizedText = RecognizedText("", "")
+        var recognizedTexts = listOf<RecognizedText>()
 
         runBlocking {
-            recognizedText = process(input)
+            recognizedTexts = process(input)
         }
 
-        return recognizedText
+        return recognizedTexts
 
+    }
+
+    private fun log(message: String){
+        if(enableLogging){
+            Log.println(Log.VERBOSE, "[OCR]", message)
+        }
     }
 
 }

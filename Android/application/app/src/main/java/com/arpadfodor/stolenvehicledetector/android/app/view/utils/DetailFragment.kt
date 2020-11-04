@@ -72,6 +72,7 @@ class DetailFragment : AppFragment(){
     private lateinit var recognitionDetailLicenseId: TextView
     private lateinit var recognitionDetailDate: TextView
     private lateinit var recognitionDetailLocation: TextView
+    private lateinit var recognitionDetailAddress: TextView
     private lateinit var detail_back_button: FloatingActionButton
     private lateinit var detail_delete_button: FloatingActionButton
     private lateinit var detail_send_button: FloatingActionButton
@@ -91,6 +92,7 @@ class DetailFragment : AppFragment(){
         recognitionDetailLicenseId = container.findViewById(R.id.recognitionDetailLicenseId)
         recognitionDetailDate = container.findViewById(R.id.recognitionDetailDate)
         recognitionDetailLocation = container.findViewById(R.id.recognitionDetailLocation)
+        recognitionDetailAddress = container.findViewById(R.id.recognitionDetailAddress)
         detail_back_button = container.findViewById(R.id.detail_back_button)
         detail_delete_button = container.findViewById(R.id.detail_delete_button)
         detail_send_button = container.findViewById(R.id.detail_send_button)
@@ -164,6 +166,10 @@ class DetailFragment : AppFragment(){
                         recognition.longitude,
                         recognition.latitude
                     )
+
+                viewModel.getAddressFromLocation(recognition.latitude.toDouble(), recognition.longitude.toDouble()){
+                    recognitionDetailAddress.text = requireContext().getString(R.string.recognition_item_address, it)
+                }
 
                 detail_back_button.setOnClickListener {
                     viewModel.deselectRecognition()

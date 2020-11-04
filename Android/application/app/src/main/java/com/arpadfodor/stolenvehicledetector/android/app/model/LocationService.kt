@@ -3,6 +3,7 @@ package com.arpadfodor.stolenvehicledetector.android.app.model
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.LocationManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.getSystemService
@@ -22,8 +23,11 @@ object LocationService {
 
     private var isLocationUpdating = false
 
+    private lateinit var geocoder: Geocoder
+
     fun initialize(appContext_: Context){
         appContext = appContext_
+        geocoder = Geocoder(appContext)
         locationManager = getSystemService(appContext, LocationManager::class.java) as LocationManager
         updateLocation()
     }
@@ -87,6 +91,25 @@ object LocationService {
 
     fun getLocation() : Array<Double>{
         return arrayOf(deviceLatitude, deviceLongitude)
+    }
+
+    fun getAddressFromLocation(lat: Double, long: Double, resultCallback: (String) -> Unit){
+
+        var addressString = ""
+
+        Thread{
+
+            try{
+                val address = geocoder.getFromLocation(lat, long, 1)[0]
+                addressString += address.getAddressLine(0).toString()
+                resultCallback(addressString)
+            }
+            catch (e: Exception){
+                resultCallback(addressString)
+            }
+
+        }.start()
+
     }
 
 }

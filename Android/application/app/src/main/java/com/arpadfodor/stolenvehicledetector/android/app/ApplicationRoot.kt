@@ -5,10 +5,7 @@ import android.app.Application
 import android.os.Build
 import android.util.Log
 import androidx.preference.PreferenceManager
-import com.arpadfodor.stolenvehicledetector.android.app.model.BoundingBoxDrawer
-import com.arpadfodor.stolenvehicledetector.android.app.model.LocationService
-import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
-import com.arpadfodor.stolenvehicledetector.android.app.model.TextToSpeechService
+import com.arpadfodor.stolenvehicledetector.android.app.model.*
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.ObjectDetectionService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ai.TextRecognitionService

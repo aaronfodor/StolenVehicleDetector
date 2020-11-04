@@ -3,8 +3,8 @@
 <!DOCTYPE resources [
     <!ENTITY appName "Stolen Vehicle Detector">
     <!ENTITY appId "">
-    <!ENTITY appVersion "v0.23">
-    <!ENTITY appDate "01/10/2020">
+    <!ENTITY appVersion "v0.25">
+    <!ENTITY appDate "03/11/2020">
     <!ENTITY appCreator "Arpad Fodor">
     <!ENTITY adMobAppId "ca-app-pub-3940256099942544~3347511713">
     <!ENTITY adMobBannerId "ca-app-pub-3940256099942544/6300978111">
@@ -119,11 +119,13 @@
     <string name="recognition_item_timestamp">Time (UTC): %1$s</string>
     <string name="recognition_item_location">lat=%1$.5f, long=%2$.5f</string>
     <string name="recognition_item_location_long">lat=%1$s, long=%2$s</string>
+    <string name="recognition_item_address">%1$s</string>
     <string name="recognition_item_message">Message: %1$s</string>
     <string name="message_edit_text_title">Message</string>
     <string name="license_id_title">License Id</string>
     <string name="date_title">Time (UTC)</string>
     <string name="location_title">Location</string>
+    <string name="address_title">Address</string>
 
     <string name="image_saved">Image saved</string>
     <string name="image_save_failed">Image saving failed</string>

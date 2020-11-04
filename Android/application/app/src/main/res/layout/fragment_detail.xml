@@ -135,6 +135,25 @@
                     app:layout_constraintTop_toBottomOf="@+id/recognitionDetailLocationLabel"
                     style="@style/SubtitleBottom" />
 
+                <TextView
+                    android:id="@+id/recognitionDetailAddressLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recognitionDetailLocation"
+                    style="@style/ParagraphBodyTop"
+                    android:text="@string/address_title"/>
+
+                <TextView
+                    android:id="@+id/recognitionDetailAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recognitionDetailAddressLabel"
+                    style="@style/SubtitleBottom" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>

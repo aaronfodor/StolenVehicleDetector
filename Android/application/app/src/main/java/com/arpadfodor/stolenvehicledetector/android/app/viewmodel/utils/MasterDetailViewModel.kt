@@ -1,6 +1,7 @@
 package com.arpadfodor.stolenvehicledetector.android.app.viewmodel.utils
 
 import androidx.lifecycle.MutableLiveData
+import com.arpadfodor.stolenvehicledetector.android.app.model.LocationService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 
 abstract class MasterDetailViewModel : AppViewModel(){
@@ -84,6 +85,10 @@ abstract class MasterDetailViewModel : AppViewModel(){
         }
         recognitions.postValue(recognitions.value)
 
+    }
+
+    fun getAddressFromLocation(lat: Double, long: Double, callback: (String) -> Unit){
+        return LocationService.getAddressFromLocation(lat, long, callback)
     }
 
 }

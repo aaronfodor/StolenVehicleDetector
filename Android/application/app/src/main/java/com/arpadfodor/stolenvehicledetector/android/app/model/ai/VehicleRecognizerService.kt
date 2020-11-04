@@ -2,6 +2,9 @@ package com.arpadfodor.stolenvehicledetector.android.app.model.ai
 
 import android.graphics.Bitmap
 import android.graphics.RectF
+import android.os.SystemClock
+import android.os.Trace
+import android.util.Log
 import android.util.Size
 import com.arpadfodor.stolenvehicledetector.android.app.model.BoundingBoxDrawer
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
@@ -29,11 +32,19 @@ class VehicleRecognizerService {
         }
 
         private fun normalizeLicenseId(licenseId: String) : String{
-            return licenseId.replace("-", "")
-                .replace("_", "").toUpperCase(Locale.ROOT)
+            return licenseId
+                .replace("-", "")
+                .replace("_", "")
+                .replace(" ", "")
+                .toUpperCase(Locale.ROOT)
         }
 
+        private const val OBJECT_TO_RECOGNIZE_TEXT_TITLE = "License plate"
+
     }
+
+    // enable logging for debugging purposes
+    var enableLogging = true
 
     private val objectDetectionService = ObjectDetectionService()
     private val textRecognitionService = TextRecognitionService()
@@ -42,8 +53,18 @@ class VehicleRecognizerService {
                   maximumRecognitionsToShow: Int, minimumPredictionCertaintyToShow: Float,
                   callback: (Array<Pair<String, Bitmap>>) -> Unit) : Bitmap{
 
+        val startRecognitionTime = SystemClock.uptimeMillis()
+
+        // Pre-process image
+        Trace.beginSection("Pre-process image")
+        val startPreprocessingTime = SystemClock.uptimeMillis()
+
         val bitmapNxN = ImageConverter.bitmapToCroppedNxNImage(inputImage)
         val requiredInputImage = ImageConverter.resizeBitmap(bitmapNxN, objectDetectionService.getModelInputSize())
+
+        val preprocessingDuration = SystemClock.uptimeMillis() - startPreprocessingTime
+        log("Image pre-processing duration: $preprocessingDuration")
+        Trace.endSection()
 
         // Compute results
         val recognizedObjects = objectDetectionService.recognizeImage(requiredInputImage,
@@ -53,28 +74,67 @@ class VehicleRecognizerService {
 
         for(recognizedObject in recognizedObjects){
 
-            if(recognizedObject.title == "License plate"){
+            if(recognizedObject.title == OBJECT_TO_RECOGNIZE_TEXT_TITLE){
 
                 val ratio = (bitmapNxN.height.toFloat())/(requiredInputImage.height.toFloat())
                 val scaledRectF = RectF(recognizedObject.location.left*ratio, recognizedObject.location.top*ratio,
                     recognizedObject.location.right*ratio, recognizedObject.location.bottom*ratio)
 
-                val textImageSnippet = ImageConverter.cutPieceFromImage(bitmapNxN, scaledRectF)
-                val recognizedText = textRecognitionService.recognizeText(textImageSnippet)
-                recognizedObject.extra = recognizedText.getShortStringWithExtra()
+                // Run image cut
+                Trace.beginSection("Image snippet")
+                val startCutTime = SystemClock.uptimeMillis()
 
-                if(isIdSuspicious(recognizedText.text)){
-                    recognizedObject.alertNeeded = true
-                    recognitions.add(Pair(recognizedText.text, textImageSnippet))
+                val textImageSnippet = ImageConverter.cutPieceFromImage(bitmapNxN, scaledRectF)
+
+                val cutDuration = SystemClock.uptimeMillis() - startCutTime
+                log("Image cut duration: $cutDuration")
+                Trace.endSection()
+
+                val recognizedTexts = textRecognitionService.recognizeText(textImageSnippet)
+
+                if(recognizedTexts.isNotEmpty()){
+
+                    recognizedObject.extra = recognizedTexts[0].getShortStringWithExtra()
+
+                    // Check if any of the texts are suspicious
+                    Trace.beginSection("Check if text suspicious")
+                    val startCheckIfSuspiciousTime = SystemClock.uptimeMillis()
+
+                    for(recognizedText in recognizedTexts){
+
+                        if(isIdSuspicious(recognizedText.text){suspiciousTo -> recognizedText.text = suspiciousTo}){
+                            recognizedObject.extra = recognizedText.getShortStringWithExtra()
+                            recognizedObject.alertNeeded = true
+                            recognitions.add(Pair(recognizedText.text, textImageSnippet))
+                            break
+                        }
+
+                    }
+
+                    val checkIfSuspiciousDuration = SystemClock.uptimeMillis() - startCheckIfSuspiciousTime
+                    log("Check if text suspicious: $checkIfSuspiciousDuration")
+                    Trace.endSection()
+
                 }
 
             }
 
         }
 
+        // Create mask image
+        Trace.beginSection("Mask image")
+        val startMaskTime = SystemClock.uptimeMillis()
+
         val optimalBoundingBoxImageSize = ImageConverter.resizeBitmap(requiredInputImage, outputImageSize)
         val boundingBoxBitmap = BoundingBoxDrawer.drawBoundingBoxes(optimalBoundingBoxImageSize,
             deviceOrientation, objectDetectionService.getModelInputSize(), recognizedObjects)
+
+        val maskDuration = SystemClock.uptimeMillis() - startMaskTime
+        log("Create mask image duration: $maskDuration")
+        Trace.endSection()
+
+        val recognitionDuration = SystemClock.uptimeMillis() - startRecognitionTime
+        log("** Whole recognition duration: $recognitionDuration **")
 
         callback(recognitions.toTypedArray())
 
@@ -82,18 +142,25 @@ class VehicleRecognizerService {
 
     }
 
-    private fun isIdSuspicious(licenseId: String) : Boolean{
+    private fun isIdSuspicious(licenseId: String, similarTo: (String) -> Unit) : Boolean{
 
         val normalizedLicenseId = normalizeLicenseId(licenseId)
 
-        for(element in stolenVehicles){
-            if(element.licenseId == normalizedLicenseId){
+        for(vehicle in stolenVehicles){
+            if(normalizedLicenseId.contains(vehicle.licenseId, ignoreCase = true)){
+                similarTo(vehicle.licenseId)
                 return true
             }
         }
 
         return false
 
+    }
+
+    private fun log(message: String){
+        if(enableLogging){
+            Log.println(Log.VERBOSE, "[Vehicle recognizer service]", message)
+        }
     }
 
 }

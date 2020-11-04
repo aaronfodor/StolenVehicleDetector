@@ -213,7 +213,7 @@ abstract class ObjectDetector(
         val recognitionsSize = min(NUM_DETECTIONS, maximumRecognitionsToShow)
 
         // Show the top detections after scaling them back to the input size
-        val recognitions: ArrayList<RecognizedObject> = ArrayList<RecognizedObject>(recognitionsSize)
+        val detections: ArrayList<RecognizedObject> = ArrayList<RecognizedObject>(recognitionsSize)
 
         for (i in 0 until recognitionsSize){
 
@@ -245,7 +245,7 @@ abstract class ObjectDetector(
                         return ArrayList<RecognizedObject>(0)
                     }
 
-                recognitions.add(
+                detections.add(
                     RecognizedObject("" + i, title, certainty, detection)
                 )
 
@@ -254,18 +254,17 @@ abstract class ObjectDetector(
         }
 
         Trace.endSection()
+        log("detection results: ${detections}")
 
-        log("detection results: ${recognitions}")
-
-        return recognitions
+        return detections
 
     }
 
     private fun preProcessImage(image: Bitmap): ByteBuffer{
 
         // Pre-process image
-        Trace.beginSection("pre-processing image")
-        val startPreProcessTime = SystemClock.uptimeMillis()
+        Trace.beginSection("create byte buffer image")
+        val startByteBufferTime = SystemClock.uptimeMillis()
 
         image.getPixels(intValues, 0, image.width, 0, 0, image.width, image.height)
 
@@ -292,8 +291,8 @@ abstract class ObjectDetector(
             }
         }
 
-        val preProcessDuration = SystemClock.uptimeMillis() - startPreProcessTime
-        log("Image pre-processing duration: $preProcessDuration")
+        val byteBufferDuration = SystemClock.uptimeMillis() - startByteBufferTime
+        log("Create byte buffer duration: $byteBufferDuration")
         Trace.endSection()
 
         return imgData
@@ -311,7 +310,7 @@ abstract class ObjectDetector(
 
     private fun log(message: String){
         if(enableLogging){
-            Log.println(Log.VERBOSE, "[Obj. detector]", message)
+            Log.println(Log.VERBOSE, "[Detector]", message)
         }
     }
 
