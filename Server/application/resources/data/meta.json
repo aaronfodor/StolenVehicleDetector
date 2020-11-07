@@ -1,22 +1,17 @@
 [
   {
-    "Id": "vehicles",
+    "tableId": "vehicle",
     "dataSize": 2199,
-    "modificationTimeStampUTC": "2020-07-17 08:40:50"
+    "modificationTimeStampUTC": "2020-11-06 21:56:16"
   },
   {
-    "Id": "currents",
+    "tableId": "user",
+    "dataSize": 3,
+    "modificationTimeStampUTC": "2020-11-07 11:15:27"
+  },
+  {
+    "tableId": "report",
     "dataSize": 1,
-    "modificationTimeStampUTC": "2020-07-18 13:03:57"
-  },
-  {
-    "Id": "users",
-    "dataSize": 2,
-    "modificationTimeStampUTC": "2020-07-18 13:06:42"
-  },
-  {
-    "Id": "reports",
-    "dataSize": 1,
-    "modificationTimeStampUTC": "2020-07-18 13:06:42"
+    "modificationTimeStampUTC": "2020-11-07 11:15:27"
   }
 ]

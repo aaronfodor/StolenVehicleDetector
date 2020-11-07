@@ -2,7 +2,7 @@ package com.arpadfodor.ktor.model
 
 import java.lang.Exception
 
-object Validator{
+object ValidatorService{
 
     fun isUtcTimeStampValid(timeStamp: String) : Boolean{
         return (isValidUtcTimeStamp(timeStamp) && isTimeStampAfterNow(timeStamp))

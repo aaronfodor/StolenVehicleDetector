@@ -1,6 +1,6 @@
-package com.arpadfodor.ktor.communication
+package com.arpadfodor.ktor
 
-import com.arpadfodor.ktor.model.*
+import com.arpadfodor.ktor.communication.*
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.response.*
@@ -15,6 +15,8 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.gson.gson
 import io.ktor.request.receive
+import com.arpadfodor.ktor.model.Interactor
+import com.arpadfodor.ktor.model.AuthService
 import java.lang.Exception
 import java.text.DateFormat
 
@@ -28,7 +30,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 fun Application.module(testing: Boolean = false) {
 
     val model = Interactor()
-    val authenticator = AuthenticatorService()
+    val authenticator = AuthService()
 
     val client = HttpClient(Apache) {
     }
@@ -46,7 +48,7 @@ fun Application.module(testing: Boolean = false) {
             realm = Interactor.API_NAME
             validate {
 
-                val statusCode = authenticator.validateUser(it.name, it.password, Interactor.PERMISSION_MODIFY_SELF)
+                val statusCode = authenticator.authorizeUser(it.name, it.password, Interactor.PERMISSION_MODIFY_SELF)
                 if (ExceptionHandler.isNoException(statusCode)){
                     UserIdPrincipal(it.name)
                 }
@@ -61,7 +63,7 @@ fun Application.module(testing: Boolean = false) {
             realm = Interactor.API_NAME
             validate {
 
-                val statusCode = authenticator.validateUser(it.name, it.password, Interactor.PERMISSION_ADMIN)
+                val statusCode = authenticator.authorizeUser(it.name, it.password, Interactor.PERMISSION_ADMIN)
                 if (ExceptionHandler.isNoException(statusCode)){
                     UserIdPrincipal(it.name)
                 }
@@ -76,7 +78,7 @@ fun Application.module(testing: Boolean = false) {
             realm = Interactor.API_NAME
             validate {
 
-                val statusCode = authenticator.validateUser(it.name, it.password, Interactor.PERMISSION_API_GET)
+                val statusCode = authenticator.authorizeUser(it.name, it.password, Interactor.PERMISSION_API_GET)
                 if (ExceptionHandler.isNoException(statusCode)){
                     UserIdPrincipal(it.name)
                 }
@@ -91,7 +93,7 @@ fun Application.module(testing: Boolean = false) {
             realm = Interactor.API_NAME
             validate {
 
-                val statusCode = authenticator.validateUser(it.name, it.password, Interactor.PERMISSION_API_POST)
+                val statusCode = authenticator.authorizeUser(it.name, it.password, Interactor.PERMISSION_API_POST)
                 if (ExceptionHandler.isNoException(statusCode)){
                     UserIdPrincipal(it.name)
                 }
@@ -106,7 +108,7 @@ fun Application.module(testing: Boolean = false) {
             realm = Interactor.API_NAME
             validate {
 
-                val statusCode = authenticator.validateUser(it.name, it.password, Interactor.PERMISSION_REGISTER)
+                val statusCode = authenticator.authorizeUser(it.name, it.password, Interactor.PERMISSION_REGISTER)
                 if (ExceptionHandler.isNoException(statusCode)){
                     UserIdPrincipal(it.name)
                 }
@@ -170,6 +172,10 @@ fun Application.module(testing: Boolean = false) {
                             h3 { +"*/vehicles/meta" }
                             li { +"Permission needed: ${Interactor.PERMISSION_API_GET}" }
                             li { +"Response type: json" }
+                            h2 { +"Post load web-parsed vehicles" }
+                            h3 { +"*/vehicles/load" }
+                            li { +"Permission needed: ${Interactor.PERMISSION_ADMIN}" }
+                            li { +"Loads vehicles from the web-parsed local file." }
                             h2 { +"Put vehicles list" }
                             h3 { +"*/vehicles" }
                             li { +"Permission needed: ${Interactor.PERMISSION_ADMIN}" }
@@ -197,19 +203,6 @@ fun Application.module(testing: Boolean = false) {
                             h3{ +"*/reports" }
                             li { +"Permission needed: ${Interactor.PERMISSION_ADMIN}" }
                             li { +"Deletes existing reports." }
-                        }
-
-                        h1 { +"Report history" }
-                        ul {
-                            h2 { +"Get report history" }
-                            h3{ +"*/report_history" }
-                            h3 { +"*/report_history/meta" }
-                            li { +"Permission needed: ${Interactor.PERMISSION_ADMIN}" }
-                            li { +"Response type: json" }
-                            h2 { +"Delete report history" }
-                            h3{ +"*/report_history" }
-                            li { +"Permission needed: ${Interactor.PERMISSION_ADMIN}" }
-                            li { +"Deletes existing report history." }
                         }
 
                         h1 { +"Self" }
@@ -256,17 +249,14 @@ fun Application.module(testing: Boolean = false) {
                         h1 { +"Status" }
                         ul {
                             h2 { +"Vehicles" }
-                            li { +"Last update (UTC): ${model.getTableModificationTimestamp(Interactor.VEHICLES)}" }
-                            li { +"Number of stolen vehicles: ${model.getTableSize(Interactor.VEHICLES)}" }
+                            li { +"Last update (UTC): ${model.getTableModificationTimestamp(Interactor.VEHICLE)}" }
+                            li { +"Number of stolen vehicles: ${model.getTableSize(Interactor.VEHICLE)}" }
                             h2 { +"Reports" }
-                            li { +"Last update (UTC): ${model.getTableModificationTimestamp(Interactor.REPORTS)}" }
-                            li { +"Report number (distinct vehicles): ${model.getTableSize(Interactor.REPORTS)}" }
-                            h2 { +"Report history" }
-                            li { +"Last update (UTC): ${model.getTableModificationTimestamp(Interactor.REPORT_HISTORY)}" }
-                            li { +"Number of report history items: ${model.getTableSize(Interactor.REPORT_HISTORY)}" }
+                            li { +"Last update (UTC): ${model.getTableModificationTimestamp(Interactor.REPORT)}" }
+                            li { +"Report number (distinct vehicles): ${model.getTableSize(Interactor.REPORT)}" }
                             h2 { +"Users" }
-                            li { +"Last update (UTC): ${model.getTableModificationTimestamp(Interactor.USERS)}" }
-                            li { +"Number of users: ${model.getTableSize(Interactor.USERS)}" }
+                            li { +"Last update (UTC): ${model.getTableModificationTimestamp(Interactor.USER)}" }
+                            li { +"Number of users: ${model.getTableSize(Interactor.USER)}" }
                         }
                     }
                 }
@@ -279,7 +269,7 @@ fun Application.module(testing: Boolean = false) {
                     get("") {
                         var jsonContent = ""
                         try {
-                            jsonContent = model.getDataAsJson(Interactor.VEHICLES)
+                            jsonContent = model.getDataAsJson(Interactor.VEHICLE)
                         }
                         catch (e: Exception){
                             throw InternalServerError()
@@ -290,7 +280,7 @@ fun Application.module(testing: Boolean = false) {
                     get("/meta") {
                         var jsonContent = ""
                         try {
-                            jsonContent = model.getMetaDataAsJson(Interactor.VEHICLES)
+                            jsonContent = model.getMetaDataAsJson(Interactor.VEHICLE)
                         }
                         catch (e: Exception){
                             throw InternalServerError()
@@ -304,6 +294,17 @@ fun Application.module(testing: Boolean = false) {
             }
 
             authenticate(configurations = *arrayOf(Interactor.PERMISSION_ADMIN)) {
+
+                post("/vehicles/load") {
+
+                    val statusCode = model.rawVehiclesFileToDatabase()
+                    if (ExceptionHandler.isNoException(statusCode)) {
+                        call.respond(HttpStatusCode.Created, "MODIFIED")
+                    } else {
+                        ExceptionHandler.throwAppropriateException(statusCode)
+                    }
+
+                }
 
                 put("/vehicles") {
 
@@ -322,43 +323,10 @@ fun Application.module(testing: Boolean = false) {
                     val stringPayload = call.receive<String>()
                     val statusCode = model.deleteVehicles()
                     model.deleteReports()
-                    model.deleteReportHistory()
                     if (ExceptionHandler.isNoException(statusCode)) {
                         call.respond(HttpStatusCode.OK, "DELETED")
                     } else {
                         ExceptionHandler.throwAppropriateException(statusCode)
-                    }
-
-                }
-
-            }
-
-            authenticate(configurations = *arrayOf(Interactor.PERMISSION_API_GET)) {
-
-                route("/reports"){
-
-                    get("") {
-                        var jsonContent = ""
-                        try {
-                            jsonContent =  model.getDataAsJson(Interactor.REPORTS)
-                        }
-                        catch (e: Exception){
-                            throw InternalServerError()
-                        }
-
-                        call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
-                    }
-
-                    get("/meta") {
-                        var jsonContent = ""
-                        try {
-                            jsonContent = model.getMetaDataAsJson(Interactor.REPORTS)
-                        }
-                        catch (e: Exception){
-                            throw InternalServerError()
-                        }
-
-                        call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
                     }
 
                 }
@@ -389,51 +357,6 @@ fun Application.module(testing: Boolean = false) {
 
                     val stringPayload = call.receive<String>()
                     val statusCode = model.deleteReports()
-                    if (ExceptionHandler.isNoException(statusCode)){
-                        call.respond(HttpStatusCode.OK, "DELETED")
-                    }
-                    else{
-                        ExceptionHandler.throwAppropriateException(statusCode)
-                    }
-
-                }
-
-            }
-
-            authenticate(configurations = *arrayOf(Interactor.PERMISSION_ADMIN)) {
-
-                route("/report_history"){
-
-                    get("") {
-                        var jsonContent = ""
-                        try {
-                            jsonContent =  model.getDataAsJson(Interactor.REPORT_HISTORY)
-                        }
-                        catch (e: Exception){
-                            throw InternalServerError()
-                        }
-
-                        call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
-                    }
-
-                    get("/meta") {
-                        var jsonContent = ""
-                        try {
-                            jsonContent = model.getMetaDataAsJson(Interactor.REPORT_HISTORY)
-                        }
-                        catch (e: Exception){
-                            throw InternalServerError()
-                        }
-
-                        call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
-                    }
-
-                }
-
-                delete("/report_history"){
-
-                    val stringPayload = call.receive<String>()
-                    val statusCode = model.deleteReportHistory()
                     if (ExceptionHandler.isNoException(statusCode)){
                         call.respond(HttpStatusCode.OK, "DELETED")
                     }

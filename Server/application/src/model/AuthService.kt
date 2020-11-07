@@ -1,13 +1,14 @@
 package com.arpadfodor.ktor.model
 
 import com.arpadfodor.ktor.communication.StatusCodes
-import com.arpadfodor.ktor.model.dataclasses.PermissionType
-import com.arpadfodor.ktor.model.dataclasses.User
+import com.arpadfodor.ktor.data.dataclasses.PermissionType
+import com.arpadfodor.ktor.data.dataclasses.User
 
-class AuthenticatorService{
+class AuthService{
 
-    fun validateUser(email: String, password: String, permission: String) : Int{
-        val permissionToValidate = when(permission){
+    fun authorizeUser(email: String, password: String, permission: String) : Int{
+
+        val requiredPermission = when(permission){
             Interactor.PERMISSION_API_GET -> PermissionType.API_GET
             Interactor.PERMISSION_API_POST -> PermissionType.API_POST
             Interactor.PERMISSION_MODIFY_SELF -> PermissionType.MODIFY_SELF
@@ -15,8 +16,9 @@ class AuthenticatorService{
             Interactor.PERMISSION_ADMIN -> PermissionType.ADMINISTRATOR
             else -> return StatusCodes.BAD_REQUEST
         }
-        val userToValidate = User(email, "", password, "", true, 0, mutableListOf(permissionToValidate))
-        return Interactor.usersDAO.validateCredentials(userToValidate)
+        val userToValidate = User(email, password, "", "", true, 0, mutableListOf())
+
+        return Interactor.userRepository.authorizeUser(userToValidate, requiredPermission)
     }
 
 }

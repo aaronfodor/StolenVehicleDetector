@@ -1,8 +1,10 @@
 package com.arpadfodor.ktor.model
 
-import com.arpadfodor.ktor.model.dataclasses.*
 import com.google.gson.GsonBuilder
-import DAL.dataclasses.RawVehicle
+import com.arpadfodor.ktor.data.dataclasses.RawVehicle
+import com.arpadfodor.ktor.data.dataclasses.Vehicle
+import com.google.gson.Gson
+import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,6 +36,16 @@ object DataTransformer{
     fun stringToDate(dateString: String) : Date {
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
         return sdf.parse(dateString)
+    }
+
+    fun <T>jsonToType(jsonContent: String, typeToken: Type) : T?{
+        try{
+            return Gson().fromJson<T>(jsonContent, typeToken)
+        }
+        catch(e: Exception){
+            e.printStackTrace()
+        }
+        return null
     }
 
 }

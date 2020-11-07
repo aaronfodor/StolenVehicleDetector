@@ -1,7 +1,7 @@
-package com.arpadfodor.ktor.model.dataclasses
+package com.arpadfodor.ktor.data.dataclasses
 
 data class MetaData(
-    var Id: String,
+    var tableId: String,
     var dataSize: Int,
     var modificationTimeStampUTC: String
 )
