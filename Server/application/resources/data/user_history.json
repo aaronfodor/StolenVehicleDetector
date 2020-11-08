@@ -1,0 +1,67 @@
+[
+  {
+    "email": "abc@123.com",
+    "password": "password",
+    "name": "administrator",
+    "hint": "hint",
+    "active": true,
+    "numReports": 55,
+    "permissions": [
+      "API_GET",
+      "API_POST",
+      "MODIFY_SELF",
+      "REGISTER",
+      "ADMINISTRATOR"
+    ],
+    "key": "abc@123.com",
+    "version": 1,
+    "validFromUTC": "",
+    "validToUTC": ""
+  },
+  {
+    "email": "default_user@stolen_vehicle_detector",
+    "password": "default_user_czka84",
+    "name": "Default User",
+    "hint": "",
+    "active": true,
+    "numReports": 0,
+    "permissions": [
+      "API_GET",
+      "REGISTER"
+    ],
+    "key": "abc@123.com",
+    "version": 1,
+    "validFromUTC": "",
+    "validToUTC": ""
+  },
+  {
+    "email": "default@detector.com",
+    "password": "default_user_czka84",
+    "name": "Default User",
+    "hint": "",
+    "active": false,
+    "numReports": 5,
+    "permissions": [
+      "API_GET",
+      "API_POST",
+      "REGISTER"
+    ],
+    "key": "default@detector",
+    "version": 2,
+    "validFromUTC": "2020-11-07 11:15:27",
+    "validToUTC": ""
+  },
+  {
+    "email": "me@a.io",
+    "password": "wauuuu",
+    "name": "Sanyi!",
+    "hint": "",
+    "active": true,
+    "numReports": 0,
+    "permissions": [],
+    "key": "me@a.io",
+    "version": 2,
+    "validFromUTC": "2020-11-08 16:47:52",
+    "validToUTC": "2020-11-08 16:50:14"
+  }
+]
