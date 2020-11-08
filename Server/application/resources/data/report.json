@@ -9,5 +9,16 @@
     "version": 2,
     "validFromUTC": "2020-11-07 10:53:55",
     "validToUTC": ""
+  },
+  {
+    "vehicleLicenseId": "SAMSUNG",
+    "reporterEmail": "abc@123.com",
+    "latitude": 47.0,
+    "longitude": 19.0,
+    "message": "Wowza!",
+    "key": "SAMSUNG",
+    "version": 2,
+    "validFromUTC": "2020-11-08 10:01:55",
+    "validToUTC": ""
   }
 ]

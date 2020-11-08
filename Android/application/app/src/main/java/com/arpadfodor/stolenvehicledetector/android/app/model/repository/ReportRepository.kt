@@ -152,8 +152,8 @@ object ReportRepository {
     }
 
     private fun apiReportToReport(source: ApiReport) : Report{
-        return Report(source.Id, source.Vehicle, source.Reporter,
-            source.latitude, source.longitude, source.message, source.timestampUTC)
+        return Report(0, source.vehicleLicenseId, source.reporterEmail,
+            source.latitude, source.longitude, source.message, source.validFromUTC)
     }
 
     private fun reportToDbReport(source: Report) : DbReport{

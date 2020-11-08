@@ -1,5 +1,17 @@
 [
   {
+   "name": "Rendszám: SAMSUNG",
+   "type": "Jármű fajta: DEVICE",
+   "manufacturer": "Gyártmány: SAMSUNG",
+   "color": "Szín: MANY"
+  },
+  {
+   "name": "Rendszám: HJC-759",
+   "type": "Jármű fajta: SZEMÉLYGÉPKOCSI",
+   "manufacturer": "Gyártmány: OPEL",
+   "color": "Szín: FEKETE"
+  },
+  {
    "name": "Rendszám: OP-980BX",
    "type": "Jármű fajta: PÓTKOCSI",
    "manufacturer": "Gyártmány: LIEBHERR",

@@ -1,275 +1,324 @@
 [
   {
     "id": 1,
-    "timestampUTC": "2020-11-07 11:06:35",
+    "timestampUTC": "2020-11-08 15:31:15",
     "type": "INFO",
     "summary": "VehiclesRepository",
     "message": "Initialized."
   },
   {
     "id": 2,
-    "timestampUTC": "2020-11-07 11:06:35",
+    "timestampUTC": "2020-11-08 15:31:15",
     "type": "INFO",
     "summary": "ReportRepository",
     "message": "Initialized."
   },
   {
     "id": 3,
-    "timestampUTC": "2020-11-07 11:06:35",
+    "timestampUTC": "2020-11-08 15:31:15",
     "type": "INFO",
     "summary": "UsersRepository",
     "message": "Initialized."
   },
   {
     "id": 1,
-    "timestampUTC": "2020-11-07 11:08:21",
+    "timestampUTC": "2020-11-08 16:00:46",
     "type": "INFO",
     "summary": "VehiclesRepository",
     "message": "Initialized."
   },
   {
     "id": 2,
-    "timestampUTC": "2020-11-07 11:08:21",
+    "timestampUTC": "2020-11-08 16:00:46",
     "type": "INFO",
     "summary": "ReportRepository",
     "message": "Initialized."
   },
   {
     "id": 3,
-    "timestampUTC": "2020-11-07 11:08:21",
+    "timestampUTC": "2020-11-08 16:00:46",
     "type": "INFO",
     "summary": "UsersRepository",
     "message": "Initialized."
   },
   {
     "id": 1,
-    "timestampUTC": "2020-11-07 11:10:02",
+    "timestampUTC": "2020-11-08 16:04:02",
     "type": "INFO",
     "summary": "VehiclesRepository",
     "message": "Initialized."
   },
   {
     "id": 2,
-    "timestampUTC": "2020-11-07 11:10:02",
+    "timestampUTC": "2020-11-08 16:04:02",
     "type": "INFO",
     "summary": "ReportRepository",
     "message": "Initialized."
   },
   {
     "id": 3,
-    "timestampUTC": "2020-11-07 11:10:02",
+    "timestampUTC": "2020-11-08 16:04:02",
     "type": "INFO",
     "summary": "UsersRepository",
     "message": "Initialized."
   },
   {
     "id": 4,
-    "timestampUTC": "2020-11-07 11:10:19",
+    "timestampUTC": "2020-11-08 16:05:54",
     "type": "INFO",
     "summary": "ReportRepository",
-    "message": "Meta updated: size\u003d1, timestamp\u003d2020-11-07 11:10:19"
+    "message": "Meta updated: size\u003d2, timestamp\u003d2020-11-08 16:05:54"
   },
   {
     "id": 5,
-    "timestampUTC": "2020-11-07 11:10:19",
+    "timestampUTC": "2020-11-08 16:05:54",
     "type": "INFO",
     "summary": "ReportRepository",
     "message": "Write result: 200"
   },
   {
     "id": 6,
-    "timestampUTC": "2020-11-07 11:10:19",
+    "timestampUTC": "2020-11-08 16:05:54",
     "type": "INFO",
     "summary": "ReportRepository",
     "message": "Add or update result: 200"
   },
   {
     "id": 7,
-    "timestampUTC": "2020-11-07 11:10:19",
+    "timestampUTC": "2020-11-08 16:05:54",
     "type": "INFO",
     "summary": "UsersRepository",
-    "message": "Meta updated: size\u003d3, timestamp\u003d2020-11-07 11:10:19"
+    "message": "Meta updated: size\u003d3, timestamp\u003d2020-11-08 16:05:54"
   },
   {
     "id": 8,
-    "timestampUTC": "2020-11-07 11:10:19",
+    "timestampUTC": "2020-11-08 16:05:54",
     "type": "INFO",
     "summary": "UsersRepository",
     "message": "Write result: 200"
   },
   {
-    "id": 9,
-    "timestampUTC": "2020-11-07 11:11:00",
+    "id": 1,
+    "timestampUTC": "2020-11-08 16:07:35",
     "type": "INFO",
-    "summary": "ReportRepository",
-    "message": "Meta updated: size\u003d2, timestamp\u003d2020-11-07 11:11:00"
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
   },
   {
-    "id": 10,
-    "timestampUTC": "2020-11-07 11:11:00",
+    "id": 2,
+    "timestampUTC": "2020-11-08 16:07:35",
     "type": "INFO",
     "summary": "ReportRepository",
-    "message": "Write result: 200"
+    "message": "Initialized."
   },
   {
-    "id": 11,
-    "timestampUTC": "2020-11-07 11:11:00",
-    "type": "INFO",
-    "summary": "ReportRepository",
-    "message": "Add or update result: 200"
-  },
-  {
-    "id": 12,
-    "timestampUTC": "2020-11-07 11:11:00",
+    "id": 3,
+    "timestampUTC": "2020-11-08 16:07:35",
     "type": "INFO",
     "summary": "UsersRepository",
-    "message": "Meta updated: size\u003d3, timestamp\u003d2020-11-07 11:11:00"
+    "message": "Initialized."
   },
   {
-    "id": 13,
-    "timestampUTC": "2020-11-07 11:11:00",
+    "id": 1,
+    "timestampUTC": "2020-11-08 16:09:34",
+    "type": "INFO",
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 2,
+    "timestampUTC": "2020-11-08 16:09:34",
+    "type": "INFO",
+    "summary": "ReportRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 3,
+    "timestampUTC": "2020-11-08 16:09:34",
     "type": "INFO",
     "summary": "UsersRepository",
-    "message": "Write result: 200"
+    "message": "Initialized."
   },
   {
-    "id": 14,
-    "timestampUTC": "2020-11-07 11:11:16",
+    "id": 1,
+    "timestampUTC": "2020-11-08 16:26:14",
+    "type": "INFO",
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 2,
+    "timestampUTC": "2020-11-08 16:26:14",
     "type": "INFO",
     "summary": "ReportRepository",
-    "message": "Meta updated: size\u003d2, timestamp\u003d2020-11-07 11:11:16"
+    "message": "Initialized."
   },
   {
-    "id": 15,
-    "timestampUTC": "2020-11-07 11:11:16",
-    "type": "INFO",
-    "summary": "ReportRepository",
-    "message": "Write result: 200"
-  },
-  {
-    "id": 16,
-    "timestampUTC": "2020-11-07 11:11:16",
-    "type": "INFO",
-    "summary": "ReportRepository",
-    "message": "Add or update result: 200"
-  },
-  {
-    "id": 17,
-    "timestampUTC": "2020-11-07 11:11:16",
+    "id": 3,
+    "timestampUTC": "2020-11-08 16:26:14",
     "type": "INFO",
     "summary": "UsersRepository",
-    "message": "Meta updated: size\u003d3, timestamp\u003d2020-11-07 11:11:16"
+    "message": "Initialized."
   },
   {
-    "id": 18,
-    "timestampUTC": "2020-11-07 11:11:16",
+    "id": 4,
+    "timestampUTC": "2020-11-08 16:45:04",
     "type": "INFO",
     "summary": "UsersRepository",
-    "message": "Write result: 200"
+    "message": "Meta updated: size\u003d4, timestamp\u003d2020-11-08 16:45:04"
   },
   {
-    "id": 19,
-    "timestampUTC": "2020-11-07 11:11:34",
-    "type": "INFO",
-    "summary": "ReportRepository",
-    "message": "Meta updated: size\u003d2, timestamp\u003d2020-11-07 11:11:34"
-  },
-  {
-    "id": 20,
-    "timestampUTC": "2020-11-07 11:11:34",
-    "type": "INFO",
-    "summary": "ReportRepository",
-    "message": "Write result: 200"
-  },
-  {
-    "id": 21,
-    "timestampUTC": "2020-11-07 11:11:34",
-    "type": "INFO",
-    "summary": "ReportRepository",
-    "message": "Add or update result: 200"
-  },
-  {
-    "id": 22,
-    "timestampUTC": "2020-11-07 11:11:34",
-    "type": "INFO",
-    "summary": "UsersRepository",
-    "message": "Meta updated: size\u003d3, timestamp\u003d2020-11-07 11:11:34"
-  },
-  {
-    "id": 23,
-    "timestampUTC": "2020-11-07 11:11:34",
+    "id": 5,
+    "timestampUTC": "2020-11-08 16:45:04",
     "type": "INFO",
     "summary": "UsersRepository",
     "message": "Write result: 200"
   },
   {
-    "id": 24,
-    "timestampUTC": "2020-11-07 11:11:45",
-    "type": "INFO",
-    "summary": "ReportRepository",
-    "message": "Meta updated: size\u003d2, timestamp\u003d2020-11-07 11:11:45"
-  },
-  {
-    "id": 25,
-    "timestampUTC": "2020-11-07 11:11:45",
-    "type": "INFO",
-    "summary": "ReportRepository",
-    "message": "Write result: 200"
-  },
-  {
-    "id": 26,
-    "timestampUTC": "2020-11-07 11:11:45",
-    "type": "INFO",
-    "summary": "ReportRepository",
-    "message": "Add or update result: 200"
-  },
-  {
-    "id": 27,
-    "timestampUTC": "2020-11-07 11:11:45",
+    "id": 6,
+    "timestampUTC": "2020-11-08 16:47:52",
     "type": "INFO",
     "summary": "UsersRepository",
-    "message": "Meta updated: size\u003d3, timestamp\u003d2020-11-07 11:11:45"
+    "message": "Meta updated: size\u003d4, timestamp\u003d2020-11-08 16:47:52"
   },
   {
-    "id": 28,
-    "timestampUTC": "2020-11-07 11:11:45",
+    "id": 7,
+    "timestampUTC": "2020-11-08 16:47:52",
     "type": "INFO",
     "summary": "UsersRepository",
     "message": "Write result: 200"
   },
   {
-    "id": 29,
-    "timestampUTC": "2020-11-07 11:15:27",
-    "type": "INFO",
-    "summary": "UsersRepository",
-    "message": "Meta updated: size\u003d3, timestamp\u003d2020-11-07 11:15:27"
-  },
-  {
-    "id": 30,
-    "timestampUTC": "2020-11-07 11:15:27",
-    "type": "INFO",
-    "summary": "UsersRepository",
-    "message": "Write result: 200"
-  },
-  {
-    "id": 31,
-    "timestampUTC": "2020-11-07 11:15:27",
+    "id": 8,
+    "timestampUTC": "2020-11-08 16:47:52",
     "type": "INFO",
     "summary": "UsersRepository",
     "message": "Update result: 200"
   },
   {
-    "id": 32,
-    "timestampUTC": "2020-11-07 11:15:27",
+    "id": 9,
+    "timestampUTC": "2020-11-08 16:50:14",
     "type": "INFO",
-    "summary": "ReportRepository",
-    "message": "Meta updated: size\u003d1, timestamp\u003d2020-11-07 11:15:27"
+    "summary": "UsersRepository",
+    "message": "Delete with key me@a.io. Result: 200"
   },
   {
-    "id": 33,
-    "timestampUTC": "2020-11-07 11:15:27",
+    "id": 10,
+    "timestampUTC": "2020-11-08 16:50:14",
+    "type": "INFO",
+    "summary": "ReportRepository",
+    "message": "Meta updated: size\u003d2, timestamp\u003d2020-11-08 16:50:14"
+  },
+  {
+    "id": 11,
+    "timestampUTC": "2020-11-08 16:50:14",
     "type": "INFO",
     "summary": "ReportRepository",
     "message": "Write result: 200"
+  },
+  {
+    "id": 1,
+    "timestampUTC": "2020-11-08 17:18:40",
+    "type": "INFO",
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 2,
+    "timestampUTC": "2020-11-08 17:18:40",
+    "type": "INFO",
+    "summary": "ReportRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 3,
+    "timestampUTC": "2020-11-08 17:18:40",
+    "type": "INFO",
+    "summary": "UsersRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 1,
+    "timestampUTC": "2020-11-08 17:53:39",
+    "type": "INFO",
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 2,
+    "timestampUTC": "2020-11-08 17:53:39",
+    "type": "INFO",
+    "summary": "ReportRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 3,
+    "timestampUTC": "2020-11-08 17:53:39",
+    "type": "INFO",
+    "summary": "UsersRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 1,
+    "timestampUTC": "2020-11-08 17:57:59",
+    "type": "INFO",
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 2,
+    "timestampUTC": "2020-11-08 17:57:59",
+    "type": "INFO",
+    "summary": "ReportRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 3,
+    "timestampUTC": "2020-11-08 17:57:59",
+    "type": "INFO",
+    "summary": "UsersRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 1,
+    "timestampUTC": "2020-11-08 17:59:20",
+    "type": "INFO",
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 2,
+    "timestampUTC": "2020-11-08 17:59:20",
+    "type": "INFO",
+    "summary": "ReportRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 3,
+    "timestampUTC": "2020-11-08 17:59:20",
+    "type": "INFO",
+    "summary": "UsersRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 1,
+    "timestampUTC": "2020-11-08 18:00:36",
+    "type": "INFO",
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 2,
+    "timestampUTC": "2020-11-08 18:00:36",
+    "type": "INFO",
+    "summary": "ReportRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 3,
+    "timestampUTC": "2020-11-08 18:00:36",
+    "type": "INFO",
+    "summary": "UsersRepository",
+    "message": "Initialized."
   }
 ]

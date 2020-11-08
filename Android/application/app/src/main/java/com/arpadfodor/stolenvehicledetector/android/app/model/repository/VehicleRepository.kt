@@ -187,7 +187,7 @@ object VehicleRepository {
     }
 
     private fun apiVehicleToVehicle(source: ApiVehicle) : Vehicle {
-        return Vehicle(source.name, source.type, source.manufacturer, source.color)
+        return Vehicle(source.licenseId, source.type, source.manufacturer, source.color)
     }
 
     private fun vehicleListToDbVehicleList(sourceList: List<Vehicle>) : List<DbVehicle>{

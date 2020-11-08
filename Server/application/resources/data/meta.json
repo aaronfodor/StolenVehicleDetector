@@ -1,17 +1,12 @@
 [
   {
-    "tableId": "vehicle",
-    "dataSize": 2199,
-    "modificationTimeStampUTC": "2020-11-06 21:56:16"
-  },
-  {
     "tableId": "user",
-    "dataSize": 3,
-    "modificationTimeStampUTC": "2020-11-07 11:15:27"
+    "dataSize": 4,
+    "modificationTimeStampUTC": "2020-11-08 16:47:52"
   },
   {
     "tableId": "report",
-    "dataSize": 1,
-    "modificationTimeStampUTC": "2020-11-07 11:15:27"
+    "dataSize": 2,
+    "modificationTimeStampUTC": "2020-11-08 16:50:14"
   }
 ]

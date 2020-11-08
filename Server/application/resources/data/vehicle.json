@@ -1,5 +1,25 @@
 [
   {
+    "licenseId": "SAMSUNG",
+    "type": "DEVICE",
+    "manufacturer": "SAMSUNG",
+    "color": "MANY",
+    "key": "SAMSUNG",
+    "version": 1,
+    "validFromUTC": "",
+    "validToUTC": ""
+  },
+  {
+    "licenseId": "HJC-759",
+    "type": "SZEMÉLYGÉPKOCSI",
+    "manufacturer": "OPEL",
+    "color": "FEKETE",
+    "key": "HJC-759",
+    "version": 1,
+    "validFromUTC": "",
+    "validToUTC": ""
+  },
+  {
     "licenseId": "OP-980BX",
     "type": "PÓTKOCSI",
     "manufacturer": "LIEBHERR",

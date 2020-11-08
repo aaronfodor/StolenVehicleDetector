@@ -11,19 +11,28 @@ import kotlinx.html.*
 import kotlinx.css.*
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.StatusPages
 import io.ktor.gson.gson
 import io.ktor.request.receive
 import com.arpadfodor.ktor.model.Interactor
 import com.arpadfodor.ktor.model.AuthService
+import io.ktor.features.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+import java.io.File
 import java.lang.Exception
 import java.text.DateFormat
 
 /**
- * Access: 127.0.0.1:8080
+ * Access:
+ * http://127.1.0.0:8080/
+ * https://127.1.0.0:8443/
  */
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main(args: Array<String>): Unit{
+    // HTTPS self certificate generator
+    CertificateGenerator.main(args)
+
+    EngineMain.main(args)
+}
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
@@ -34,6 +43,10 @@ fun Application.module(testing: Boolean = false) {
 
     val client = HttpClient(Apache) {
     }
+
+    install(DefaultHeaders)
+    install(CallLogging)
+    install(Routing)
 
     install(ContentNegotiation) {
         gson {
@@ -299,7 +312,7 @@ fun Application.module(testing: Boolean = false) {
 
                     val statusCode = model.rawVehiclesFileToDatabase()
                     if (ExceptionHandler.isNoException(statusCode)) {
-                        call.respond(HttpStatusCode.Created, "MODIFIED")
+                        call.respond(HttpStatusCode.Created)
                     } else {
                         ExceptionHandler.throwAppropriateException(statusCode)
                     }
@@ -311,7 +324,7 @@ fun Application.module(testing: Boolean = false) {
                     val stringPayload = call.receive<String>()
                     val statusCode = model.rawVehiclesToDatabase(stringPayload)
                     if (ExceptionHandler.isNoException(statusCode)) {
-                        call.respond(HttpStatusCode.Created, "MODIFIED")
+                        call.respond(HttpStatusCode.Created)
                     } else {
                         ExceptionHandler.throwAppropriateException(statusCode)
                     }
@@ -324,9 +337,40 @@ fun Application.module(testing: Boolean = false) {
                     val statusCode = model.deleteVehicles()
                     model.deleteReports()
                     if (ExceptionHandler.isNoException(statusCode)) {
-                        call.respond(HttpStatusCode.OK, "DELETED")
+                        call.respond(HttpStatusCode.OK)
                     } else {
                         ExceptionHandler.throwAppropriateException(statusCode)
+                    }
+
+                }
+
+            }
+
+            authenticate(configurations = *arrayOf(Interactor.PERMISSION_API_GET)) {
+
+                route("/reports"){
+
+                    get("") {
+                        var jsonContent = ""
+                        try {
+                            jsonContent = model.getDataAsJson(Interactor.REPORT)
+                        }
+                        catch (e: Exception){
+                            throw InternalServerError()
+                        }
+                        call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
+                    }
+
+                    get("/meta") {
+                        var jsonContent = ""
+                        try {
+                            jsonContent = model.getMetaDataAsJson(Interactor.REPORT)
+                        }
+                        catch (e: Exception){
+                            throw InternalServerError()
+                        }
+
+                        call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
                     }
 
                 }
@@ -341,7 +385,7 @@ fun Application.module(testing: Boolean = false) {
                     val email = call.principal<UserIdPrincipal>()?.name ?: ""
                     val statusCode = model.addReport(stringPayload, email)
                     if (ExceptionHandler.isNoException(statusCode)){
-                        call.respond(HttpStatusCode.Created, "CREATED")
+                        call.respond(HttpStatusCode.Created)
                     }
                     else{
                         ExceptionHandler.throwAppropriateException(statusCode)
@@ -358,7 +402,25 @@ fun Application.module(testing: Boolean = false) {
                     val stringPayload = call.receive<String>()
                     val statusCode = model.deleteReports()
                     if (ExceptionHandler.isNoException(statusCode)){
-                        call.respond(HttpStatusCode.OK, "DELETED")
+                        call.respond(HttpStatusCode.OK)
+                    }
+                    else{
+                        ExceptionHandler.throwAppropriateException(statusCode)
+                    }
+
+                }
+
+            }
+
+            authenticate(configurations = *arrayOf(Interactor.PERMISSION_API_GET)) {
+
+                post("/user/login"){
+
+                    val email = call.principal<UserIdPrincipal>()?.name ?: ""
+
+                    val statusCode = model.login()
+                    if (ExceptionHandler.isNoException(statusCode)){
+                        call.respond(HttpStatusCode.OK)
                     }
                     else{
                         ExceptionHandler.throwAppropriateException(statusCode)
@@ -377,7 +439,7 @@ fun Application.module(testing: Boolean = false) {
                     val stringPayload = call.receive<String>()
                     val statusCode = model.updateSelf(email, stringPayload)
                     if (ExceptionHandler.isNoException(statusCode)){
-                        call.respond(HttpStatusCode.OK, "MODIFIED")
+                        call.respond(HttpStatusCode.OK)
                     }
                     else{
                         ExceptionHandler.throwAppropriateException(statusCode)
@@ -391,7 +453,7 @@ fun Application.module(testing: Boolean = false) {
 
                     val statusCode = model.deleteSelf(email)
                     if (ExceptionHandler.isNoException(statusCode)){
-                        call.respond(HttpStatusCode.OK, "DELETED")
+                        call.respond(HttpStatusCode.OK)
                     }
                     else{
                         ExceptionHandler.throwAppropriateException(statusCode)
@@ -403,16 +465,31 @@ fun Application.module(testing: Boolean = false) {
 
             authenticate(configurations = *arrayOf(Interactor.PERMISSION_ADMIN)) {
 
-                get("/users"){
-                    var jsonContent = ""
-                    try {
-                        jsonContent =  model.getUsers()
-                    }
-                    catch (e: Exception){
-                        throw InternalServerError()
+                route("/users"){
+
+                    get("") {
+                        var jsonContent = ""
+                        try {
+                            jsonContent = model.getUsers()
+                        }
+                        catch (e: Exception){
+                            throw InternalServerError()
+                        }
+                        call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
                     }
 
-                    call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
+                    get("/meta") {
+                        var jsonContent = ""
+                        try {
+                            jsonContent = model.getMetaDataAsJson(Interactor.USER)
+                        }
+                        catch (e: Exception){
+                            throw InternalServerError()
+                        }
+
+                        call.respondText(jsonContent, contentType = ContentType.Text.JavaScript)
+                    }
+
                 }
 
                 post("/user"){
@@ -420,7 +497,7 @@ fun Application.module(testing: Boolean = false) {
                     val stringPayload = call.receive<String>()
                     val statusCode = model.addUser(stringPayload)
                     if (ExceptionHandler.isNoException(statusCode)){
-                        call.respond(HttpStatusCode.Created, "CREATED")
+                        call.respond(HttpStatusCode.Created)
                     }
                     else{
                         ExceptionHandler.throwAppropriateException(statusCode)
@@ -433,7 +510,7 @@ fun Application.module(testing: Boolean = false) {
                     val stringPayload = call.receive<String>()
                     val statusCode = model.updateUser(stringPayload)
                     if (ExceptionHandler.isNoException(statusCode)){
-                        call.respond(HttpStatusCode.OK, "MODIFIED")
+                        call.respond(HttpStatusCode.OK)
                     }
                     else{
                         ExceptionHandler.throwAppropriateException(statusCode)
@@ -449,7 +526,7 @@ fun Application.module(testing: Boolean = false) {
                     val stringPayload = call.receive<String>()
                     val statusCode = model.deleteUser(emailToDelete)
                     if (ExceptionHandler.isNoException(statusCode)){
-                        call.respond(HttpStatusCode.OK, "DELETED")
+                        call.respond(HttpStatusCode.OK)
                     }
                     else{
                         ExceptionHandler.throwAppropriateException(statusCode)
@@ -466,7 +543,7 @@ fun Application.module(testing: Boolean = false) {
                     val stringPayload = call.receive<String>()
                     val statusCode = model.addApiUser(stringPayload)
                     if (ExceptionHandler.isNoException(statusCode)){
-                        call.respond(HttpStatusCode.Created, "CREATED")
+                        call.respond(HttpStatusCode.Created)
                     }
                     else{
                         ExceptionHandler.throwAppropriateException(statusCode)
@@ -508,4 +585,18 @@ fun CommonAttributeGroupFacade.style(builder: CSSBuilder.() -> Unit) {
 
 suspend inline fun ApplicationCall.respondCss(builder: CSSBuilder.() -> Unit) {
     this.respondText(CSSBuilder().apply(builder).toString(), ContentType.Text.CSS)
+}
+
+class CertificateGenerator {
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val file = File("build/temporary.jks")
+
+            if (!file.exists()) {
+                file.parentFile.mkdirs()
+                io.ktor.network.tls.certificates.generateCertificate(file)
+            }
+        }
+    }
 }

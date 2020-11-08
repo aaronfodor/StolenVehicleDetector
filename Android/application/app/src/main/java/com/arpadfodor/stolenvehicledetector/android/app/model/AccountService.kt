@@ -1,7 +1,10 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model
 
+import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
+import com.arpadfodor.stolenvehicledetector.android.app.model.api.BasicAuthInterceptor
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserRepository
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.User
+import okhttp3.OkHttpClient
 
 object AccountService {
 
@@ -9,13 +12,21 @@ object AccountService {
     private const val DEFAULT_USER_NAME = "Default User"
     private const val DEFAULT_USER_PASSWORD = "default_user_czka84"
 
-    var userId = ""
-    var userDisplayName = ""
-    private var userPassword = ""
+    var userId = DEFAULT_USER_ID
+    var userDisplayName = DEFAULT_USER_NAME
+    private var userPassword = DEFAULT_USER_PASSWORD
 
     private var isCurrentAccountGuest = true
+    var rememberAccount = false
 
-    fun login(email: String, name: String, password: String, rememberAccount: Boolean, success: () -> Unit, error: () -> Unit){
+    fun getClient() : OkHttpClient{
+        val httpClient = OkHttpClient.Builder().addInterceptor(
+            BasicAuthInterceptor(userId, userPassword)
+        ).build()
+        return httpClient
+    }
+
+    fun login(email: String, name: String, password: String, success: () -> Unit, error: () -> Unit){
 
         tryLogin(email, name, password,
             success = {
@@ -81,54 +92,43 @@ object AccountService {
     }
 
     fun sendPasswordToEmail(email: String, success: () -> Unit, error: () -> Unit){
-
         //TODO: API send password to email
-        
         success()
-
     }
 
-    fun registerAccount(email: String, name: String, password: String, rememberAccount: Boolean, success: () -> Unit, error: () -> Unit){
+    fun registerAccount(email: String, name: String, password: String, success: () -> Unit, error: () -> Unit){
 
-        //TODO: API create account call
+        login(DEFAULT_USER_ID, DEFAULT_USER_NAME, DEFAULT_USER_PASSWORD, success={
 
-        login(email, name, password, rememberAccount, success, error)
+            ApiService.postApiUser(email, name, password, success={
+                login(email, name, password, success, error)
+            }, error=error)
+
+        }, error=error)
 
     }
 
     fun deleteAccount(success: () -> Unit, error: () -> Unit){
-        //TODO: API delete call
-        logout(success, error)
+        ApiService.deleteSelf(success={
+            logout(success, error)
+        }, error=error)
     }
 
-    fun changeAccount(newName: String = "", newPassword: String = "", success: () -> Unit, error: () -> Unit){
-
-        var nameToSet = userDisplayName
-        var passwordToSet = userPassword
-
-        if(newName.isNotEmpty()){
-            nameToSet = newName
-        }
-
-        if(newPassword.isNotEmpty()){
-            passwordToSet = newPassword
-        }
-
-        //TODO: API change call
-        login(userId, nameToSet, passwordToSet, false, success, error)
-
+    fun changeAccount(nameToSet: String = userDisplayName, passwordToSet: String = userPassword, success: () -> Unit, error: () -> Unit){
+        ApiService.putSelf(userId, nameToSet, passwordToSet, success={
+            login(userId, nameToSet, passwordToSet, success, error)
+        }, error=error)
     }
 
     private fun tryLogin(email: String, name: String, password: String, success: () -> Unit, error: () -> Unit){
 
-        //TODO: API login logic
-
         userId = email
         userDisplayName = name
         userPassword = password
-
         isCurrentAccountGuest = false
-        success()
+
+        ApiService.initialize(getClient())
+        ApiService.login(success, error)
 
     }
 

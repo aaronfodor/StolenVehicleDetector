@@ -63,7 +63,7 @@ class ApplicationRoot : Application() {
 
         //init model singletons
         GeneralRepository.initialize(applicationContext)
-        ApiService.initialize()
+        ApiService.initialize(AccountService.getClient())
 
         ObjectDetectionService.initialize(assets, NUM_THREADS)
         TextRecognitionService.initialize()

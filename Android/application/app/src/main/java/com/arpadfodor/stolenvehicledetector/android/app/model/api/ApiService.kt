@@ -1,7 +1,9 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model.api
 
+import com.arpadfodor.stolenvehicledetector.android.app.model.DateHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.dataclasses.ApiMetaData
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.dataclasses.ApiReport
+import com.arpadfodor.stolenvehicledetector.android.app.model.api.dataclasses.ApiUser
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.dataclasses.ApiVehicle
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,23 +13,13 @@ object ApiService{
 
     private lateinit var stolenVehicleAPI: StolenVehicleAPI
 
-    fun initialize(){
-
-        val httpClient = OkHttpClient.Builder().addInterceptor(
-            BasicAuthInterceptor(
-                StolenVehicleAPI.DEFAULT_USER,
-                StolenVehicleAPI.DEFAULT_USER_PASSWORD
-            )
-        ).build()
-
+    fun initialize(httpClient: OkHttpClient){
         val retrofitStolenVehiclesAPI = Retrofit.Builder()
             .baseUrl(StolenVehicleAPI.API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient)
             .build()
-
         this.stolenVehicleAPI = retrofitStolenVehiclesAPI.create(StolenVehicleAPI::class.java)
-
     }
 
     fun getVehiclesData(callback: (List<ApiVehicle>) -> Unit) {
@@ -44,37 +36,7 @@ object ApiService{
                 e.printStackTrace()
             }
             finally{
-
-                //TODO: just for testing
-                val responseWithAddedElements = dataResponse.toMutableList()
-
-                responseWithAddedElements.add(
-                    ApiVehicle(
-                        "HJC-759",
-                        "car",
-                        "Opel",
-                        "black",
-                    )
-                )
-                responseWithAddedElements.add(
-                    ApiVehicle(
-                        "Samsung",
-                        "device",
-                        "Samsung",
-                        "many",
-                    )
-                )
-                responseWithAddedElements.add(
-                    ApiVehicle(
-                        "Acer",
-                        "device",
-                        "Acer",
-                        "many",
-                    )
-                )
-
-                callback(responseWithAddedElements)
-
+                callback(dataResponse)
             }
 
         }.start()
@@ -86,16 +48,14 @@ object ApiService{
         Thread {
 
             var size = 0
-
-            //TODO: for testing, should be DateHandler.defaultDate()
-            var timestampUTC = "1980-01-01 01:01:01"
+            var timestampUTC = DateHandler.defaultDateString()
 
             try {
                 val metaDataCall = stolenVehicleAPI.getVehiclesMeta()
                 val metaDataResponse = metaDataCall.execute().body()
-                    ?: ApiMetaData(0, timestampUTC)
+                    ?: ApiMetaData("", 0, timestampUTC)
                 size = metaDataResponse.dataSize
-                timestampUTC = metaDataResponse.modificationTimestampUTC
+                timestampUTC = metaDataResponse.modificationTimeStampUTC
             }
             catch (e: Exception) {
                 e.printStackTrace()
@@ -122,35 +82,7 @@ object ApiService{
                 e.printStackTrace()
             }
             finally {
-
-                //TODO: just for testing
-                val responseWithAddedElements = dataResponse.toMutableList()
-
-                responseWithAddedElements.add(
-                    ApiReport(
-                        1,
-                        "SAMSUNG",
-                        "aaa@bbb.com",
-                        47.519959,
-                        19.079840,
-                        "I never thought I will find it there!",
-                        "2020-07-18 06:00:00"
-                    )
-                )
-                responseWithAddedElements.add(
-                    ApiReport(
-                        2,
-                        "HJC759",
-                        "aaa@bbb.com",
-                        47.496686,
-                        19.039277,
-                        "Wow! Such a finding!",
-                        "2020-07-30 16:12:34"
-                    )
-                )
-
-                callback(responseWithAddedElements)
-
+                callback(dataResponse)
             }
 
         }.start()
@@ -162,16 +94,14 @@ object ApiService{
         Thread {
 
             var size = 0
-
-            //TODO: for testing, should be DateHandler.defaultDate()
-            var timestampUTC = "1980-01-01 01:01:01"
+            var timestampUTC = DateHandler.dateToString(DateHandler.defaultDate())
 
             try {
                 val metaDataCall = stolenVehicleAPI.getReportsMeta()
                 val metaDataResponse = metaDataCall.execute().body()
-                    ?: ApiMetaData(0, timestampUTC)
+                    ?: ApiMetaData("", 0, timestampUTC)
                 size = metaDataResponse.dataSize
-                timestampUTC = metaDataResponse.modificationTimestampUTC
+                timestampUTC = metaDataResponse.modificationTimeStampUTC
             }
             catch (e: Exception) {
                 e.printStackTrace()
@@ -192,17 +122,8 @@ object ApiService{
 
             try {
                 val postReportCall = stolenVehicleAPI.postReport(report)
-                var response = postReportCall.execute().body() ?: ""
-
-                //TODO: response check
-                response = "200"
-                if(response == "200"){
-                    isSuccess = true
-                }
-                else{
-                    isSuccess = false
-                }
-
+                val responseCode = postReportCall.execute().code()
+                isSuccess = responseCode < 300
             }
             catch (e: Exception) {
                 e.printStackTrace()
@@ -215,6 +136,113 @@ object ApiService{
 
     }
 
-    //TODO: user, self interactions
+    fun deleteSelf(success: () -> Unit, error: () -> Unit){
+
+        Thread {
+
+            var isSuccess = false
+
+            try {
+                val deleteSelfCall = stolenVehicleAPI.deleteSelf()
+                val responseCode = deleteSelfCall.execute().code()
+                isSuccess = responseCode < 300
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+            finally {
+                if(isSuccess) {
+                    success()
+                }
+                else{
+                    error()
+                }
+            }
+
+        }.start()
+
+    }
+
+    fun postApiUser(email: String, name: String, password: String, success: () -> Unit, error: () -> Unit){
+
+        Thread {
+
+            var isSuccess = false
+
+            try {
+                val user = ApiUser(email, password, name, "", true, 0, mutableListOf())
+                val postApiUserCall = stolenVehicleAPI.postApiUser(user)
+                val responseCode = postApiUserCall.execute().code()
+                isSuccess = responseCode < 300
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+            finally {
+                if(isSuccess) {
+                    success()
+                }
+                else{
+                    error()
+                }
+            }
+
+        }.start()
+
+    }
+
+    fun putSelf(email: String, nameToSet: String, passwordToSet: String, success: () -> Unit, error: () -> Unit){
+
+        Thread {
+
+            var isSuccess = false
+
+            try {
+                val user = ApiUser(email, passwordToSet, nameToSet, "", true, 0, mutableListOf())
+                val putSelfCall = stolenVehicleAPI.putSelf(user)
+                val responseCode = putSelfCall.execute().code()
+                isSuccess = responseCode < 300
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+            finally {
+                if(isSuccess) {
+                    success()
+                }
+                else{
+                    error()
+                }
+            }
+
+        }.start()
+
+    }
+
+    fun login(success: () -> Unit, error: () -> Unit){
+
+        Thread {
+            var isSuccess = false
+
+            try {
+                val metaDataCall = stolenVehicleAPI.login()
+                val responseCode = metaDataCall.execute().code()
+                isSuccess = responseCode < 300
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+            finally {
+                if(isSuccess){
+                    success()
+                }
+                else{
+                    error()
+                }
+            }
+
+        }.start()
+
+    }
 
 }

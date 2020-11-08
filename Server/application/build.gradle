@@ -8,6 +8,7 @@ buildscript {
     }
 }
 
+apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'application'
 
@@ -42,4 +43,13 @@ dependencies {
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
     implementation "io.ktor:ktor-gson:$ktor_version"
     implementation "io.ktor:ktor-auth:$ktor_version"
+    implementation "io.ktor:ktor-network-tls-certificates:$ktor_version"
 }
+
+task stage(dependsOn: ['installDist'])
+
+task generateJks(type: JavaExec, dependsOn: 'classes') {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.arpadfodor.ktor.CertificateGenerator'
+}
+getTasksByName("run", false).first().dependsOn('generateJks')

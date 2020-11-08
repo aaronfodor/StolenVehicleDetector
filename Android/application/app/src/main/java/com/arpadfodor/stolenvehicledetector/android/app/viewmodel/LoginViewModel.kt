@@ -15,7 +15,8 @@ class LoginViewModel : ViewModel(){
     }
 
     fun login(email: String, name: String, password: String, rememberAccount: Boolean, success: () -> Unit, error: () -> Unit){
-        AccountService.login(email, name, password, rememberAccount, success, error)
+        AccountService.rememberAccount = rememberAccount
+        AccountService.login(email, name, password, success, error)
     }
 
     fun loginAsGuest(success: () -> Unit, error: () -> Unit){
@@ -32,7 +33,7 @@ class LoginViewModel : ViewModel(){
 
     fun registerAccount(email: String, name: String,  password: String, rememberAccount:
     Boolean, success: () -> Unit, error: () -> Unit){
-        AccountService.registerAccount(email, name, password, rememberAccount, success, error)
+        AccountService.registerAccount(email, name, password, success, error)
     }
 
 }

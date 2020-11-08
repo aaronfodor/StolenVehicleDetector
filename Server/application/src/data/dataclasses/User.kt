@@ -4,7 +4,7 @@ data class User(
         val email: String,
         var password: String,
         var name: String,
-        val hint: String,
+        var hint: String,
         var active: Boolean,
         var numReports: Int,
         var permissions:  MutableList<PermissionType>,

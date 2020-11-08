@@ -5,7 +5,7 @@
     "name": "administrator",
     "hint": "hint",
     "active": true,
-    "numReports": 54,
+    "numReports": 56,
     "permissions": [
       "API_GET",
       "API_POST",
