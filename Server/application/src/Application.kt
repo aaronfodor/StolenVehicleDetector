@@ -29,8 +29,7 @@ import java.text.DateFormat
  */
 fun main(args: Array<String>): Unit{
     // HTTPS self certificate generator
-    CertificateGenerator.main(args)
-
+    //CertificateGenerator.main(args)
     EngineMain.main(args)
 }
 

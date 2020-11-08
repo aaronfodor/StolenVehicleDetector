@@ -48,8 +48,8 @@ dependencies {
 
 task stage(dependsOn: ['installDist'])
 
-task generateJks(type: JavaExec, dependsOn: 'classes') {
+/*task generateJks(type: JavaExec, dependsOn: 'classes') {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.arpadfodor.ktor.CertificateGenerator'
-}
+}*/
 getTasksByName("run", false).first().dependsOn('generateJks')

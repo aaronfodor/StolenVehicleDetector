@@ -320,5 +320,110 @@
     "type": "INFO",
     "summary": "UsersRepository",
     "message": "Initialized."
+  },
+  {
+    "id": 1,
+    "timestampUTC": "2020-11-08 18:15:29",
+    "type": "INFO",
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 2,
+    "timestampUTC": "2020-11-08 18:15:29",
+    "type": "INFO",
+    "summary": "ReportRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 3,
+    "timestampUTC": "2020-11-08 18:15:29",
+    "type": "INFO",
+    "summary": "UsersRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 1,
+    "timestampUTC": "2020-11-08 18:16:14",
+    "type": "INFO",
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 2,
+    "timestampUTC": "2020-11-08 18:16:14",
+    "type": "INFO",
+    "summary": "ReportRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 3,
+    "timestampUTC": "2020-11-08 18:16:14",
+    "type": "INFO",
+    "summary": "UsersRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 1,
+    "timestampUTC": "2020-11-08 18:17:10",
+    "type": "INFO",
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 2,
+    "timestampUTC": "2020-11-08 18:17:10",
+    "type": "INFO",
+    "summary": "ReportRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 3,
+    "timestampUTC": "2020-11-08 18:17:10",
+    "type": "INFO",
+    "summary": "UsersRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 1,
+    "timestampUTC": "2020-11-08 18:21:10",
+    "type": "INFO",
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 2,
+    "timestampUTC": "2020-11-08 18:21:10",
+    "type": "INFO",
+    "summary": "ReportRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 3,
+    "timestampUTC": "2020-11-08 18:21:10",
+    "type": "INFO",
+    "summary": "UsersRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 1,
+    "timestampUTC": "2020-11-08 18:53:56",
+    "type": "INFO",
+    "summary": "VehiclesRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 2,
+    "timestampUTC": "2020-11-08 18:53:56",
+    "type": "INFO",
+    "summary": "ReportRepository",
+    "message": "Initialized."
+  },
+  {
+    "id": 3,
+    "timestampUTC": "2020-11-08 18:53:56",
+    "type": "INFO",
+    "summary": "UsersRepository",
+    "message": "Initialized."
   }
 ]

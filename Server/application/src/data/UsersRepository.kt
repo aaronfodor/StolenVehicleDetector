@@ -67,6 +67,11 @@ class UsersRepository(name: String, metaDAO: MetaDAO) : DataclassDAO<User>(name,
         val updateRecordBasedOnItem: (User, User) -> Unit = {record, item ->
             record.active = item.active
             record.permissions = item.permissions
+            // fields to keep (may be invalid in item)
+            item.hint = record.hint
+            item.numReports = record.numReports
+            item.password = record.password
+            item.name = record.name
         }
 
         return super.update(items, areSameItems = areSameItems, isUpdateNeeded = isUpdateNeeded,
@@ -86,6 +91,11 @@ class UsersRepository(name: String, metaDAO: MetaDAO) : DataclassDAO<User>(name,
         val updateRecordBasedOnItem: (User, User) -> Unit = {record, item ->
             record.name = userToUpdate.name
             record.password = userToUpdate.password
+            // fields to keep (may be invalid in item)
+            item.permissions = record.permissions
+            item.hint = record.hint
+            item.numReports = record.numReports
+            item.active = record.active
         }
 
         return super.update(listOf(userToUpdate), areSameItems = areSameItems, isUpdateNeeded = isUpdateNeeded,

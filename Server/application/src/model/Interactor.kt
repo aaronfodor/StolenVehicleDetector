@@ -157,6 +157,10 @@ class Interactor{
         return resultCode
     }
 
+    fun login() : Int{
+        return StatusCodes.SUCCESS
+    }
+
     fun deleteSelf(key: String) : Int{
         val resultCode = userRepository.deleteSelf(key, DataUtils.currentTimeUTC())
         updateReportsBasedOnValidUsers()
