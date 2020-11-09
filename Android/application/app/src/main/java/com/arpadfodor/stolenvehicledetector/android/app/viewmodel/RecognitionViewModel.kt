@@ -47,10 +47,9 @@ class RecognitionViewModel : MasterDetailViewModel(){
 
         val recognition = recognitions.value?.find { it.artificialId == id } ?: return
 
-        val apiReport =
-            ApiReport(recognition.licenseId, recognition.reporter,
+        val apiReport = ApiReport(recognition.licenseId, recognition.reporter,
             recognition.latitude.toDouble(), recognition.longitude.toDouble(),
-            recognition.message, recognition.date)
+            recognition.message, recognition.licenseId, 0, recognition.date)
 
         ApiService.postReport(apiReport) { isPostSuccess ->
 

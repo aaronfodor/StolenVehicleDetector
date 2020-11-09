@@ -11,7 +11,10 @@ interface StolenVehicleAPI {
 
     companion object {
 
-        const val BASE_URL = "http://10.0.2.2:8080/"
+        //emulator testing
+        //const val BASE_URL = "http://10.0.2.2:8080/"
+        const val BASE_URL = "http://stolenvehicleserver.herokuapp.com/"
+
         const val API_URL = "${BASE_URL}api/v1/"
 
         const val GET_VEHICLES = "${API_URL}vehicles/"

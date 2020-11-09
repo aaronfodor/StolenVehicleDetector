@@ -16,7 +16,7 @@ object MetaProvider {
     }
 
     fun getDeviceMetaData(): Array<String> {
-        val date = DateHandler.currentDateString()
+        val date = DateHandler.currentTimeUTC()
         val location = LocationService.getLocation()
         return arrayOf(date, location[0].toString(), location[1].toString())
     }

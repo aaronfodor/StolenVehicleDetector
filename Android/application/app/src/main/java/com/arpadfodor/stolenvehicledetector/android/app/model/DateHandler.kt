@@ -1,16 +1,17 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model
 
-import java.lang.Exception
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 object DateHandler{
 
-    private val timeZone = TimeZone.getTimeZone("UTC")
-    private val calendar = Calendar.getInstance(timeZone)
-    private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+    private const val formatterPattern = "yyyy-MM-dd HH:mm:ss"
+    private val formatter = SimpleDateFormat(formatterPattern, Locale.ENGLISH)
     private val defaultDate = Date(0)
-    private val defaultDateString = "1970-01-01 00:00:00"
+    private const val defaultDateString = "1970-01-01 00:00:00"
 
     fun stringToDate(dateString: String) : Date{
 
@@ -38,8 +39,11 @@ object DateHandler{
         return formatter.format(date) ?: ""
     }
 
-    fun currentDateString() : String{
-        return dateToString(calendar.time)
+    fun currentTimeUTC() : String {
+        return DateTimeFormatter
+            .ofPattern(formatterPattern)
+            .withZone(ZoneOffset.UTC)
+            .format(Instant.now())
     }
 
 }

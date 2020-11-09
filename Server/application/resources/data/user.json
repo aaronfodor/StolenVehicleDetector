@@ -50,5 +50,22 @@
     "version": 2,
     "validFromUTC": "2020-11-07 11:15:27",
     "validToUTC": ""
+  },
+  {
+    "email": "arpadfodor01@gmail.com",
+    "password": "a",
+    "name": "Default User",
+    "hint": "",
+    "active": true,
+    "numReports": 5,
+    "permissions": [
+      "API_GET",
+      "API_POST",
+      "REGISTER"
+    ],
+    "key": "arpadfodor01@gmail.com",
+    "version": 1,
+    "validFromUTC": "2020-11-07 11:15:27",
+    "validToUTC": ""
   }
 ]

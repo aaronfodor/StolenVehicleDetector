@@ -37,6 +37,11 @@ object LocationService {
      **/
     fun updateLocation(){
 
+        val callback:(Double, Double) -> Unit = {lat, long ->
+            deviceLatitude = lat
+            deviceLongitude = long
+        }
+
         var latitude = 0.0
         var longitude = 0.0
 
@@ -78,8 +83,7 @@ object LocationService {
             }
 
             if(latitude != 0.0 && longitude != 0.0){
-                deviceLatitude = latitude
-                deviceLongitude = longitude
+                callback(latitude, longitude)
                 locationTimeStamp = Calendar.getInstance().timeInMillis
             }
 
