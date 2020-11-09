@@ -1,0 +1,6 @@
+{
+  "name": "Stolen Vehicle Detector server",
+  "description": "Stolen Vehicle Detector server app with REST API.",
+  "image": "heroku/java",
+  "addons": []
+}
