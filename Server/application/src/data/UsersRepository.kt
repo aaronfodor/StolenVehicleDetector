@@ -1,9 +1,9 @@
-package com.arpadfodor.ktor.data
+package com.arpadfodor.stolenvehicledetector.data
 
-import com.arpadfodor.ktor.communication.StatusCodes
-import com.arpadfodor.ktor.data.dataclasses.User
+import com.arpadfodor.stolenvehicledetector.communication.StatusCodes
+import com.arpadfodor.stolenvehicledetector.data.dataclasses.User
 import com.google.gson.reflect.TypeToken
-import com.arpadfodor.ktor.data.dataclasses.PermissionType
+import com.arpadfodor.stolenvehicledetector.data.dataclasses.PermissionType
 
 private val typeToken = object : TypeToken<MutableList<User>>() {}.type
 

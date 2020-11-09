@@ -1,8 +1,8 @@
-package com.arpadfodor.ktor.model
+package com.arpadfodor.stolenvehicledetector.model
 
-import com.arpadfodor.ktor.data.DAO
-import com.arpadfodor.ktor.data.dataclasses.Log
-import com.arpadfodor.ktor.data.dataclasses.LogType
+import com.arpadfodor.stolenvehicledetector.data.DAO
+import com.arpadfodor.stolenvehicledetector.data.dataclasses.Log
+import com.arpadfodor.stolenvehicledetector.data.dataclasses.LogType
 import com.google.gson.reflect.TypeToken
 
 object LoggerService{

@@ -1,4 +1,4 @@
-package com.arpadfodor.ktor.model
+package com.arpadfodor.stolenvehicledetector.model
 
 import java.io.File
 import java.io.FileInputStream

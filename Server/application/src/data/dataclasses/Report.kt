@@ -1,4 +1,4 @@
-package com.arpadfodor.ktor.data.dataclasses
+package com.arpadfodor.stolenvehicledetector.data.dataclasses
 
 data class Report(
         val vehicleLicenseId: String,

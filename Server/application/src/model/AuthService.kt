@@ -1,8 +1,8 @@
-package com.arpadfodor.ktor.model
+package com.arpadfodor.stolenvehicledetector.model
 
-import com.arpadfodor.ktor.communication.StatusCodes
-import com.arpadfodor.ktor.data.dataclasses.PermissionType
-import com.arpadfodor.ktor.data.dataclasses.User
+import com.arpadfodor.stolenvehicledetector.communication.StatusCodes
+import com.arpadfodor.stolenvehicledetector.data.dataclasses.PermissionType
+import com.arpadfodor.stolenvehicledetector.data.dataclasses.User
 
 class AuthService{
 

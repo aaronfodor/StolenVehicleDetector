@@ -1,4 +1,4 @@
-package com.arpadfodor.ktor.data.dataclasses
+package com.arpadfodor.stolenvehicledetector.data.dataclasses
 
 interface IDataclass{
     var key: String

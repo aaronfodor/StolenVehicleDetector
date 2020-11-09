@@ -1,6 +1,6 @@
-package com.arpadfodor.ktor.data
+package com.arpadfodor.stolenvehicledetector.data
 
-import com.arpadfodor.ktor.data.dataclasses.Vehicle
+import com.arpadfodor.stolenvehicledetector.data.dataclasses.Vehicle
 import com.google.gson.reflect.TypeToken
 
 private val typeToken = object : TypeToken<MutableList<Vehicle>>() {}.type

@@ -1,10 +1,10 @@
-package com.arpadfodor.ktor.model
+package com.arpadfodor.stolenvehicledetector.model
 
-import com.arpadfodor.ktor.communication.StatusCodes
-import com.arpadfodor.ktor.data.*
+import com.arpadfodor.stolenvehicledetector.communication.StatusCodes
+import com.arpadfodor.stolenvehicledetector.data.*
 import com.google.gson.reflect.TypeToken
-import com.arpadfodor.ktor.data.UsersRepository
-import com.arpadfodor.ktor.data.dataclasses.*
+import com.arpadfodor.stolenvehicledetector.data.UsersRepository
+import com.arpadfodor.stolenvehicledetector.data.dataclasses.*
 
 class Interactor{
 

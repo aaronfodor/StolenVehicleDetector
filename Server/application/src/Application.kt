@@ -1,6 +1,8 @@
-package com.arpadfodor.ktor
+package com.arpadfodor.stolenvehicledetector
 
-import com.arpadfodor.ktor.communication.*
+import com.arpadfodor.stolenvehicledetector.communication.*
+import com.arpadfodor.stolenvehicledetector.model.AuthService
+import com.arpadfodor.stolenvehicledetector.model.Interactor
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.response.*
@@ -13,11 +15,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.apache.*
 import io.ktor.gson.gson
 import io.ktor.request.receive
-import com.arpadfodor.ktor.model.Interactor
-import com.arpadfodor.ktor.model.AuthService
 import io.ktor.features.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
 import java.io.File
 import java.lang.Exception
 import java.text.DateFormat
@@ -28,9 +26,11 @@ import java.text.DateFormat
  * https://127.1.0.0:8443/
  */
 fun main(args: Array<String>): Unit{
+    val port = System.getenv("PORT")?.toInt() ?: 8080
+
     // HTTPS self certificate generator
     //CertificateGenerator.main(args)
-    EngineMain.main(args)
+    io.ktor.server.netty.EngineMain.main(args + arrayOf("-port=$port"))
 }
 
 @Suppress("unused") // Referenced in application.conf

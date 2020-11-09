@@ -1,8 +1,8 @@
-package com.arpadfodor.ktor.model
+package com.arpadfodor.stolenvehicledetector.model
 
 import com.google.gson.GsonBuilder
-import com.arpadfodor.ktor.data.dataclasses.RawVehicle
-import com.arpadfodor.ktor.data.dataclasses.Vehicle
+import com.arpadfodor.stolenvehicledetector.data.dataclasses.RawVehicle
+import com.arpadfodor.stolenvehicledetector.data.dataclasses.Vehicle
 import com.google.gson.Gson
 import java.lang.reflect.Type
 import java.text.SimpleDateFormat

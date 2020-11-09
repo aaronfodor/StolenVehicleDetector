@@ -1,4 +1,4 @@
-package com.arpadfodor.ktor.communication
+package com.arpadfodor.stolenvehicledetector.communication
 
 /**
  * Parent exception indicating problems originated from the client request.

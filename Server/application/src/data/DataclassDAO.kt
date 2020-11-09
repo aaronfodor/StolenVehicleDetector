@@ -1,9 +1,9 @@
-package com.arpadfodor.ktor.data
+package com.arpadfodor.stolenvehicledetector.data
 
-import com.arpadfodor.ktor.communication.StatusCodes
-import com.arpadfodor.ktor.model.DataUtils
-import com.arpadfodor.ktor.data.dataclasses.IDataclass
-import com.arpadfodor.ktor.data.dataclasses.MetaData
+import com.arpadfodor.stolenvehicledetector.communication.StatusCodes
+import com.arpadfodor.stolenvehicledetector.model.DataUtils
+import com.arpadfodor.stolenvehicledetector.data.dataclasses.IDataclass
+import com.arpadfodor.stolenvehicledetector.data.dataclasses.MetaData
 import java.lang.reflect.Type
 
 open class DataclassDAO<T : IDataclass>(name: String, typeToken: Type, metaDAO: MetaDAO) : CacheDAO<T>(name, typeToken){

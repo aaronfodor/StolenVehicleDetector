@@ -1,9 +1,8 @@
-package com.arpadfodor.ktor.data
+package com.arpadfodor.stolenvehicledetector.data
 
-import com.arpadfodor.ktor.communication.StatusCodes
-import com.arpadfodor.ktor.data.dataclasses.LogType
-import com.arpadfodor.ktor.model.DataTransformer
-import com.arpadfodor.ktor.model.DataUtils
+import com.arpadfodor.stolenvehicledetector.communication.StatusCodes
+import com.arpadfodor.stolenvehicledetector.model.DataTransformer
+import com.arpadfodor.stolenvehicledetector.model.DataUtils
 import java.lang.Exception
 import java.lang.reflect.Type
 

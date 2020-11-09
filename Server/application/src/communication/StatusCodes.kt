@@ -1,4 +1,4 @@
-package com.arpadfodor.ktor.communication
+package com.arpadfodor.stolenvehicledetector.communication
 
 object StatusCodes {
     const val SUCCESS = 200
