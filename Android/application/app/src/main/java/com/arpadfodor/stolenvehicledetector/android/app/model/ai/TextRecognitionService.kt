@@ -23,7 +23,7 @@ class TextRecognitionService {
             model = TextRecognition.getClient()
         }
 
-        private const val MAX_RECOGNITIONS_PER_IMAGE = 2
+        private const val MAX_RECOGNITIONS_PER_IMAGE = 4
 
     }
 
