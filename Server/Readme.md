@@ -2,6 +2,10 @@
 
 This is the server of the Stolen Vehicle Detector system. Clients can upload new reports, and download the current ones. The server provides an API for Android clients and manages registered users. It provides a stateless REST API, so a user needs to authenticate itself every time querying the server.
 
+## How to run
+
+Run the server locally with IntelliJ IDEA. Run `Application.kt/main`, then, to access the server, open *http://127.1.0.0:8080/*.
+
 ## Architecture
 
 The server has a three-layered architecture. Because it is responsible for API service and data storage, it does not have a separate View layer (only a simple HTML UI is available). 
@@ -12,7 +16,7 @@ In the business logic layer, the Authenticator module checks requests and does n
 
 The data access layer contains the DAO classes responsible for handling their tables and providing a unified interface for retrieving/writing data.
 
-
+![Picture3](https://user-images.githubusercontent.com/37120889/101178321-279c4f80-3649-11eb-85bd-6ae4218542c9.png)
 
 ## Database
 
@@ -22,13 +26,14 @@ There are tables of stolen vehicles, current reports, and user accounts. To thes
 
 When accessing data, the database serves it from memory, making API responses fast because there is no need to wait for table I/O operations. The memory content is synchronized with the corresponding table in the background. It is a viable solution as a very large amount of data is never stored on the server (images are not uploaded). To validate this, I examined one item from the largest JSON object type (Report), which is precisely 173 bytes. Multiplied by 1 million, it turns out that the server needs 173 MB 49 memory, which is acceptable. It is a severe overestimation, though, as the stolen vehicles list obtained by web scraping typically has a few thousand items. That is the maximum number of records that the in-memory database ever has (if every stolen vehicle has been detected at once). As history content is only stored persistently, extensive API usage does not saturate the memory either.
 
-
+![Picture4](https://user-images.githubusercontent.com/37120889/101178325-28cd7c80-3649-11eb-94ea-9201e67b02b3.png)
 
 ## API
 
 The API is divided into five parts: Vehicles, Reports, Report history, Self, and Users. These names are also the corresponding API call prefixes. All parts have similar actions and a unified calling convention. All actions are subject to specific permission, which is evaluated every time before serving. There is also a status page describing the API. The following figures show the two most common server and client communication types.
 
-
+![Picture1](https://user-images.githubusercontent.com/37120889/101178314-24a15f00-3649-11eb-9086-4a56f29bed29.png)
+![Picture2](https://user-images.githubusercontent.com/37120889/101178318-266b2280-3649-11eb-93b6-83d3f495269c.png)
 
 ## Permission management
 
