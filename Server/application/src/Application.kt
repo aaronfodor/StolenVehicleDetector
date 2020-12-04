@@ -274,7 +274,7 @@ fun Application.module(testing: Boolean = false) {
                 }
             }
 
-            authenticate(configurations = *arrayOf(Interactor.PERMISSION_API_GET)) {
+            authenticate(configurations = arrayOf(Interactor.PERMISSION_API_GET)) {
 
                 route("/vehicles"){
 
@@ -305,7 +305,7 @@ fun Application.module(testing: Boolean = false) {
 
             }
 
-            authenticate(configurations = *arrayOf(Interactor.PERMISSION_ADMIN)) {
+            authenticate(configurations = arrayOf(Interactor.PERMISSION_ADMIN)) {
 
                 post("/vehicles/load") {
 
@@ -345,7 +345,7 @@ fun Application.module(testing: Boolean = false) {
 
             }
 
-            authenticate(configurations = *arrayOf(Interactor.PERMISSION_API_GET)) {
+            authenticate(configurations = arrayOf(Interactor.PERMISSION_API_GET)) {
 
                 route("/reports"){
 
@@ -376,7 +376,7 @@ fun Application.module(testing: Boolean = false) {
 
             }
 
-            authenticate(configurations = *arrayOf(Interactor.PERMISSION_API_POST)) {
+            authenticate(configurations = arrayOf(Interactor.PERMISSION_API_POST)) {
 
                 post("/report") {
 
@@ -394,7 +394,7 @@ fun Application.module(testing: Boolean = false) {
 
             }
 
-            authenticate(configurations = *arrayOf(Interactor.PERMISSION_ADMIN)) {
+            authenticate(configurations = arrayOf(Interactor.PERMISSION_ADMIN)) {
 
                 delete("/reports"){
 
@@ -411,7 +411,7 @@ fun Application.module(testing: Boolean = false) {
 
             }
 
-            authenticate(configurations = *arrayOf(Interactor.PERMISSION_API_GET)) {
+            authenticate(configurations = arrayOf(Interactor.PERMISSION_API_GET)) {
 
                 post("/user/login"){
 
