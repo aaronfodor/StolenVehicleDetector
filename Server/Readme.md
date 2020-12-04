@@ -4,7 +4,7 @@ This is the server of the Stolen Vehicle Detector system. Clients can upload new
 
 ## How to run
 
-Run the server locally with IntelliJ IDEA. Run `Application.kt/main`, then, to access the server, open *http://127.1.0.0:8080/*.
+Run the server locally with IntelliJ IDEA. Run `Application.kt/main`, then, to access the server, open *http://127.1.0.0:8080/*. To interact with the API, use the default user eg. in Postman (use the HTTP basic auth credentials - "email": "default_user@stolen_vehicle_detector", "password": "default_user_czka84").
 
 ## Architecture
 
