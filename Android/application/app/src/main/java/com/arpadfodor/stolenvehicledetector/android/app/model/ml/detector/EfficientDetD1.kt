@@ -1,4 +1,4 @@
-package com.arpadfodor.stolenvehicledetector.android.app.model.ai
+package com.arpadfodor.stolenvehicledetector.android.app.model.ml.detector
 
 import android.content.res.AssetManager
 

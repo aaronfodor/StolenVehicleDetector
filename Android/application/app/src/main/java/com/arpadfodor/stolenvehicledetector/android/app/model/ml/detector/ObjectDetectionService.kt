@@ -1,4 +1,4 @@
-package com.arpadfodor.stolenvehicledetector.android.app.model.ai
+package com.arpadfodor.stolenvehicledetector.android.app.model.ml.detector
 
 import android.content.res.AssetManager
 import android.graphics.Bitmap
@@ -20,8 +20,8 @@ class ObjectDetectionService {
 
     }
 
-    fun recognizeImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<RecognizedObject>{
-        val results = model?.recognizeImage(image, maximumRecognitionsToShow, minimumPredictionCertainty)
+    fun processImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<RecognizedObject>{
+        val results = model?.processImage(image, maximumRecognitionsToShow, minimumPredictionCertainty)
         return results ?: emptyList<RecognizedObject>()
     }
 

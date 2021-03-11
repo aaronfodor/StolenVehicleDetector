@@ -1,0 +1,18 @@
+
+Training: overfit on a captcha subset with 32 images, with variable length labels
+
+training parameters:
+-epochs:1000, early stopping:50
+
+results:
+-CTC uniform padding (len:10, including 0s), img(50x200): 672 epochs, loss: 0.5941 - val_loss: 0.2828 (410ms/step)
+-CTC explicit label length (max.len:10, without 0s), img(50x200): 993 epochs, loss: 0.1306 - val_loss: 0.0409 (410ms/step)
+	>better optimum
+
+-CTC explicit label length (max.len:20, without 0s), img(50x200): 1000 epochs, loss: 0.0194 - val_loss: 0.0085 (420ms/step)
+	>max.len does not slow down training
+
+-CTC explicit label length (max.len:20, without 0s), img(200x200): 1000 epochs, loss: 0.0599 - val_loss: 0.0320 (1900ms/step)
+	>training is significantly slower on an NxN images than on KxNs, where K<N
+	>convergence is a bit slower
+	>higher image with padding does not screw character recognition

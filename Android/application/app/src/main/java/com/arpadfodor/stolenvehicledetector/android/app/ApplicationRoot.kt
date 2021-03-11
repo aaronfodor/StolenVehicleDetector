@@ -6,10 +6,11 @@ import android.os.Build
 import android.util.Log
 import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.model.*
-import com.arpadfodor.stolenvehicledetector.android.app.model.ai.ObjectDetectionService
-import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
-import com.arpadfodor.stolenvehicledetector.android.app.model.ai.TextRecognitionService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.detector.ObjectDetectionService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.VehicleRecognizerService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr.TextRecognitionService
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr.OCRService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.GeneralRepository
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.CameraViewModel
 import java.util.*
@@ -66,7 +67,7 @@ class ApplicationRoot : Application() {
         ApiService.initialize(AccountService.getClient())
 
         ObjectDetectionService.initialize(assets, NUM_THREADS)
-        TextRecognitionService.initialize()
+        OCRService.initialize(assets, NUM_THREADS)
 
         val radius = resources.getDimension(R.dimen.bounding_box_radius)
         val width = resources.getDimension(R.dimen.bounding_box_line_width)

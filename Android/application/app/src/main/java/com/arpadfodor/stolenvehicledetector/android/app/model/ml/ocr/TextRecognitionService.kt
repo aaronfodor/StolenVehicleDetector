@@ -1,4 +1,4 @@
-package com.arpadfodor.stolenvehicledetector.android.app.model.ai
+package com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr
 
 import android.graphics.Bitmap
 import android.graphics.RectF

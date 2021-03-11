@@ -8,7 +8,7 @@ import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
-import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.VehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.GeneralRepository
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserRecognitionRepository
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder

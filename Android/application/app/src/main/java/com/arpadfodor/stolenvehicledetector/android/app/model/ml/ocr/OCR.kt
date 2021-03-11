@@ -1,4 +1,4 @@
-package com.arpadfodor.stolenvehicledetector.android.app.model.ai
+package com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr
 
 import android.content.res.AssetManager
 import android.graphics.Bitmap
@@ -17,9 +17,9 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * Abstract class for interacting with different object detector models similarly.
+ * Abstract class for interacting with different OCR models the same way
  **/
-abstract class ObjectDetector(
+abstract class OCR(
     assets: AssetManager,
     threads: Int,
     // Model and label paths
@@ -168,7 +168,7 @@ abstract class ObjectDetector(
 
     }
 
-    fun recognizeImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<RecognizedObject>{
+    open fun processImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<RecognizedText>{
 
         // Recognize image
         Trace.beginSection("Recognize image")
@@ -203,7 +203,7 @@ abstract class ObjectDetector(
             // return an empty list if the model is not ready
             ?: run {
             log("INFERENCE FAILURE: Model has not been loaded")
-            return ArrayList<RecognizedObject>(0)
+            return ArrayList<RecognizedText>(0)
             }
 
         val inferenceDuration = SystemClock.uptimeMillis() - startInferenceTime
@@ -212,8 +212,8 @@ abstract class ObjectDetector(
 
         val recognitionsSize = min(NUM_DETECTIONS, maximumRecognitionsToShow)
 
-        // Show the top detections after scaling them back to the input size
-        val detections: ArrayList<RecognizedObject> = ArrayList<RecognizedObject>(recognitionsSize)
+        // Show the top recognitions after scaling them back to the input size
+        val texts: ArrayList<RecognizedText> = ArrayList<RecognizedText>(recognitionsSize)
 
         for (i in 0 until recognitionsSize){
 
@@ -242,11 +242,11 @@ abstract class ObjectDetector(
                 // return an empty list if the labels are not ready
                     ?: run{
                         log("INFERENCE FAILURE: Labels list is empty")
-                        return ArrayList<RecognizedObject>(0)
+                        return ArrayList<RecognizedText>(0)
                     }
 
-                detections.add(
-                    RecognizedObject("" + i, title, certainty, detection)
+                texts.add(
+                    RecognizedText("" + i, title, RectF(), "")
                 )
 
             }
@@ -254,13 +254,13 @@ abstract class ObjectDetector(
         }
 
         Trace.endSection()
-        log("detection results: ${detections}")
+        log("detection results: ${texts}")
 
-        return detections
+        return texts
 
     }
 
-    private fun preProcessImage(image: Bitmap): ByteBuffer{
+    fun preProcessImage(image: Bitmap): ByteBuffer{
 
         // Pre-process image
         Trace.beginSection("create byte buffer image")
@@ -308,7 +308,7 @@ abstract class ObjectDetector(
         }
     }
 
-    private fun log(message: String){
+    fun log(message: String){
         if(enableLogging){
             Log.println(Log.VERBOSE, "[Detector]", message)
         }

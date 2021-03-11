@@ -1,8 +1,8 @@
-package com.arpadfodor.stolenvehicledetector.android.app.model.ai
+package com.arpadfodor.stolenvehicledetector.android.app.model.ml.detector
 
 import android.content.res.AssetManager
 
-class MobileNetV3Coco(assets: AssetManager, threads: Int) : ObjectDetector(
+class MobileNetV2(assets: AssetManager, threads: Int) : ObjectDetector(
     assets,
     threads,
 
@@ -12,7 +12,7 @@ class MobileNetV3Coco(assets: AssetManager, threads: Int) : ObjectDetector(
      */
 
     // Model and label paths
-    BASE_PATH = "detector/MobileNetV3Coco/",
+    BASE_PATH = "detector/MobileNetV2/",
     MODEL_PATH = "model.tflite",
     LABEL_PATH = "labelmap.txt",
 
@@ -20,8 +20,8 @@ class MobileNetV3Coco(assets: AssetManager, threads: Int) : ObjectDetector(
     IS_QUANTIZED = false,
 
     // image properties
-    IMAGE_MEAN = 128f,
-    IMAGE_STD = 128f,
+    IMAGE_MEAN = 127.5f,
+    IMAGE_STD = 127.5f,
 
     // Input image size required by the model
     IMAGE_SIZE_X = 320,

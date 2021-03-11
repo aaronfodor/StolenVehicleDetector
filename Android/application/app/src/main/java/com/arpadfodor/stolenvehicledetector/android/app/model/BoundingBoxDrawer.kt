@@ -3,7 +3,7 @@ package com.arpadfodor.stolenvehicledetector.android.app.model
 import android.graphics.*
 import android.util.Size
 import androidx.core.graphics.ColorUtils
-import com.arpadfodor.stolenvehicledetector.android.app.model.ai.RecognizedObject
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.detector.RecognizedObject
 import kotlin.math.max
 import kotlin.math.min
 

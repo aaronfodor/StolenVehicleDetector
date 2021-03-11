@@ -6,7 +6,7 @@ import android.util.Size
 import androidx.lifecycle.MutableLiveData
 import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
-import com.arpadfodor.stolenvehicledetector.android.app.model.ai.VehicleRecognizerService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.VehicleRecognizerService
 import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 import com.arpadfodor.stolenvehicledetector.android.app.model.MetaProvider
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition

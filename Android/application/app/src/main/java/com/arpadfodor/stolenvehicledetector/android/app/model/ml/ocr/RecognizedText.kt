@@ -1,27 +1,23 @@
-package com.arpadfodor.stolenvehicledetector.android.app.model.ai
+package com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr
 
 import android.graphics.RectF
 
 /**
- * A result returned by an ObjectDetector describing what was recognized.
+ * A result returned by the TextRecognitionService containing text and describing what was recognized.
  */
-data class RecognizedObject(
-    val id: String,
-    val title: String,
-    val confidence: Float,
+data class RecognizedText(
+    var text: String,
+    val language: String,
     val location: RectF = RectF(),
-    var extra: String = "",
-    var alertNeeded: Boolean = false
+    var extra: String = ""
 ){
 
     fun getShortString(): String {
-        val confidencePercentage = "${"%.2f".format(confidence*100)}%"
-        val resultString = "${title} ${confidencePercentage}"
-        return resultString
+        return text
     }
 
     fun getNormalString(): String{
-        val resultString = "[$id] " + getShortString()
+        val resultString = getShortString() + " [$language]"
         return resultString
     }
 

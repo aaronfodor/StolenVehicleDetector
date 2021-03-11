@@ -1,4 +1,4 @@
-package com.arpadfodor.stolenvehicledetector.android.app.model.ai
+package com.arpadfodor.stolenvehicledetector.android.app.model.ml
 
 import android.graphics.Bitmap
 import android.graphics.RectF
@@ -8,6 +8,8 @@ import android.util.Log
 import android.util.Size
 import com.arpadfodor.stolenvehicledetector.android.app.model.BoundingBoxDrawer
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.detector.ObjectDetectionService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr.OCRService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.VehicleRepository
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.Vehicle
 import java.util.*
@@ -47,7 +49,8 @@ class VehicleRecognizerService {
     var enableLogging = true
 
     private val objectDetectionService = ObjectDetectionService()
-    private val textRecognitionService = TextRecognitionService()
+    //private val textRecognitionService = TextRecognitionService()
+    private val ocrService = OCRService()
 
     fun recognize(inputImage: Bitmap, outputImageSize: Size, deviceOrientation: Int,
                   maximumRecognitionsToShow: Int, minimumPredictionCertaintyToShow: Float,
@@ -67,7 +70,7 @@ class VehicleRecognizerService {
         Trace.endSection()
 
         // Compute results
-        val recognizedObjects = objectDetectionService.recognizeImage(requiredInputImage,
+        val recognizedObjects = objectDetectionService.processImage(requiredInputImage,
             maximumRecognitionsToShow, minimumPredictionCertaintyToShow)
 
         val recognitions = arrayListOf<Pair<String, Bitmap>>()
@@ -90,7 +93,7 @@ class VehicleRecognizerService {
                 log("Image cut duration: $cutDuration")
                 Trace.endSection()
 
-                val recognizedTexts = textRecognitionService.recognizeText(textImageSnippet)
+                val recognizedTexts = ocrService.processImage(textImageSnippet, 20, 0f)
 
                 if(recognizedTexts.isNotEmpty()){
 
