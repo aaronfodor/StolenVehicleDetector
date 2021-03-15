@@ -8,7 +8,7 @@ import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.ApplicationRoot
 import com.arpadfodor.stolenvehicledetector.android.app.R
 import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
-import com.arpadfodor.stolenvehicledetector.android.app.model.ml.VehicleRecognizerService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.VehicleIdentifierService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.GeneralRepository
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.UserRecognitionRepository
 import com.arpadfodor.stolenvehicledetector.android.app.view.utils.AppSnackBarBuilder
@@ -59,7 +59,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                         preferences.edit().putString(getString(R.string.LAST_SYNCED_DB_VEHICLES), currentTime)
                             .apply()
                     }
-                    VehicleRecognizerService.initialize()
+                    VehicleIdentifierService.initialize()
 
                     if(isReportsSuccess){
                         val currentTime = Calendar.getInstance().time.toString()

@@ -2,7 +2,7 @@ package com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr
 
 import android.content.res.AssetManager
 import android.graphics.Bitmap
-import android.util.Log
+import android.util.Size
 
 class OCRService {
 
@@ -11,7 +11,7 @@ class OCRService {
         var model: OCR? = null
 
         fun initialize(assets: AssetManager, numThreads: Int){
-            model = TestOCR(assets, numThreads)
+            model = OCR(assets, numThreads)
         }
 
         fun close(){
@@ -20,18 +20,15 @@ class OCRService {
 
     }
 
-    // enable logging for debugging purposes
-    var enableLogging = true
-
-    fun processImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<RecognizedText>{
-        val results = model?.processImage(image, maximumRecognitionsToShow, minimumPredictionCertainty)
+    fun processImage(image: Bitmap, maximumBlocks: Int, minimumCertainty: Float): List<RecognizedText>{
+        val results = model?.processImage(image, maximumBlocks, minimumCertainty)
         return results ?: emptyList<RecognizedText>()
     }
 
-    private fun log(message: String){
-        if(enableLogging){
-            Log.println(Log.VERBOSE, "[OCR]", message)
-        }
+    fun getModelInputSize(): Size {
+        val width = model?.IMAGE_SIZE_X ?: 0
+        val height = model?.IMAGE_SIZE_Y ?: 0
+        return Size(width, height)
     }
 
 }

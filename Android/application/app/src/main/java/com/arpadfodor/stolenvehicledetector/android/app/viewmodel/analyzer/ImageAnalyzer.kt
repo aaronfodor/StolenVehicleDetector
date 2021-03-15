@@ -8,7 +8,7 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.AccountService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.UserRecognition
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.MetaProvider
-import com.arpadfodor.stolenvehicledetector.android.app.model.ml.VehicleRecognizerService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.VehicleIdentifierService
 import com.arpadfodor.stolenvehicledetector.android.app.view.DetectionListener
 import com.arpadfodor.stolenvehicledetector.android.app.viewmodel.CameraViewModel
 import java.util.*
@@ -24,7 +24,7 @@ class ImageAnalyzer(listener: DetectionListener? = null, viewModel_: CameraViewM
     private var framesPerSecond: Double = -1.0
 
     private val viewModel: CameraViewModel = viewModel_
-    private val licensePlateReaderService = VehicleRecognizerService()
+    private val licensePlateReaderService = VehicleIdentifierService()
 
     /**
      * Used to add listeners that will be called with each detection computed

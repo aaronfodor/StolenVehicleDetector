@@ -10,23 +10,25 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.BoundingBoxDrawer
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.ml.detector.ObjectDetectionService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr.OCRService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr.TextRecognitionService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.VehicleRepository
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.Vehicle
 import java.util.*
 
-class VehicleRecognizerService {
+class VehicleIdentifierService {
 
     companion object{
 
         private var stolenVehicles = listOf<Vehicle>()
+        private const val OBJECT_TO_PASS_TO_OCR = "License plate"
 
         fun initialize(){
 
             VehicleRepository.getVehicles {vehicleList ->
                 val normalizedVehicleList = mutableListOf<Vehicle>()
                 for(element in vehicleList){
-                    normalizedVehicleList.add(Vehicle(normalizeLicenseId(element.licenseId),
-                        element.type, element.manufacturer, element.color))
+                    normalizedVehicleList.add(
+                        Vehicle(normalizeLicenseId(element.licenseId), element.type, element.manufacturer, element.color))
                 }
                 stolenVehicles = normalizedVehicleList
             }
@@ -41,16 +43,14 @@ class VehicleRecognizerService {
                 .toUpperCase(Locale.ROOT)
         }
 
-        private const val OBJECT_TO_RECOGNIZE_TEXT_TITLE = "License plate"
-
     }
 
     // enable logging for debugging purposes
     var enableLogging = true
 
     private val objectDetectionService = ObjectDetectionService()
-    //private val textRecognitionService = TextRecognitionService()
     private val ocrService = OCRService()
+    //private val ocrService = TextRecognitionService()
 
     fun recognize(inputImage: Bitmap, outputImageSize: Size, deviceOrientation: Int,
                   maximumRecognitionsToShow: Int, minimumPredictionCertaintyToShow: Float,
@@ -58,15 +58,15 @@ class VehicleRecognizerService {
 
         val startRecognitionTime = SystemClock.uptimeMillis()
 
-        // Pre-process image
-        Trace.beginSection("Pre-process image")
+        // Detector image preprocessing
+        Trace.beginSection("Detector preprocess image")
         val startPreprocessingTime = SystemClock.uptimeMillis()
 
         val bitmapNxN = ImageConverter.bitmapToCroppedNxNImage(inputImage)
-        val requiredInputImage = ImageConverter.resizeBitmap(bitmapNxN, objectDetectionService.getModelInputSize())
+        val requiredInputImage = ImageConverter.transformBitmap(bitmapNxN, objectDetectionService.getModelInputSize())
 
         val preprocessingDuration = SystemClock.uptimeMillis() - startPreprocessingTime
-        log("Image pre-processing duration: $preprocessingDuration")
+        log("Detector img preprocessing duration: $preprocessingDuration")
         Trace.endSection()
 
         // Compute results
@@ -77,30 +77,31 @@ class VehicleRecognizerService {
 
         for(recognizedObject in recognizedObjects){
 
-            if(recognizedObject.title == OBJECT_TO_RECOGNIZE_TEXT_TITLE){
+            if(recognizedObject.title == OBJECT_TO_PASS_TO_OCR){
 
                 val ratio = (bitmapNxN.height.toFloat())/(requiredInputImage.height.toFloat())
                 val scaledRectF = RectF(recognizedObject.location.left*ratio, recognizedObject.location.top*ratio,
                     recognizedObject.location.right*ratio, recognizedObject.location.bottom*ratio)
 
-                // Run image cut
-                Trace.beginSection("Image snippet")
-                val startCutTime = SystemClock.uptimeMillis()
+                // OCR image preprocessing
+                Trace.beginSection("OCR preprocess image")
+                val startPreprocessingTime = SystemClock.uptimeMillis()
 
                 val textImageSnippet = ImageConverter.cutPieceFromImage(bitmapNxN, scaledRectF)
+                val resizedGrayscaleImage = ImageConverter.transformBitmap(textImageSnippet, ocrService.getModelInputSize())
 
-                val cutDuration = SystemClock.uptimeMillis() - startCutTime
-                log("Image cut duration: $cutDuration")
+                val preprocessingDuration = SystemClock.uptimeMillis() - startPreprocessingTime
+                log("OCR img preprocessing duration: $preprocessingDuration")
                 Trace.endSection()
 
-                val recognizedTexts = ocrService.processImage(textImageSnippet, 20, 0f)
+                val recognizedTexts = ocrService.processImage(resizedGrayscaleImage, 20, 0f)
 
                 if(recognizedTexts.isNotEmpty()){
 
                     recognizedObject.extra = recognizedTexts[0].getShortStringWithExtra()
 
                     // Check if any of the texts are suspicious
-                    Trace.beginSection("Check if text suspicious")
+                    Trace.beginSection("Check if text is suspicious")
                     val startCheckIfSuspiciousTime = SystemClock.uptimeMillis()
 
                     for(recognizedText in recognizedTexts){
@@ -128,7 +129,7 @@ class VehicleRecognizerService {
         Trace.beginSection("Mask image")
         val startMaskTime = SystemClock.uptimeMillis()
 
-        val optimalBoundingBoxImageSize = ImageConverter.resizeBitmap(requiredInputImage, outputImageSize)
+        val optimalBoundingBoxImageSize = ImageConverter.transformBitmap(requiredInputImage, outputImageSize)
         val boundingBoxBitmap = BoundingBoxDrawer.drawBoundingBoxes(optimalBoundingBoxImageSize,
             deviceOrientation, objectDetectionService.getModelInputSize(), recognizedObjects)
 
@@ -137,7 +138,7 @@ class VehicleRecognizerService {
         Trace.endSection()
 
         val recognitionDuration = SystemClock.uptimeMillis() - startRecognitionTime
-        log("** Whole recognition duration: $recognitionDuration **")
+        log("** Whole inference duration: $recognitionDuration **")
 
         callback(recognitions.toTypedArray())
 
@@ -162,7 +163,7 @@ class VehicleRecognizerService {
 
     private fun log(message: String){
         if(enableLogging){
-            Log.println(Log.VERBOSE, "[Vehicle recognizer service]", message)
+            Log.println(Log.VERBOSE, "[Vehicle identifier service]", message)
         }
     }
 

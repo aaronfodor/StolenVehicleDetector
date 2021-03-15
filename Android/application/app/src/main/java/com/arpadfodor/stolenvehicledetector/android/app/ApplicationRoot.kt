@@ -7,8 +7,7 @@ import android.util.Log
 import androidx.preference.PreferenceManager
 import com.arpadfodor.stolenvehicledetector.android.app.model.*
 import com.arpadfodor.stolenvehicledetector.android.app.model.ml.detector.ObjectDetectionService
-import com.arpadfodor.stolenvehicledetector.android.app.model.ml.VehicleRecognizerService
-import com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr.TextRecognitionService
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.VehicleIdentifierService
 import com.arpadfodor.stolenvehicledetector.android.app.model.api.ApiService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr.OCRService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.GeneralRepository
@@ -101,7 +100,7 @@ class ApplicationRoot : Application() {
                     preferences.edit().putString(getString(R.string.LAST_SYNCED_DB_VEHICLES), currentTime)
                         .apply()
                 }
-                VehicleRecognizerService.initialize()
+                VehicleIdentifierService.initialize()
 
                 if(isReportsSuccess){
                     val currentTime = Calendar.getInstance().time.toString()

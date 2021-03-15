@@ -38,18 +38,18 @@ object ImageConverter {
     }
 
     /**
-     * Returns the resized image
+     * Returns the transformed bitmap
      *
-     * @param bitmap            The input image which has NxN dimensions
-     * @param desiredSize       The desired output image dimensions
+     * @param bitmap                The input image which has NxN dimensions
+     * @param desiredSize           The desired output image dimensions
      *
      * @return Bitmap           The resized Bitmap
      */
-    fun resizeBitmap(bitmap: Bitmap, desiredSize: Size): Bitmap{
+    fun transformBitmap(bitmap: Bitmap, desiredSize: Size): Bitmap{
 
         val cropToFrameTransform = Matrix()
 
-        val resizedBitmap: Bitmap = Bitmap.createBitmap(
+        val transformedBitmap: Bitmap = Bitmap.createBitmap(
             desiredSize.width,
             desiredSize.height,
             Bitmap.Config.ARGB_8888
@@ -67,10 +67,14 @@ object ImageConverter {
 
         frameToReScaleTransform.invert(cropToFrameTransform)
 
-        val canvas = Canvas(resizedBitmap)
-        canvas.drawBitmap(bitmap, frameToReScaleTransform, null)
+        val canvas = Canvas(transformedBitmap)
+        val paint = Paint()
+        val colorMatrix = ColorMatrix()
+        val colorMatrixFilter = ColorMatrixColorFilter(colorMatrix)
+        paint.colorFilter = colorMatrixFilter
+        canvas.drawBitmap(bitmap, frameToReScaleTransform, paint)
 
-        return resizedBitmap
+        return transformedBitmap
 
     }
 

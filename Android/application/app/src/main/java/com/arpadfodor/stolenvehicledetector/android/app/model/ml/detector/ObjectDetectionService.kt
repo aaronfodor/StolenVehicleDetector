@@ -26,8 +26,8 @@ class ObjectDetectionService {
     }
 
     fun getModelInputSize(): Size {
-        val width = model?.IMAGE_SIZE_X ?: 0
-        val height = model?.IMAGE_SIZE_Y ?: 0
+        val width = model?.IMAGE_SIZE_Y ?: 0
+        val height = model?.IMAGE_SIZE_X ?: 0
         return Size(width, height)
     }
 

@@ -13,43 +13,48 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
-import kotlin.math.max
 import kotlin.math.min
 
 /**
  * Abstract class for interacting with different OCR models the same way
  **/
-abstract class OCR(
-    assets: AssetManager,
-    threads: Int,
-    // Model and label paths
-    val BASE_PATH: String,
-    val MODEL_PATH: String,
-    val LABEL_PATH: String,
-    // Whether the model quantized or not
-    val IS_QUANTIZED: Boolean,
-    // image properties
-    val IMAGE_MEAN: Float,
-    val IMAGE_STD: Float,
-    // Input image size required by the model
-    val IMAGE_SIZE_X: Int,
-    val IMAGE_SIZE_Y: Int,
-    // Input image channels (RGB)
-    val DIM_CHANNEL_SIZE: Int,
-    // Number of bytes of a channel in a pixel
-    // 1 means the model is quantized (Int), 4 means non-quantized (floating point)
-    val NUM_BYTES_PER_CHANNEL: Int,
-    // batch size dimension
-    val DIM_BATCH_SIZE: Int,
-    // returns this many results
-    val NUM_DETECTIONS: Int
+class OCR(
+        assets: AssetManager,
+        threads: Int,
+        // Model and label paths
+        val BASE_PATH: String = "OCR/",
+        val MODEL_PATH: String = "ocr_model.tflite",
+        val LABEL_PATH: String = "charactermap.txt",
+
+        // Whether the model quantized or not
+        val IS_QUANTIZED: Boolean = false,
+        // Number of bytes of a channel in a pixel
+        // 1 means the model is quantized (Int), 4 means non-quantized (floating point)
+        val NUM_BYTES_PER_CHANNEL: Int = 4,
+        // image properties
+        val IMAGE_MEAN: Float = 127.5f,
+        val IMAGE_STD: Float = 127.5f,
+        // batch size dimension
+        val DIM_BATCH_SIZE: Int = 1,
+        // Input image size required by the model
+        val IMAGE_SIZE_X: Int = 200,
+        val IMAGE_SIZE_Y: Int = 50,
+        // Input image channels (grayscale)
+        val DIM_CHANNEL_SIZE: Int = 1,
+
+        // returns this many text blocks
+        val NUM_BLOCKS: Int = 1,
+        // maximum text block length
+        val MAX_BLOCK_LENGTH: Int = 50,
+        // returns this many char probabilities
+        val NUM_CHARACTERS: Int = 68
     ) {
 
     // the inference model
     var model: Interpreter? = null
 
     // pre-allocated buffer to the labels
-    var labels: ArrayList<String>? = null
+    var labels: ArrayList<String> = arrayListOf()
 
     // GPU delegate to run the model on device GPU
     var gpuDelegate: GpuDelegate? = null
@@ -60,14 +65,8 @@ abstract class OCR(
     // pre-allocated buffer to the input image
     val intValues: IntArray
 
-    // contains the number of detected boxes - array of shape [DIM_BATCH_SIZE]
-    val numDetections: FloatArray
-    // contains the location of detected boxes - array of shape [DIM_BATCH_SIZE, NUM_DETECTIONS, 4]
-    val outputLocations: Array<Array<FloatArray>>
-    // contains the classes of detected boxes - array of shape [DIM_BATCH_SIZE, NUM_DETECTIONS]
-    val outputClasses: Array<FloatArray>
-    // contains the scores of detected boxes - array of shape [DIM_BATCH_SIZE, NUM_DETECTIONS]
-    val outputScores: Array<FloatArray>
+    // contains the recognized text sequence - array of shape [DIM_BATCH_SIZE, MAX_RESULTS, NUM_CHARACTERS]
+    lateinit var output: Array<Array<FloatArray>>
 
     // enable logging for debugging purposes
     var enableLogging = true
@@ -79,11 +78,6 @@ abstract class OCR(
 
         numThreads = threads
 
-        numDetections = FloatArray(DIM_BATCH_SIZE)
-        outputLocations = Array(DIM_BATCH_SIZE) { Array(NUM_DETECTIONS) { FloatArray(4) } }
-        outputClasses = Array(DIM_BATCH_SIZE) { FloatArray(NUM_DETECTIONS) }
-        outputScores = Array(DIM_BATCH_SIZE) { FloatArray(NUM_DETECTIONS) }
-
         imgData = initImgData()
         intValues = IntArray(IMAGE_SIZE_X * IMAGE_SIZE_Y)
 
@@ -92,6 +86,7 @@ abstract class OCR(
             val mappedByteBuffer = loadModelFile(assets)
             model = buildModel(mappedByteBuffer, numThreads)
             labels = loadLabels(assets)
+            output = Array(DIM_BATCH_SIZE) { Array(MAX_BLOCK_LENGTH) { FloatArray(NUM_CHARACTERS) } }
         }.start()
 
         log("Model initialized")
@@ -144,6 +139,7 @@ abstract class OCR(
         }
         options.setNumThreads(numThreads)
         val model = Interpreter(mappedByteBuffer, options)
+        model.resizeInput(0, intArrayOf(1, 50, 200, 1) )
 
         log("Model built")
         return model
@@ -168,10 +164,10 @@ abstract class OCR(
 
     }
 
-    open fun processImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<RecognizedText>{
+    fun processImage(image: Bitmap, maximumBlocksToShow: Int, minimumCertainty: Float): List<RecognizedText>{
 
         // Recognize image
-        Trace.beginSection("Recognize image")
+        Trace.beginSection("Process image")
 
         // image pre-processing
         val imgData = preProcessImage(image)
@@ -185,10 +181,7 @@ abstract class OCR(
 
         // output values will appear in this HashMap
         val outputMap = HashMap<Int, Any>()
-        outputMap[0] = outputLocations
-        outputMap[1] = outputClasses
-        outputMap[2] = outputScores
-        outputMap[3] = numDetections
+        outputMap[0] = output
 
         val feedingDuration = SystemClock.uptimeMillis() - startFeedingTime
         log("Feeding duration: $feedingDuration")
@@ -200,63 +193,73 @@ abstract class OCR(
 
         // inference call on the model
         model?.runForMultipleInputsOutputs(inputArray, outputMap)
-            // return an empty list if the model is not ready
+        // return an empty list if the model is not ready
             ?: run {
-            log("INFERENCE FAILURE: Model has not been loaded")
-            return ArrayList<RecognizedText>(0)
+                log("INFERENCE FAILURE: Model has not been loaded")
+                return ArrayList<RecognizedText>(0)
             }
 
         val inferenceDuration = SystemClock.uptimeMillis() - startInferenceTime
         log("Inference duration: $inferenceDuration")
         Trace.endSection()
 
-        val recognitionsSize = min(NUM_DETECTIONS, maximumRecognitionsToShow)
+        val numBlocks = min(NUM_BLOCKS, maximumBlocksToShow)
 
         // Show the top recognitions after scaling them back to the input size
-        val texts: ArrayList<RecognizedText> = ArrayList<RecognizedText>(recognitionsSize)
+        val texts: ArrayList<RecognizedText> = ArrayList<RecognizedText>(numBlocks)
 
-        for (i in 0 until recognitionsSize){
-
-            val certainty = outputScores[0][i]
-
-            if(certainty >= minimumPredictionCertainty){
-
-                //if one coordinate is out of the image size range, adjust it
-                val left = max(0f, outputLocations[0][i][1] * IMAGE_SIZE_X)
-                val top = max(0f, outputLocations[0][i][0] * IMAGE_SIZE_Y)
-                val right = min(image.width.toFloat(), outputLocations[0][i][3] * IMAGE_SIZE_X)
-                val bottom = min(image.height.toFloat(), outputLocations[0][i][2] * IMAGE_SIZE_Y)
-
-                // one bounding box coordinates
-                val detection = RectF(left, top, right, bottom)
-
-                /**
-                 * The detector assumes class 0 is the background class in label file and class
-                 * labels start from 1 to number_of_classes+1
-                 * outputClasses correspond to class index from 0 to number_of_classes
-                 */
-                val labelOffset = 1
-
-                // title from labels list
-                val title = labels?.get(outputClasses[0][i].toInt() + labelOffset)
-                // return an empty list if the labels are not ready
-                    ?: run{
-                        log("INFERENCE FAILURE: Labels list is empty")
-                        return ArrayList<RecognizedText>(0)
-                    }
-
-                texts.add(
-                    RecognizedText("" + i, title, RectF(), "")
-                )
-
-            }
-
+        for (i in 0 until numBlocks){
+            val text = greedySearchBlockDecode(output[i], MAX_BLOCK_LENGTH)
+            texts.add(RecognizedText(text, "", RectF(), ""))
         }
 
         Trace.endSection()
-        log("detection results: ${texts}")
+        log("inference results: ${texts}")
 
         return texts
+
+    }
+
+    /**
+     * Greedy search decoding: remove duplicates next to each other & no_char characters to generate output text
+     *
+     * @param blockWithCharProbabilities    Array of FloatArrays with char probabilities
+     * @param maxBlockLength                The maximum length the output text is
+     *
+     * @return String                       Decoded text
+     */
+    fun greedySearchBlockDecode(blockWithCharProbabilities: Array<FloatArray>, maxBlockLength: Int): String{
+
+        // max value indices
+        val indices = mutableListOf<Int>()
+        val numMaxCharacters = min(maxBlockLength, blockWithCharProbabilities.size)
+
+        // record last index to remove duplicates
+        var lastMaxIdx = -1
+
+        for(i in 0 until numMaxCharacters){
+
+            val charProbabilities = blockWithCharProbabilities[i]
+            val maxValue = charProbabilities.maxOrNull()
+            val maxIdx = charProbabilities.indexOfFirst { it == maxValue }
+
+            if(maxIdx != lastMaxIdx){
+                indices.add(maxIdx)
+            }
+            lastMaxIdx = maxIdx
+
+        }
+
+        // decoded text
+        var text = ""
+        // decode numbers to text with labels
+        for(index in indices){
+            if(index < labels.size){
+                text += labels[index]
+            }
+        }
+
+        return text
 
     }
 
@@ -270,8 +273,8 @@ abstract class OCR(
 
         imgData.rewind()
 
-        for (i in 0 until IMAGE_SIZE_X) {
-            for (j in 0 until IMAGE_SIZE_Y) {
+        for (i in 0 until IMAGE_SIZE_Y) {
+            for (j in 0 until IMAGE_SIZE_X) {
 
                 val pixelValue = intValues[i * IMAGE_SIZE_X + j]
 
@@ -283,9 +286,16 @@ abstract class OCR(
                 }
                 // Float model
                 else {
-                    imgData.putFloat(((pixelValue shr 16 and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
-                    imgData.putFloat(((pixelValue shr 8 and 0xFF) - IMAGE_MEAN) /IMAGE_STD)
-                    imgData.putFloat(((pixelValue and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
+
+                    val red = (((pixelValue and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
+                    val green = (((pixelValue shr 8 and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
+                    val blue = (((pixelValue shr 16 and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
+
+                    // grayscale conversion: the same as during model training (like Tensorflow rgb_to_grayscale)
+                    // reference: https://en.wikipedia.org/wiki/Luma_%28video%29
+                    val luminance = (red*0.2989f) + (green*0.5870f) + (blue*0.1140f)
+                    imgData.putFloat(luminance)
+
                 }
 
             }
@@ -310,7 +320,7 @@ abstract class OCR(
 
     fun log(message: String){
         if(enableLogging){
-            Log.println(Log.VERBOSE, "[Detector]", message)
+            Log.println(Log.VERBOSE, "[OCR]", message)
         }
     }
 
@@ -327,7 +337,8 @@ abstract class OCR(
             "Bytes per channel: $NUM_BYTES_PER_CHANNEL/n" +
             "[1 means the model is quantized (Int), 4 means non-quantized (floating point)]/n/n" +
             "Batch size: $DIM_BATCH_SIZE/n" +
-            "Bounding boxes per inference: $NUM_DETECTIONS/n" +
+            "Max block length: $MAX_BLOCK_LENGTH/n" +
+            "Max blocks per inference: $NUM_BLOCKS/n" +
             "# threads to use: $numThreads/n"
         return stats
     }

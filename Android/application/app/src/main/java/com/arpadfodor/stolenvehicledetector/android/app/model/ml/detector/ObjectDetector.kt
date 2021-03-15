@@ -270,8 +270,8 @@ abstract class ObjectDetector(
 
         imgData.rewind()
 
-        for (i in 0 until IMAGE_SIZE_X) {
-            for (j in 0 until IMAGE_SIZE_Y) {
+        for (i in 0 until IMAGE_SIZE_Y) {
+            for (j in 0 until IMAGE_SIZE_X) {
 
                 val pixelValue = intValues[i * IMAGE_SIZE_X + j]
 
@@ -333,13 +333,11 @@ abstract class ObjectDetector(
     }
 
     fun close(){
-
         model?.close()
         gpuDelegate?.close()
 
         model = null
         gpuDelegate = null
-
     }
 
 }

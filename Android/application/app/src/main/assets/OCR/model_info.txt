@@ -1,0 +1,16 @@
+Model: ocr_model_v1_20210313-221222_captcha_epoch75_loss0.0480
+
+File size: 0.483 MB
+----------
+Input:
+(1, 50, 200, 1), type: DT_FLOAT - grayscale
+non-quantized: 4 bytes/channels/pixel, [0,1). This typically means mapping each pixel (linearly)
+to a value between [0, 1]. Input image values between 0 and 255 should be divided by 255 to ensure the range is [0,1).
+----------
+Output: 
+HashMap<Int, Any>, type: DT_FLOAT - Use labelmap.txt to interpret output indices
+
+The model outputs 1 array, mapped to the index 0.
+
+0:	characters
+Multidimensional float32 tensor of shape [50, 68] with character probabilities. Floating point values are between 0 and 1. The outer array is the sequence length (max. 50 characters). The inner arrays represent predicted character probabilities in their specific position. To interpret which position means which character, use charactermap.txt

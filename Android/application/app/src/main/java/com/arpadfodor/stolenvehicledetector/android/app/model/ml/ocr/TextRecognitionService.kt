@@ -82,7 +82,7 @@ class TextRecognitionService {
 
     }
 
-    fun recognizeText(image: Bitmap) : List<RecognizedText>{
+    fun processImage(image: Bitmap, maximumBlocks: Int, minimumCertainty: Float) : List<RecognizedText>{
 
         val input = InputImage.fromBitmap(image, 0)
         var recognizedTexts = listOf<RecognizedText>()
