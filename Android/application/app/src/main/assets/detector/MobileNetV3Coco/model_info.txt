@@ -4,7 +4,7 @@ File size: 3.787 MB
 ----------
 Input: 
 (1, 320, 320, 3), type: DT_FLOAT - channels_last RGB
-non-quantized: 4 bytes/channels/pixel, [-1,1). This typically means mapping each pixel (linearly)
+4 bytes/channels/pixel, [-1,1). This typically means mapping each pixel (linearly)
 to a value between [-1, 1]. Input image values between 0 and 255 are scaled by (1/128.0) and then a value of -1 is added to them to ensure the range is [-1,1).
 ----------
 Output: 

@@ -1,0 +1,2 @@
+MLKit Vision TextRecognizer: 50x200x3 img: 39 ms
+custom OCR: 50x200x3 img: 12 ms
