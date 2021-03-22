@@ -51,7 +51,7 @@ class TextRecognitionService {
 
                     for(block in rawResult.textBlocks){
                         for(line in block.lines){
-                            val recognition = RecognizedText(line.text, line.recognizedLanguage, RectF(line.boundingBox))
+                            val recognition = RecognizedText(line.text, 1f, line.recognizedLanguage, RectF(line.boundingBox))
                             recognizedTexts.add(recognition)
                         }
                     }

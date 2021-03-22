@@ -1,6 +1,6 @@
 Model: ocr_model_v1_20210313-221222_captcha_epoch75_loss0.0480
-
-File size: 0.483 MB
+File size: 0.451 MB
+Quantization: dynamic-integer quantized
 ----------
 Input:
 (1, 50, 200, 1), type: DT_FLOAT - grayscale

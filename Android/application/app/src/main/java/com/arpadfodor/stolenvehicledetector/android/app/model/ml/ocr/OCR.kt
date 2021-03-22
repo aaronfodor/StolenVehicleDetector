@@ -26,8 +26,8 @@ class OCR(
         val MODEL_PATH: String = "ocr_model.tflite",
         val LABEL_PATH: String = "charactermap.txt",
 
-        // Whether the model quantized or not
-        val IS_QUANTIZED: Boolean = false,
+        // Whether the model can run on GPU
+        val GPU_INFERENCE_SUPPORT: Boolean = true,
         // Number of bytes of a channel in a pixel
         // 1 means the model is quantized (Int), 4 means non-quantized (floating point)
         val NUM_BYTES_PER_CHANNEL: Int = 4,
@@ -133,7 +133,7 @@ class OCR(
 
         val options = Interpreter.Options()
 
-        if(IS_QUANTIZED){
+        if(GPU_INFERENCE_SUPPORT){
             gpuDelegate = GpuDelegate()
             options.addDelegate(gpuDelegate)
         }
@@ -209,8 +209,8 @@ class OCR(
         val texts: ArrayList<RecognizedText> = ArrayList<RecognizedText>(numBlocks)
 
         for (i in 0 until numBlocks){
-            val text = greedySearchBlockDecode(output[i], MAX_BLOCK_LENGTH)
-            texts.add(RecognizedText(text, "", RectF(), ""))
+            val resultText = greedySearchBlockDecode(output[i], MAX_BLOCK_LENGTH)
+            texts.add(RecognizedText(resultText.first, resultText.second, "", RectF(), ""))
         }
 
         Trace.endSection()
@@ -228,7 +228,7 @@ class OCR(
      *
      * @return String                       Decoded text
      */
-    fun greedySearchBlockDecode(blockWithCharProbabilities: Array<FloatArray>, maxBlockLength: Int): String{
+    fun greedySearchBlockDecode(blockWithCharProbabilities: Array<FloatArray>, maxBlockLength: Int): Pair<String, Float> {
 
         // max value indices
         val indices = mutableListOf<Int>()
@@ -237,10 +237,15 @@ class OCR(
         // record last index to remove duplicates
         var lastMaxIdx = -1
 
+        // record average probability
+        var probability = 0f
+
         for(i in 0 until numMaxCharacters){
 
             val charProbabilities = blockWithCharProbabilities[i]
             val maxValue = charProbabilities.maxOrNull()
+            probability += maxValue ?: 0f
+
             val maxIdx = charProbabilities.indexOfFirst { it == maxValue }
 
             if(maxIdx != lastMaxIdx){
@@ -249,6 +254,8 @@ class OCR(
             lastMaxIdx = maxIdx
 
         }
+
+        probability /= numMaxCharacters
 
         // decoded text
         var text = ""
@@ -259,7 +266,7 @@ class OCR(
             }
         }
 
-        return text
+        return Pair(text, probability)
 
     }
 
@@ -335,7 +342,6 @@ class OCR(
             "Input img size Y: $IMAGE_SIZE_Y/n/n" +
             "Img channels: $DIM_CHANNEL_SIZE/n" +
             "Bytes per channel: $NUM_BYTES_PER_CHANNEL/n" +
-            "[1 means the model is quantized (Int), 4 means non-quantized (floating point)]/n/n" +
             "Batch size: $DIM_BATCH_SIZE/n" +
             "Max block length: $MAX_BLOCK_LENGTH/n" +
             "Max blocks per inference: $NUM_BLOCKS/n" +

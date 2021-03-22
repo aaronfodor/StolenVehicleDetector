@@ -67,7 +67,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
     //Navigation library
-    def nav_version = "2.3.3"
+    def nav_version = "2.3.4"
     implementation "androidx.navigation:navigation-fragment-ktx:${nav_version}"
     implementation "androidx.navigation:navigation-ui-ktx:${nav_version}"
 
@@ -98,7 +98,7 @@ dependencies {
 
     // TensorFlow Lite
     implementation 'org.tensorflow:tensorflow-lite:0.0.0-nightly'
-    implementation 'org.tensorflow:tensorflow-lite-gpu:1.14.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.3.0'
 
     //OCR
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:16.1.3'

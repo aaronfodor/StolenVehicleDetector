@@ -4,14 +4,11 @@ import androidx.appcompat.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.arpadfodor.stolenvehicledetector.android.app.R
-import com.arpadfodor.stolenvehicledetector.android.app.model.MediaHandler
 
 /**
  * Dialog class of the app

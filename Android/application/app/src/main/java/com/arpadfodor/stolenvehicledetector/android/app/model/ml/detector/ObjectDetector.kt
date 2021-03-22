@@ -27,7 +27,7 @@ abstract class ObjectDetector(
     val MODEL_PATH: String,
     val LABEL_PATH: String,
     // Whether the model quantized or not
-    val IS_QUANTIZED: Boolean,
+    val GPU_INFERENCE_SUPPORT: Boolean,
     // image properties
     val IMAGE_MEAN: Float,
     val IMAGE_STD: Float,
@@ -138,7 +138,7 @@ abstract class ObjectDetector(
 
         val options = Interpreter.Options()
 
-        if(IS_QUANTIZED){
+        if(GPU_INFERENCE_SUPPORT){
             gpuDelegate = GpuDelegate()
             options.addDelegate(gpuDelegate)
         }
@@ -325,7 +325,6 @@ abstract class ObjectDetector(
             "Input img size Y: $IMAGE_SIZE_Y/n/n" +
             "Img channels: $DIM_CHANNEL_SIZE/n" +
             "Bytes per channel: $NUM_BYTES_PER_CHANNEL/n" +
-            "[1 means the model is quantized (Int), 4 means non-quantized (floating point)]/n/n" +
             "Batch size: $DIM_BATCH_SIZE/n" +
             "Bounding boxes per inference: $NUM_DETECTIONS/n" +
             "# threads to use: $numThreads/n"

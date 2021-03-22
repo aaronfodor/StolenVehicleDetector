@@ -7,6 +7,7 @@ import android.graphics.RectF
  */
 data class RecognizedText(
     var text: String,
+    val confidence: Float,
     val language: String,
     val location: RectF = RectF(),
     var extra: String = ""
@@ -17,12 +18,12 @@ data class RecognizedText(
     }
 
     fun getNormalString(): String{
-        val resultString = getShortString() + " [$language]"
+        val resultString = getShortString() + " [$confidence]"
         return resultString
     }
 
     fun getDetailedString(): String{
-        val resultString = getNormalString() + " $location"
+        val resultString = getNormalString() + " $language"  + " $location"
         return resultString
     }
 

@@ -16,8 +16,8 @@ class EfficientDetD1(assets: AssetManager, threads: Int) : ObjectDetector(
     MODEL_PATH = "model.tflite",
     LABEL_PATH = "labelmap.txt",
 
-    // Whether the model quantized or not
-    IS_QUANTIZED = false,
+    // Whether the model can run on GPU
+    GPU_INFERENCE_SUPPORT = false,
 
     // image properties
     IMAGE_MEAN = 127.5f,
