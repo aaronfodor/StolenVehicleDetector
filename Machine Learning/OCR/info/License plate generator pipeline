@@ -1,0 +1,15 @@
+License plate generator pipeline:
+-random text from allowed chars with random length in range
+-random font
+-set grayscale type & colors
+-if RGB image is needed, set grayscale type & colors
+-random image background and text colors (TODO)
+-create background image
+-create text image
+-if text image is bigger than background image in any dimension, calculate resize_ratio to fit text onto the background
+-multiply resize_ratio with a value between min_resize_text (0.75) and 1.01
+-resize text image based on resize_ratio
+-random rotation (TODO)
+-random heigh, width offset of text on backgroud
+-dirt simulation (TODO)
+-random img aspect_ratio (TODO)
