@@ -7,9 +7,10 @@ License plate generator pipeline:
 -create background image
 -create text image
 -if text image is bigger than background image in any dimension, calculate resize_ratio to fit text onto the background
--multiply resize_ratio with a value between min_resize_text (0.75) and 1.01
+-multiply resize_ratio with a value in resize_text range
 -resize text image based on resize_ratio
--random rotation (TODO)
+-random text aspect ratio change with a value in text_aspect_ratio range
 -random heigh, width offset of text on backgroud
+-random rotation with a value in rotation_deg range
 -dirt simulation (TODO)
--random img aspect_ratio (TODO)
+-random image resolution (TODO)
