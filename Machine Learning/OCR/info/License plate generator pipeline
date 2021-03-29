@@ -3,7 +3,7 @@ License plate generator pipeline:
 -random font
 -set grayscale type & colors
 -if RGB image is needed, set grayscale type & colors
--random image background and text colors (TODO)
+-random image background and text colors
 -create background image
 -create text image
 -if text image is bigger than background image in any dimension, calculate resize_ratio to fit text onto the background
@@ -12,5 +12,7 @@ License plate generator pipeline:
 -random text aspect ratio change with a value in text_aspect_ratio range
 -random heigh, width offset of text on backgroud
 -random rotation with a value in rotation_deg range
--dirt simulation (TODO)
--random image resolution (TODO)
+-random image enhancements: brightness, contrast, sharpness
+-random gaussian blur
+-dirt simulation: random dirt image, random resize, random rotation, random placement on plate image
+-random image resolution: downscale image between range, then upscale back (to degradate character resolution, but keep required image dimensions)
