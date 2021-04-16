@@ -1,0 +1,3 @@
+Residual OCR batch 32 loss: 0.5923, epoch: 78
+Residual OCR batch 16 loss: 0.4385, epoch: 165
+Residual OCR batch 8 loss: 0.5314, epoch: 90

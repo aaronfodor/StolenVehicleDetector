@@ -1,0 +1,2 @@
+Train epoch: 100000
+Validation epoch: 10000 (without hard overlays); inaccuracy +/- 0.015
