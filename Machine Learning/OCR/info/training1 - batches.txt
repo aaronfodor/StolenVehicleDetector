@@ -1,3 +1,18 @@
-Residual OCR batch 32 loss: 0.5923, epoch: 78
-Residual OCR batch 16 loss: 0.4385, epoch: 165
-Residual OCR batch 8 loss: 0.5314, epoch: 90
+Residual OCR 	batch 8 	val_loss: 0.2121	loss: 1.1741 	epoch: 8 	(early stopped)
+Residual OCR 	batch 16 	val_loss: 0.1545 	loss: 0.9286	epoch: 29	(early stopped)
+Residual OCR 	batch 32 	val_loss: 0.1134 	loss: 0.7060	epoch: 22	(early stopped)******
+
+validation on the same model:
+0.2121
+0.2287
+0.2173
+0.2237
+0.2121
+0.2422
+0.2101
+0.2221
+0.2223
+0.2188
+0.2433
+0.2307
+0.2364
