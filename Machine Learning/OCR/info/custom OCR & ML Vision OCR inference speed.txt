@@ -1,3 +1,17 @@
-MLKit Vision TextRecognizer: 50x200x3 img: 39 ms
-custom OCR on CPU: 50x200x3 img: 12 ms
-custom OCR on GPU: 50x200x3 img: 9-13 ms
+MLKit Vision TextRecognizer: 50x200x3 img, ? KB
+45 ms
+
+custom OCR: 50x200x3 img, 451 KB
+on CPU: 12 ms
+on GPU: 9-13 ms
+
+Residual OCR: 50x500x1 img, 628 KB
+on CPU: 36 ms
+on GPU: 48 ms
+
+MLKit Vision TextRecognizer: 50x500x3 img, ? KB
+40 ms
+
+Residual OCR: 50x500x3 img, 639 KB
+on CPU: 37 ms
+on GPU: 51 ms

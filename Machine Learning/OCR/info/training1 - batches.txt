@@ -1,6 +1,9 @@
 Residual OCR 	batch 8 	val_loss: 0.2121	loss: 1.1741 	epoch: 8 	(early stopped)
 Residual OCR 	batch 16 	val_loss: 0.1545 	loss: 0.9286	epoch: 29	(early stopped)
-Residual OCR 	batch 32 	val_loss: 0.1134 	loss: 0.7060	epoch: 22	(early stopped)******
+Residual OCR 	batch 32 	val_loss: 0.1134 	loss: 0.7060	epoch: 22	(early stopped)
+Residual OCR 	batch 64 	val_loss: 0.0855	loss: 0.6179	epoch: 55	(stopped)
+Residual OCR 	batch 128 	val_loss: 0.0848	loss: 0.6004	epoch: 51	(stopped)***
+Residual OCR 	batch 256 	val_loss: 1.3336 	loss: 4.9018	epoch: 4	(resource exhausted error)
 
 validation on the same model:
 0.2121

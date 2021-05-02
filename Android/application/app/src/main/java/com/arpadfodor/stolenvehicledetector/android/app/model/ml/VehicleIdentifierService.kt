@@ -23,7 +23,6 @@ class VehicleIdentifierService {
         private const val OBJECT_TO_PASS_TO_OCR = "License plate"
 
         fun initialize(){
-
             VehicleRepository.getVehicles {vehicleList ->
                 val normalizedVehicleList = mutableListOf<Vehicle>()
                 for(element in vehicleList){
@@ -32,7 +31,6 @@ class VehicleIdentifierService {
                 }
                 stolenVehicles = normalizedVehicleList
             }
-
         }
 
         private fun normalizeLicenseId(licenseId: String) : String{
@@ -55,18 +53,17 @@ class VehicleIdentifierService {
     fun recognize(inputImage: Bitmap, outputImageSize: Size, deviceOrientation: Int,
                   maximumRecognitionsToShow: Int, minimumPredictionCertaintyToShow: Float,
                   callback: (Array<Pair<String, Bitmap>>) -> Unit) : Bitmap{
-
         val startRecognitionTime = SystemClock.uptimeMillis()
 
-        // Detector image preprocessing
-        Trace.beginSection("Detector preprocess image")
-        val startPreprocessingTime = SystemClock.uptimeMillis()
+        // Detector image pre-processing
+        Trace.beginSection("Detector prepare image")
+        val startPrepareTime = SystemClock.uptimeMillis()
 
         val bitmapNxN = ImageConverter.bitmapToCroppedNxNImage(inputImage)
-        val requiredInputImage = ImageConverter.transformBitmap(bitmapNxN, objectDetectionService.getModelInputSize())
+        val requiredInputImage = ImageConverter.transformBitmapWithCrop(bitmapNxN, objectDetectionService.getModelInputSize())
 
-        val preprocessingDuration = SystemClock.uptimeMillis() - startPreprocessingTime
-        log("Detector img preprocessing duration: $preprocessingDuration")
+        val preparingDuration = SystemClock.uptimeMillis() - startPrepareTime
+        log("Detector image preparing duration: $preparingDuration")
         Trace.endSection()
 
         // Compute results
@@ -83,18 +80,18 @@ class VehicleIdentifierService {
                 val scaledRectF = RectF(recognizedObject.location.left*ratio, recognizedObject.location.top*ratio,
                     recognizedObject.location.right*ratio, recognizedObject.location.bottom*ratio)
 
-                // OCR image preprocessing
-                Trace.beginSection("OCR preprocess image")
-                val startPreprocessingTime = SystemClock.uptimeMillis()
+                // OCR image preparing
+                Trace.beginSection("OCR prepare image")
+                val startPrepareTime = SystemClock.uptimeMillis()
 
                 val textImageSnippet = ImageConverter.cutPieceFromImage(bitmapNxN, scaledRectF)
-                val resizedGrayscaleImage = ImageConverter.transformBitmap(textImageSnippet, ocrService.getModelInputSize())
+                val resizedOcrImage = ImageConverter.transformBitmapWithPad(textImageSnippet, ocrService.getInputSize())
 
-                val preprocessingDuration = SystemClock.uptimeMillis() - startPreprocessingTime
-                log("OCR img preprocessing duration: $preprocessingDuration")
+                val preparingDuration = SystemClock.uptimeMillis() - startPrepareTime
+                log("OCR image preparing duration: $preparingDuration")
                 Trace.endSection()
 
-                val recognizedTexts = ocrService.processImage(resizedGrayscaleImage, 20, 0f)
+                val recognizedTexts = ocrService.processImage(resizedOcrImage, 20, 0f)
 
                 if(recognizedTexts.isNotEmpty()){
 
@@ -129,7 +126,7 @@ class VehicleIdentifierService {
         Trace.beginSection("Mask image")
         val startMaskTime = SystemClock.uptimeMillis()
 
-        val optimalBoundingBoxImageSize = ImageConverter.transformBitmap(requiredInputImage, outputImageSize)
+        val optimalBoundingBoxImageSize = ImageConverter.transformBitmapWithCrop(requiredInputImage, outputImageSize)
         val boundingBoxBitmap = BoundingBoxDrawer.drawBoundingBoxes(optimalBoundingBoxImageSize,
             deviceOrientation, objectDetectionService.getModelInputSize(), recognizedObjects)
 
@@ -143,11 +140,9 @@ class VehicleIdentifierService {
         callback(recognitions.toTypedArray())
 
         return boundingBoxBitmap
-
     }
 
     private fun isIdSuspicious(licenseId: String, similarTo: (String) -> Unit) : Boolean{
-
         val normalizedLicenseId = normalizeLicenseId(licenseId)
 
         for(vehicle in stolenVehicles){
@@ -158,7 +153,6 @@ class VehicleIdentifierService {
         }
 
         return false
-
     }
 
     private fun log(message: String){

@@ -5,6 +5,7 @@ import android.graphics.RectF
 import android.os.SystemClock
 import android.os.Trace
 import android.util.Log
+import android.util.Size
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
@@ -16,7 +17,6 @@ import kotlin.math.min
 class TextRecognitionService {
 
     companion object{
-
         var model: TextRecognizer = TextRecognition.getClient()
 
         fun initialize(){
@@ -24,7 +24,6 @@ class TextRecognitionService {
         }
 
         private const val MAX_RECOGNITIONS_PER_IMAGE = 4
-
     }
 
     // enable logging for debugging purposes
@@ -35,7 +34,6 @@ class TextRecognitionService {
      * The model inference method retrieves results in an async way, thus waiting is needed before returning.
      **/
     private suspend fun process(input: InputImage) : List<RecognizedText>{
-
         var recognizedTexts = mutableListOf<RecognizedText>()
 
         return suspendCoroutine { continuation ->
@@ -79,11 +77,9 @@ class TextRecognitionService {
                 }
 
         }
-
     }
 
     fun processImage(image: Bitmap, maximumBlocks: Int, minimumCertainty: Float) : List<RecognizedText>{
-
         val input = InputImage.fromBitmap(image, 0)
         var recognizedTexts = listOf<RecognizedText>()
 
@@ -92,13 +88,18 @@ class TextRecognitionService {
         }
 
         return recognizedTexts
-
     }
 
     private fun log(message: String){
         if(enableLogging){
             Log.println(Log.VERBOSE, "[OCR]", message)
         }
+    }
+
+    fun getInputSize(): Size {
+        val width = 500
+        val height = 50
+        return Size(width, height)
     }
 
 }

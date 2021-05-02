@@ -27,13 +27,13 @@ class MobileNetV3Coco(assets: AssetManager, threads: Int) : ObjectDetector(
     IMAGE_SIZE_X = 320,
     IMAGE_SIZE_Y = 320,
     // Input image channels (RGB)
-    DIM_CHANNEL_SIZE = 3,
+    NUM_CHANNELS = 3,
     // Number of bytes of a channel in a pixel
     // 1 means the model is quantized (Int), 4 means non-quantized (floating point)
     NUM_BYTES_PER_CHANNEL = 4,
 
     // batch size dimension
-    DIM_BATCH_SIZE = 1,
+    BATCH_SIZE = 1,
     // returns this many results
     NUM_DETECTIONS = 100
     ) {

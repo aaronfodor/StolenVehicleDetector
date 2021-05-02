@@ -23,31 +23,35 @@ class OCR(
         threads: Int,
         // Model and label paths
         val BASE_PATH: String = "OCR/",
-        val MODEL_PATH: String = "ocr_model.tflite",
-        val LABEL_PATH: String = "charactermap.txt",
+        val MODEL_PATH: String = "model.tflite",
+        val LABEL_PATH: String = "characters.txt",
 
         // Whether the model can run on GPU
         val GPU_INFERENCE_SUPPORT: Boolean = true,
-        // Number of bytes of a channel in a pixel
-        // 1 means the model is quantized (Int), 4 means non-quantized (floating point)
-        val NUM_BYTES_PER_CHANNEL: Int = 4,
+
+        // input properties
         // image properties
         val IMAGE_MEAN: Float = 127.5f,
         val IMAGE_STD: Float = 127.5f,
-        // batch size dimension
-        val DIM_BATCH_SIZE: Int = 1,
-        // Input image size required by the model
-        val IMAGE_SIZE_X: Int = 200,
+        // input image size required
+        val IMAGE_SIZE_X: Int = 500,
         val IMAGE_SIZE_Y: Int = 50,
-        // Input image channels (grayscale)
-        val DIM_CHANNEL_SIZE: Int = 1,
+        // input image channels (1: grayscale, 3: RGB)
+        val NUM_CHANNELS: Int = 3,
+        // number of bytes of a channel in a pixel
+        // 1 means the model is quantized (Int), 4 means non-quantized (floating point)
+        val NUM_BYTES_PER_CHANNEL: Int = 4,
 
+        // output properties
         // returns this many text blocks
         val NUM_BLOCKS: Int = 1,
         // maximum text block length
-        val MAX_BLOCK_LENGTH: Int = 50,
+        val MAX_BLOCK_LENGTH: Int = 125,
         // returns this many char probabilities
-        val NUM_CHARACTERS: Int = 68
+        val NUM_CHARACTERS: Int = 38,
+
+        // batch size
+        val BATCH_SIZE: Int = 1
     ) {
 
     // the inference model
@@ -72,12 +76,9 @@ class OCR(
     var enableLogging = true
 
     // number of threads to use
-    val numThreads: Int
+    private val numThreads: Int = threads
 
     init {
-
-        numThreads = threads
-
         imgData = initImgData()
         intValues = IntArray(IMAGE_SIZE_X * IMAGE_SIZE_Y)
 
@@ -86,18 +87,16 @@ class OCR(
             val mappedByteBuffer = loadModelFile(assets)
             model = buildModel(mappedByteBuffer, numThreads)
             labels = loadLabels(assets)
-            output = Array(DIM_BATCH_SIZE) { Array(MAX_BLOCK_LENGTH) { FloatArray(NUM_CHARACTERS) } }
+            output = Array(BATCH_SIZE) { Array(MAX_BLOCK_LENGTH) { FloatArray(NUM_CHARACTERS) } }
         }.start()
 
         log("Model initialized")
-
     }
 
     /**
      * Load the model file from Assets
      */
     private fun loadModelFile(assets: AssetManager): MappedByteBuffer{
-
         val fileDescriptor = assets.openFd(BASE_PATH + MODEL_PATH)
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
         val fileChannel = inputStream.channel
@@ -109,11 +108,9 @@ class OCR(
 
         log("Model file loaded")
         return  byteBuffer
-
     }
 
     private fun loadLabels(assets: AssetManager): ArrayList<String>{
-
         val inputStream = assets.open(BASE_PATH + LABEL_PATH)
 
         val labels = arrayListOf<String>()
@@ -126,11 +123,9 @@ class OCR(
 
         log("Labels loaded")
         return labels
-
     }
 
     private fun buildModel(mappedByteBuffer: MappedByteBuffer, numThreads: Int): Interpreter{
-
         val options = Interpreter.Options()
 
         if(GPU_INFERENCE_SUPPORT){
@@ -139,11 +134,9 @@ class OCR(
         }
         options.setNumThreads(numThreads)
         val model = Interpreter(mappedByteBuffer, options)
-        model.resizeInput(0, intArrayOf(1, 50, 200, 1) )
 
         log("Model built")
         return model
-
     }
 
     /**
@@ -151,26 +144,22 @@ class OCR(
      * The interpreter can accept float arrays directly as input, but the ByteBuffer is more efficient as it avoids extra copies in the interpreter
      */
     private fun initImgData(): ByteBuffer{
-
         val imgData = ByteBuffer.allocateDirect(
-            DIM_BATCH_SIZE
+            BATCH_SIZE
                     * IMAGE_SIZE_X
                     * IMAGE_SIZE_Y
-                    * DIM_CHANNEL_SIZE
+                    * NUM_CHANNELS
                     * NUM_BYTES_PER_CHANNEL)
         imgData.order(ByteOrder.nativeOrder())
-
         return imgData
-
     }
 
     fun processImage(image: Bitmap, maximumBlocksToShow: Int, minimumCertainty: Float): List<RecognizedText>{
-
         // Recognize image
         Trace.beginSection("Process image")
 
         // image pre-processing
-        val imgData = preProcessImage(image)
+        val imgData = prepareImage(image)
 
         // Feed input & output to TensorFlow
         Trace.beginSection("Feed data")
@@ -217,7 +206,6 @@ class OCR(
         log("inference results: ${texts}")
 
         return texts
-
     }
 
     /**
@@ -228,8 +216,7 @@ class OCR(
      *
      * @return String                       Decoded text
      */
-    fun greedySearchBlockDecode(blockWithCharProbabilities: Array<FloatArray>, maxBlockLength: Int): Pair<String, Float> {
-
+    private fun greedySearchBlockDecode(blockWithCharProbabilities: Array<FloatArray>, maxBlockLength: Int): Pair<String, Float> {
         // max value indices
         val indices = mutableListOf<Int>()
         val numMaxCharacters = min(maxBlockLength, blockWithCharProbabilities.size)
@@ -267,11 +254,9 @@ class OCR(
         }
 
         return Pair(text, probability)
-
     }
 
-    fun preProcessImage(image: Bitmap): ByteBuffer{
-
+    fun prepareImage(image: Bitmap): ByteBuffer{
         // Pre-process image
         Trace.beginSection("create byte buffer image")
         val startByteBufferTime = SystemClock.uptimeMillis()
@@ -293,16 +278,24 @@ class OCR(
                 }
                 // Float model
                 else {
+                    // grayscale image needed
+                    if(NUM_CHANNELS == 1){
+                        // grayscale conversion
+                        val red = (((pixelValue and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
+                        val green = (((pixelValue shr 8 and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
+                        val blue = (((pixelValue shr 16 and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
 
-                    val red = (((pixelValue and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
-                    val green = (((pixelValue shr 8 and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
-                    val blue = (((pixelValue shr 16 and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
-
-                    // grayscale conversion: the same as during model training (like Tensorflow rgb_to_grayscale)
-                    // reference: https://en.wikipedia.org/wiki/Luma_%28video%29
-                    val luminance = (red*0.2989f) + (green*0.5870f) + (blue*0.1140f)
-                    imgData.putFloat(luminance)
-
+                        // grayscale conversion: the same as during model training (like TensorFlow rgb_to_grayscale)
+                        // reference: https://en.wikipedia.org/wiki/Luma_%28video%29
+                        val luminance = (red*0.2989f) + (green*0.5870f) + (blue*0.1140f)
+                        imgData.putFloat(luminance)
+                    }
+                    // RGB image needed
+                    else{
+                        imgData.putFloat(((pixelValue shr 16 and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
+                        imgData.putFloat(((pixelValue shr 8 and 0xFF) - IMAGE_MEAN) /IMAGE_STD)
+                        imgData.putFloat(((pixelValue and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
+                    }
                 }
 
             }
@@ -313,7 +306,6 @@ class OCR(
         Trace.endSection()
 
         return imgData
-
     }
 
     fun changeLoggingState(){
@@ -325,7 +317,7 @@ class OCR(
         }
     }
 
-    fun log(message: String){
+    private fun log(message: String){
         if(enableLogging){
             Log.println(Log.VERBOSE, "[OCR]", message)
         }
@@ -340,9 +332,9 @@ class OCR(
             "Img std: $IMAGE_STD/n/n" +
             "Input img size X: $IMAGE_SIZE_X/n" +
             "Input img size Y: $IMAGE_SIZE_Y/n/n" +
-            "Img channels: $DIM_CHANNEL_SIZE/n" +
+            "Img channels: $NUM_CHANNELS/n" +
             "Bytes per channel: $NUM_BYTES_PER_CHANNEL/n" +
-            "Batch size: $DIM_BATCH_SIZE/n" +
+            "Batch size: $BATCH_SIZE/n" +
             "Max block length: $MAX_BLOCK_LENGTH/n" +
             "Max blocks per inference: $NUM_BLOCKS/n" +
             "# threads to use: $numThreads/n"
@@ -350,13 +342,10 @@ class OCR(
     }
 
     fun close(){
-
         model?.close()
         gpuDelegate?.close()
-
         model = null
         gpuDelegate = null
-
     }
 
 }

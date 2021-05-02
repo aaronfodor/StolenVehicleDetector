@@ -44,6 +44,7 @@ android {
 
     buildFeatures {
         dataBinding = true
+        mlModelBinding = true
     }
 
 }
@@ -60,14 +61,16 @@ dependencies {
     //App compat and UI
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+    implementation 'org.tensorflow:tensorflow-lite-support:0.1.0-rc1'
+    implementation 'org.tensorflow:tensorflow-lite-metadata:0.1.0-rc1'
 
     //Navigation library
-    def nav_version = "2.3.4"
+    def nav_version = "2.3.5"
     implementation "androidx.navigation:navigation-fragment-ktx:${nav_version}"
     implementation "androidx.navigation:navigation-ui-ktx:${nav_version}"
 
@@ -83,13 +86,13 @@ dependencies {
     implementation "androidx.camera:camera-view:1.0.0-alpha14"              // cameraX View
 
     //db
-    def room_version = '2.2.6'
+    def room_version = '2.3.0'
     implementation "androidx.room:room-runtime:${room_version}"
     kapt "androidx.room:room-compiler:${room_version}"
 
     //network
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.8.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
@@ -97,8 +100,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.11.0'
 
     // TensorFlow Lite
-    implementation 'org.tensorflow:tensorflow-lite:0.0.0-nightly'
-    implementation 'org.tensorflow:tensorflow-lite-gpu:2.3.0'
+    implementation 'org.tensorflow:tensorflow-lite:2.4.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:0.0.0-nightly'
 
     //OCR
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:16.1.3'

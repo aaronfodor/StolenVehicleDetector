@@ -20,29 +20,32 @@ import kotlin.math.min
  * Abstract class for interacting with different object detector models the same way
  **/
 abstract class ObjectDetector(
-    assets: AssetManager,
-    threads: Int,
-    // Model and label paths
-    val BASE_PATH: String,
-    val MODEL_PATH: String,
-    val LABEL_PATH: String,
-    // Whether the model quantized or not
-    val GPU_INFERENCE_SUPPORT: Boolean,
-    // image properties
-    val IMAGE_MEAN: Float,
-    val IMAGE_STD: Float,
-    // Input image size required by the model
-    val IMAGE_SIZE_X: Int,
-    val IMAGE_SIZE_Y: Int,
-    // Input image channels (RGB)
-    val DIM_CHANNEL_SIZE: Int,
-    // Number of bytes of a channel in a pixel
-    // 1 means the model is quantized (Int), 4 means non-quantized (floating point)
-    val NUM_BYTES_PER_CHANNEL: Int,
-    // batch size dimension
-    val DIM_BATCH_SIZE: Int,
-    // returns this many results
-    val NUM_DETECTIONS: Int
+        assets: AssetManager,
+        threads: Int,
+        // Model and label paths
+        val BASE_PATH: String,
+        val MODEL_PATH: String,
+        val LABEL_PATH: String,
+
+        // Whether the model quantized or not
+        val GPU_INFERENCE_SUPPORT: Boolean,
+
+        // image properties
+        val IMAGE_MEAN: Float,
+        val IMAGE_STD: Float,
+        // Input image size required by the model
+        val IMAGE_SIZE_X: Int,
+        val IMAGE_SIZE_Y: Int,
+        // Input image channels (RGB)
+        val NUM_CHANNELS: Int,
+        // Number of bytes of a channel in a pixel
+        // 1 means the model is quantized (Int), 4 means non-quantized (floating point)
+        val NUM_BYTES_PER_CHANNEL: Int,
+
+        // returns this many results
+        val NUM_DETECTIONS: Int,
+        // batch size dimension
+        val BATCH_SIZE: Int
     ) {
 
     // the inference model
@@ -73,16 +76,14 @@ abstract class ObjectDetector(
     var enableLogging = true
 
     // number of threads to use
-    val numThreads: Int
+    private val numThreads: Int = threads
 
     init {
 
-        numThreads = threads
-
-        numDetections = FloatArray(DIM_BATCH_SIZE)
-        outputLocations = Array(DIM_BATCH_SIZE) { Array(NUM_DETECTIONS) { FloatArray(4) } }
-        outputClasses = Array(DIM_BATCH_SIZE) { FloatArray(NUM_DETECTIONS) }
-        outputScores = Array(DIM_BATCH_SIZE) { FloatArray(NUM_DETECTIONS) }
+        numDetections = FloatArray(BATCH_SIZE)
+        outputLocations = Array(BATCH_SIZE) { Array(NUM_DETECTIONS) { FloatArray(4) } }
+        outputClasses = Array(BATCH_SIZE) { FloatArray(NUM_DETECTIONS) }
+        outputScores = Array(BATCH_SIZE) { FloatArray(NUM_DETECTIONS) }
 
         imgData = initImgData()
         intValues = IntArray(IMAGE_SIZE_X * IMAGE_SIZE_Y)
@@ -95,14 +96,12 @@ abstract class ObjectDetector(
         }.start()
 
         log("Model initialized")
-
     }
 
     /**
      * Load the model file from Assets
      */
     private fun loadModelFile(assets: AssetManager): MappedByteBuffer{
-
         val fileDescriptor = assets.openFd(BASE_PATH + MODEL_PATH)
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
         val fileChannel = inputStream.channel
@@ -114,11 +113,9 @@ abstract class ObjectDetector(
 
         log("Model file loaded")
         return  byteBuffer
-
     }
 
     private fun loadLabels(assets: AssetManager): ArrayList<String>{
-
         val inputStream = assets.open(BASE_PATH + LABEL_PATH)
 
         val labels = arrayListOf<String>()
@@ -131,11 +128,9 @@ abstract class ObjectDetector(
 
         log("Labels loaded")
         return labels
-
     }
 
     private fun buildModel(mappedByteBuffer: MappedByteBuffer, numThreads: Int): Interpreter{
-
         val options = Interpreter.Options()
 
         if(GPU_INFERENCE_SUPPORT){
@@ -147,7 +142,6 @@ abstract class ObjectDetector(
 
         log("Model built")
         return model
-
     }
 
     /**
@@ -155,26 +149,23 @@ abstract class ObjectDetector(
      * The interpreter can accept float arrays directly as input, but the ByteBuffer is more efficient as it avoids extra copies in the interpreter
      */
     private fun initImgData(): ByteBuffer{
-
         val imgData = ByteBuffer.allocateDirect(
-            DIM_BATCH_SIZE
+            BATCH_SIZE
                     * IMAGE_SIZE_X
                     * IMAGE_SIZE_Y
-                    * DIM_CHANNEL_SIZE
+                    * NUM_CHANNELS
                     * NUM_BYTES_PER_CHANNEL)
         imgData.order(ByteOrder.nativeOrder())
 
         return imgData
-
     }
 
     fun processImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<RecognizedObject>{
-
         // Recognize image
         Trace.beginSection("Recognize image")
 
         // image pre-processing
-        val imgData = preProcessImage(image)
+        val imgData = prepareImage(image)
 
         // Feed input & output to TensorFlow
         Trace.beginSection("Feed data")
@@ -254,14 +245,12 @@ abstract class ObjectDetector(
         }
 
         Trace.endSection()
-        log("detection results: ${detections}")
+        log("detection results: $detections")
 
         return detections
-
     }
 
-    private fun preProcessImage(image: Bitmap): ByteBuffer{
-
+    fun prepareImage(image: Bitmap): ByteBuffer{
         // Pre-process image
         Trace.beginSection("create byte buffer image")
         val startByteBufferTime = SystemClock.uptimeMillis()
@@ -283,9 +272,24 @@ abstract class ObjectDetector(
                 }
                 // Float model
                 else {
-                    imgData.putFloat(((pixelValue shr 16 and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
-                    imgData.putFloat(((pixelValue shr 8 and 0xFF) - IMAGE_MEAN) /IMAGE_STD)
-                    imgData.putFloat(((pixelValue and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
+                    // grayscale image needed
+                    if(NUM_CHANNELS == 1){
+                        // grayscale conversion
+                        val red = (((pixelValue and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
+                        val green = (((pixelValue shr 8 and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
+                        val blue = (((pixelValue shr 16 and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
+
+                        // grayscale conversion: the same as during model training (like TensorFlow rgb_to_grayscale)
+                        // reference: https://en.wikipedia.org/wiki/Luma_%28video%29
+                        val luminance = (red*0.2989f) + (green*0.5870f) + (blue*0.1140f)
+                        imgData.putFloat(luminance)
+                    }
+                    // RGB image needed
+                    else{
+                        imgData.putFloat(((pixelValue shr 16 and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
+                        imgData.putFloat(((pixelValue shr 8 and 0xFF) - IMAGE_MEAN) /IMAGE_STD)
+                        imgData.putFloat(((pixelValue and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
+                    }
                 }
 
             }
@@ -296,16 +300,6 @@ abstract class ObjectDetector(
         Trace.endSection()
 
         return imgData
-
-    }
-
-    fun changeLoggingState(){
-        if(enableLogging){
-            enableLogging = false
-        }
-        else if(!enableLogging){
-            enableLogging = true
-        }
     }
 
     private fun log(message: String){
@@ -323,9 +317,9 @@ abstract class ObjectDetector(
             "Img std: $IMAGE_STD/n/n" +
             "Input img size X: $IMAGE_SIZE_X/n" +
             "Input img size Y: $IMAGE_SIZE_Y/n/n" +
-            "Img channels: $DIM_CHANNEL_SIZE/n" +
+            "Img channels: $NUM_CHANNELS/n" +
             "Bytes per channel: $NUM_BYTES_PER_CHANNEL/n" +
-            "Batch size: $DIM_BATCH_SIZE/n" +
+            "Batch size: $BATCH_SIZE/n" +
             "Bounding boxes per inference: $NUM_DETECTIONS/n" +
             "# threads to use: $numThreads/n"
         return stats

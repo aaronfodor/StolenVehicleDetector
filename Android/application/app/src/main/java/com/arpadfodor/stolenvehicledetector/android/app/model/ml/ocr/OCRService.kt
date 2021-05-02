@@ -7,7 +7,6 @@ import android.util.Size
 class OCRService {
 
     companion object{
-
         var model: OCR? = null
 
         fun initialize(assets: AssetManager, numThreads: Int){
@@ -17,7 +16,6 @@ class OCRService {
         fun close(){
             model?.close()
         }
-
     }
 
     fun processImage(image: Bitmap, maximumBlocks: Int, minimumCertainty: Float): List<RecognizedText>{
@@ -25,7 +23,7 @@ class OCRService {
         return results ?: emptyList<RecognizedText>()
     }
 
-    fun getModelInputSize(): Size {
+    fun getInputSize(): Size {
         val width = model?.IMAGE_SIZE_X ?: 0
         val height = model?.IMAGE_SIZE_Y ?: 0
         return Size(width, height)

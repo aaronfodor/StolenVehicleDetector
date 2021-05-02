@@ -8,10 +8,10 @@ import java.io.ByteArrayOutputStream
 import kotlin.math.abs
 import kotlin.math.max
 
+
 object ImageConverter {
 
     fun imageProxyToBitmap(image: ImageProxy): Bitmap {
-
         val yBuffer = image.planes[0].buffer // Y
         val uBuffer = image.planes[1].buffer // U
         val vBuffer = image.planes[2].buffer // V
@@ -34,19 +34,17 @@ object ImageConverter {
         val imageBytes = out.toByteArray()
 
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-
     }
 
     /**
      * Returns the transformed bitmap
      *
-     * @param bitmap                The input image which has NxN dimensions
-     * @param desiredSize           The desired output image dimensions
+     * @param image             The input image which has NxN dimensions
+     * @param desiredSize       The desired output image dimensions
      *
      * @return Bitmap           The resized Bitmap
      */
-    fun transformBitmap(bitmap: Bitmap, desiredSize: Size): Bitmap{
-
+    fun transformBitmapWithCrop(image: Bitmap, desiredSize: Size): Bitmap{
         val cropToFrameTransform = Matrix()
 
         val transformedBitmap: Bitmap = Bitmap.createBitmap(
@@ -54,17 +52,15 @@ object ImageConverter {
             desiredSize.height,
             Bitmap.Config.ARGB_8888
         )
-
         val frameToReScaleTransform = getTransformationMatrix(
-            bitmap.width,
-            bitmap.height,
+            image.width,
+            image.height,
             desiredSize.width,
             desiredSize.height,
             0,
             //maintain aspect ratio
             true
         )
-
         frameToReScaleTransform.invert(cropToFrameTransform)
 
         val canvas = Canvas(transformedBitmap)
@@ -72,10 +68,47 @@ object ImageConverter {
         val colorMatrix = ColorMatrix()
         val colorMatrixFilter = ColorMatrixColorFilter(colorMatrix)
         paint.colorFilter = colorMatrixFilter
-        canvas.drawBitmap(bitmap, frameToReScaleTransform, paint)
+        canvas.drawBitmap(image, frameToReScaleTransform, paint)
 
         return transformedBitmap
+    }
 
+    /**
+     * Returns the transformed bitmap
+     *
+     * @param image             The input image which has NxN dimensions
+     * @param desiredSize       The desired output image dimensions
+     *
+     * @return Bitmap           The resized Bitmap
+     */
+    fun transformBitmapWithPad(image: Bitmap, desiredSize: Size): Bitmap{
+        val resizedImage = resizeKeepingAspectRatio(image, desiredSize)
+        return padImageToFit(resizedImage, desiredSize)
+    }
+
+    private fun resizeKeepingAspectRatio(image: Bitmap, desiredSize: Size): Bitmap {
+        val imageRatio = (image.width.toFloat() / image.height.toFloat())
+        val desiredRatio = (desiredSize.width.toFloat() / desiredSize.height.toFloat())
+
+        var requiredWidth = desiredSize.width
+        var requiredHeight = desiredSize.height
+
+        if(imageRatio > desiredRatio){
+            requiredHeight = ((desiredSize.width.toFloat() / image.width.toFloat()) * image.height).toInt()
+        }
+        else{
+            requiredWidth = ((desiredSize.height.toFloat() / image.height.toFloat()) * image.width).toInt()
+        }
+
+        return Bitmap.createScaledBitmap(image, requiredWidth, requiredHeight, true)
+    }
+
+    private fun padImageToFit(image: Bitmap, desiredSize: Size): Bitmap {
+        val outputBitmap = Bitmap.createBitmap(desiredSize.width, desiredSize.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(outputBitmap)
+        canvas.drawColor(Color.BLACK)
+        canvas.drawBitmap(image, 0F, 0F, null)
+        return outputBitmap
     }
 
     /**
@@ -86,7 +119,6 @@ object ImageConverter {
      * @return Bitmap           The resized Bitmap
      */
     fun mirrorHorizontallyBitmap(bitmap: Bitmap): Bitmap{
-
         val mirrorTransform = Matrix()
         mirrorTransform.postScale(-1f, 1f, (bitmap.width / 2f), (bitmap.height / 2f))
 
@@ -94,7 +126,6 @@ object ImageConverter {
         canvas.drawBitmap(bitmap, mirrorTransform, null)
 
         return bitmap
-
     }
 
     /**
@@ -106,7 +137,6 @@ object ImageConverter {
      * @return Bitmap           The resized Bitmap
      */
     fun rotateBitmap(bitmap: Bitmap, rotationDegrees: Int): Bitmap{
-
         val cropToFrameTransform = Matrix()
 
         var newWidth = bitmap.width
@@ -140,13 +170,10 @@ object ImageConverter {
         canvas.drawBitmap(bitmap, frameToReScaleTransform, null)
 
         return rotatedBitmap
-
     }
 
     fun bitmapToCroppedNxNImage(sourceBitmap: Bitmap): Bitmap{
-
         val croppedBitmap: Bitmap?
-
         val matrix = Matrix()
 
         if (sourceBitmap.width >= sourceBitmap.height) {
@@ -175,7 +202,6 @@ object ImageConverter {
         }
 
         return croppedBitmap
-
     }
 
     fun createSpecifiedBitmap(desiredSize: Size, config: Bitmap.Config): Bitmap {
@@ -191,14 +217,12 @@ object ImageConverter {
      * @return The image part from the original image defined by the RectF
      */
     fun cutPieceFromImage(bitmap: Bitmap, location: RectF): Bitmap{
-
         val left = location.left.toInt()
         val right = location.right.toInt()
         val top = location.top.toInt()
         val bottom = location.bottom.toInt()
 
-        return Bitmap.createBitmap(bitmap, left, top, right-left, bottom-top)
-
+        return Bitmap.createBitmap(bitmap, left, top, right - left, bottom - top)
     }
 
     /**
@@ -214,14 +238,20 @@ object ImageConverter {
      *
      * @return The transformation fulfilling the desired requirements
      */
-    private fun getTransformationMatrix(srcWidth: Int, srcHeight: Int, dstWidth: Int, dstHeight: Int, applyRotation: Int, maintainAspectRatio: Boolean): Matrix {
-
+    private fun getTransformationMatrix(
+        srcWidth: Int,
+        srcHeight: Int,
+        dstWidth: Int,
+        dstHeight: Int,
+        applyRotation: Int,
+        maintainAspectRatio: Boolean
+    ): Matrix {
         val matrix = Matrix()
 
         if (applyRotation != 0) {
 
             if (applyRotation % 90 != 0) {
-                Log.w("Image Conveter", "Input 'applyRotation' should be a multiple of 90")
+                Log.w("Image Converter", "Input 'applyRotation' should be a multiple of 90")
             }
 
             // Translate so center of image is at origin
@@ -261,7 +291,6 @@ object ImageConverter {
         }
 
         return matrix
-
     }
 
 }
