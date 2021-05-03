@@ -251,7 +251,7 @@ abstract class ObjectDetector(
     }
 
     fun prepareImage(image: Bitmap): ByteBuffer{
-        // Pre-process image
+        // prepare image
         Trace.beginSection("create byte buffer image")
         val startByteBufferTime = SystemClock.uptimeMillis()
 
@@ -264,13 +264,13 @@ abstract class ObjectDetector(
 
                 val pixelValue = intValues[i * IMAGE_SIZE_X + j]
 
-                // Quantized model
+                // integer input
                 if (NUM_BYTES_PER_CHANNEL == 1) {
                     imgData.put((pixelValue shr 16 and 0xFF).toByte())
                     imgData.put((pixelValue shr 8 and 0xFF).toByte())
                     imgData.put((pixelValue and 0xFF).toByte())
                 }
-                // Float model
+                // float input
                 else {
                     // grayscale image needed
                     if(NUM_CHANNELS == 1){
@@ -300,6 +300,15 @@ abstract class ObjectDetector(
         Trace.endSection()
 
         return imgData
+    }
+
+    fun changeLoggingState(){
+        if(enableLogging){
+            enableLogging = false
+        }
+        else if(!enableLogging){
+            enableLogging = true
+        }
     }
 
     private fun log(message: String){

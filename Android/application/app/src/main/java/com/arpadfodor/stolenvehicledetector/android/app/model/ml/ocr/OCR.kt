@@ -248,7 +248,8 @@ class OCR(
         var text = ""
         // decode numbers to text with labels
         for(index in indices){
-            if(index < labels.size){
+            // -1 as the last label is the non-character token which should be removed
+            if(index < labels.size -1){
                 text += labels[index]
             }
         }
@@ -257,7 +258,7 @@ class OCR(
     }
 
     fun prepareImage(image: Bitmap): ByteBuffer{
-        // Pre-process image
+        // prepare image
         Trace.beginSection("create byte buffer image")
         val startByteBufferTime = SystemClock.uptimeMillis()
 
@@ -270,21 +271,23 @@ class OCR(
 
                 val pixelValue = intValues[i * IMAGE_SIZE_X + j]
 
-                // Quantized model
+                // integer input
                 if (NUM_BYTES_PER_CHANNEL == 1) {
-                    imgData.put((pixelValue shr 16 and 0xFF).toByte())
-                    imgData.put((pixelValue shr 8 and 0xFF).toByte())
-                    imgData.put((pixelValue and 0xFF).toByte())
+                    val red = (pixelValue shr 16 and 0xFF).toByte()
+                    val green = (pixelValue shr 8 and 0xFF).toByte()
+                    val blue = (pixelValue and 0xFF).toByte()
+                    imgData.put(red)
+                    imgData.put(green)
+                    imgData.put(blue)
                 }
-                // Float model
+                // float input
                 else {
                     // grayscale image needed
                     if(NUM_CHANNELS == 1){
                         // grayscale conversion
-                        val red = (((pixelValue and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
+                        val red = (((pixelValue shr 16 and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
                         val green = (((pixelValue shr 8 and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
-                        val blue = (((pixelValue shr 16 and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
-
+                        val blue = (((pixelValue and 0xFF).toFloat()- IMAGE_MEAN) / IMAGE_STD)
                         // grayscale conversion: the same as during model training (like TensorFlow rgb_to_grayscale)
                         // reference: https://en.wikipedia.org/wiki/Luma_%28video%29
                         val luminance = (red*0.2989f) + (green*0.5870f) + (blue*0.1140f)
@@ -292,9 +295,16 @@ class OCR(
                     }
                     // RGB image needed
                     else{
-                        imgData.putFloat(((pixelValue shr 16 and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
-                        imgData.putFloat(((pixelValue shr 8 and 0xFF) - IMAGE_MEAN) /IMAGE_STD)
-                        imgData.putFloat(((pixelValue and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
+                        //val red = ((pixelValue shr 16 and 0xFF) - IMAGE_MEAN) / IMAGE_STD
+                        //val green = ((pixelValue shr 8 and 0xFF) - IMAGE_MEAN) /IMAGE_STD
+                        //val blue = ((pixelValue and 0xFF) - IMAGE_MEAN) / IMAGE_STD
+                        // normalization is not needed here
+                        val red = (pixelValue shr 16 and 0xFF).toFloat()
+                        val green = (pixelValue shr 8 and 0xFF).toFloat()
+                        val blue = (pixelValue and 0xFF).toFloat()
+                        imgData.putFloat(red)
+                        imgData.putFloat(green)
+                        imgData.putFloat(blue)
                     }
                 }
 

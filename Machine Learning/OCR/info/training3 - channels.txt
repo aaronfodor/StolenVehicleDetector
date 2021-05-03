@@ -1,3 +1,13 @@
 grayscale:
+	loss: 0.0642
+	epoch: 53 (stopped)
+	batch: 128
+	epoch: 100000
+	val_epoch: 10000
 
 RGB:
+	loss: ***0.0613***
+	epoch: 40 (stopped)
+	batch: 128
+	epoch: 100000
+	val_epoch: 10000
