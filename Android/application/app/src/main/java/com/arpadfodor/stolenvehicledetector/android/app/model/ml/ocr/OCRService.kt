@@ -10,7 +10,7 @@ class OCRService {
         var model: OCR? = null
 
         fun initialize(assets: AssetManager, numThreads: Int){
-            model = OCR(assets, numThreads)
+            model = ResidualCRNN(assets, numThreads)
         }
 
         fun close(){
@@ -19,7 +19,7 @@ class OCRService {
     }
 
     fun processImage(image: Bitmap, maximumBlocks: Int, minimumCertainty: Float): List<RecognizedText>{
-        val results = model?.processImage(image, maximumBlocks, minimumCertainty)
+        val results = model?.inference(image, maximumBlocks, minimumCertainty)
         return results ?: emptyList<RecognizedText>()
     }
 

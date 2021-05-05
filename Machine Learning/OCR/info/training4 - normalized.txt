@@ -1,0 +1,8 @@
+Residual network
+normalized [0..1) RGB image training
+	loss: 0.3786
+	val_loss: 0.0424
+	epoch: 20 (not stopped)
+	batch: 128
+	epoch: 500000
+	val_epoch: 50000

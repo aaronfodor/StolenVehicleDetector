@@ -14,4 +14,4 @@ MLKit Vision TextRecognizer: 50x500x3 img, ? KB
 
 Residual OCR: 50x500x3 img, 639 KB
 on CPU: 37 ms
-on GPU: 51 ms
+on GPU: 50 ms

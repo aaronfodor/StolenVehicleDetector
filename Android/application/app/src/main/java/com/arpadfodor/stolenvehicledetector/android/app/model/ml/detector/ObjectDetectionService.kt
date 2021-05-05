@@ -21,7 +21,7 @@ class ObjectDetectionService {
     }
 
     fun processImage(image: Bitmap, maximumRecognitionsToShow: Int, minimumPredictionCertainty: Float): List<RecognizedObject>{
-        val results = model?.processImage(image, maximumRecognitionsToShow, minimumPredictionCertainty)
+        val results = model?.inference(image, maximumRecognitionsToShow, minimumPredictionCertainty)
         return results ?: emptyList<RecognizedObject>()
     }
 

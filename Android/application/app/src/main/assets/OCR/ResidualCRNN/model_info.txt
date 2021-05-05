@@ -1,0 +1,17 @@
+Model: Residual_RCNN_OCR_20210505-071831_plate_epoch20_loss0.0424
+File size: 0.639 MB
+Quantization: dynamic-integer quantized
+----------
+Input:
+(1, 50, 500, 3), type: DT_FLOAT - RGB
+NORMALIZED
+non-quantized: 4 bytes/channels/pixel, [0,1). This typically means mapping each pixel (linearly)
+to a value between [0, 1). Input image values between 0 and 255 should be divided by 255 to ensure the range is [0,1).
+----------
+Output: 
+HashMap<Int, Any>, type: DT_FLOAT - Use characters.txt to interpret output indices
+
+The model outputs 1 array, mapped to the index 0.
+
+0:	characters
+Multidimensional float32 tensor of shape (125, 38) with character probabilities. Floating point values are between 0 and 1. The outer array is the sequence length (max. 125 characters). The inner arrays represent predicted character probabilities in their specific position. To interpret which position means which character, use characters.txt

@@ -1,0 +1,11 @@
+Pure CNN network
+features: 64
+num blocks: 2
+layers per block: 2
+normalized [0..1) RGB image training
+	loss: 0.6728
+	val_loss: 0.1595
+	epoch: 19 (stopped)
+	batch: 64
+	epoch: 100000
+	val_epoch: 10000
