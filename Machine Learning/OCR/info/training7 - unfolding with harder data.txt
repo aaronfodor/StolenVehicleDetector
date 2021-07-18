@@ -1,0 +1,24 @@
+************************************
+Unfolding Residual CNN network enhanced
+props:
+	learning_rate = 1e-3
+	num_features=64
+	num_blocks=2
+	layers_per_level=2
+	residual_needed=True
+	kernel_size=3
+	stride=1
+	activation="relu"
+	batchnorm_needed=True
+	dropout=0.1
+	unfolding_layers=2
+	unf_layers_per_level=2
+	model_name="Unfolding_Residual_CNN_OCR"
+normalized [0..1) RGB image training
+	loss: 8.1065
+	val_loss: 6.3190
+	epoch: 142 (learns)
+	batch: 32
+	epoch: 100000
+	val_epoch: 10000
+*************************************

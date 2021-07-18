@@ -105,15 +105,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
      **/
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         sharedPreferences?.let {
-            changeSettings(sharedPreferences){
+            changeSettings(it){
                 updatePreferenceUpdatedTimestamp(sharedPreferences)
             }
         }
     }
 
-    private fun changeSettings(sharedPreferences: SharedPreferences?, callback: (Boolean) -> Unit) {
-
-        sharedPreferences?: return
+    private fun changeSettings(sharedPreferences: SharedPreferences, callback: (Boolean) -> Unit) {
 
         with (sharedPreferences.edit()) {
 

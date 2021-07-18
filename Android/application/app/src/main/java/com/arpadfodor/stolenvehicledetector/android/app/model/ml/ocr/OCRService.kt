@@ -10,7 +10,7 @@ class OCRService {
         var model: OCR? = null
 
         fun initialize(assets: AssetManager, numThreads: Int){
-            model = ResidualCRNN(assets, numThreads)
+            model = ResidualRCNN(assets, numThreads)
         }
 
         fun close(){
@@ -20,7 +20,7 @@ class OCRService {
 
     fun processImage(image: Bitmap, maximumBlocks: Int, minimumCertainty: Float): List<RecognizedText>{
         val results = model?.inference(image, maximumBlocks, minimumCertainty)
-        return results ?: emptyList<RecognizedText>()
+        return results ?: emptyList()
     }
 
     fun getInputSize(): Size {

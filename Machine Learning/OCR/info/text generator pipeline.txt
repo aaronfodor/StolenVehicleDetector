@@ -1,0 +1,29 @@
+Text generator pipeline:
+•	Generate N random texts (and label texts without whitespaces) with characters in the range of 1...12.
+•	Select random font.
+•	Select random image overlay.
+•	Generate random image background color: random value [0...255] in every channel.
+•	Create the background image with defined dimensions and random color.
+•	Set the last textbox coordinates to [0,0,0,0].
+•	Set inserted textbox indices list to [].
+•	for every generated texts:
+	•	Generate random text color. Text-background colors must have at least 20% diff in one channel (randomly selected which channel satisfy this).
+	•	Create text image, with a background color identical to the background image.
+	•	If the text is bigger than the background in any dimension, calculate a resize ratio to fit text onto the background.
+	•	Multiply resize ratio with a value in the resize text range (typically 0.85...1), then apply it to the text.
+	•	Set random text aspect ratio change.
+	•	Set random heigh, width offset to the text on the background.
+	•	IF the last box's vertical end is to the top of the current's start, OR if the last box's horizontal end is to the left of the current's start and the last box's vertical start is to the top of the current's start:
+		•	Paste text image to the background image.
+		•	Set last textbox coordinates to the coordinates of the current box.
+		•	Add current text's index to the inserted textbox indices list.
+•	Apply random rotation on the background image in the range.
+•	Apply random perspective transformation on the background image in the range.
+•	Resize rotated background image to the original required size.
+•	Add random overlay image: pick an image, then randomly add an offset to it, then place it onto the background image.
+•	Apply random image enhancements: brightness, contrast, sharpness with drawn values; apply random gaussian blur.
+•	Apply random resolution: downscale the image between a range, then scale it back to the original size (to degrade resolution, but keep the original dimensions).
+•	Create image label: add texts which Id is in the inserted textbox indices list.
+•	Normalize image from [0...255] to [0...1), convert image data type to float32.
+•	Encode character label to a number label.
+•	Return image and label.

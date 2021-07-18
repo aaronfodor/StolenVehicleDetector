@@ -97,8 +97,8 @@ class TextRecognitionService {
     }
 
     fun getInputSize(): Size {
-        val width = 500
-        val height = 50
+        val width = 200
+        val height = 200
         return Size(width, height)
     }
 

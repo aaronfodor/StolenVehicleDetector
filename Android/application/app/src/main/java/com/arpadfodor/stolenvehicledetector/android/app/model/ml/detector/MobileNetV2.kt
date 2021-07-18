@@ -12,7 +12,7 @@ class MobileNetV2(assets: AssetManager, threads: Int) : ObjectDetector(
     MODEL_PATH = "model.tflite",
     LABEL_PATH = "labelmap.txt",
 
-    GPU_INFERENCE_SUPPORT = true,
+    GPU_INFERENCE_SUPPORT = false,
 
     NORMALIZATION = Normalization.NORMALIZE,
     IMAGE_MEAN = 127.5f,

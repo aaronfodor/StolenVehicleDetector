@@ -1,0 +1,78 @@
+{
+    "img": [
+        200,
+        200
+    ],
+    "n_channels": 3,
+    "batch_size": 64,
+    "train_epoch_size": 500000,
+    "val_epoch_size": 50000,
+    "replace_chars": [
+        [
+            "O",
+            "0"
+        ],
+        [
+            " ",
+            ""
+        ]
+    ],
+    "min_len": 1,
+    "max_len": 10,
+    "font_size": 100,
+    "model_characters": [
+        "-",
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+        "[?]"
+    ],
+    "num_model_characters": 37,
+    "learning_rate": 0.001,
+    "num_features": 64,
+    "num_blocks": 2,
+    "layers_per_level": 2,
+    "residual_needed": true,
+    "kernel_size": 3,
+    "strides": [
+        2,
+        2
+    ],
+    "activation": "relu",
+    "batchnorm_needed": true,
+    "dropout": 0.1,
+    "name": "Residual_RCNN_OCR",
+    "realm": "realm_20210518-145014"
+}

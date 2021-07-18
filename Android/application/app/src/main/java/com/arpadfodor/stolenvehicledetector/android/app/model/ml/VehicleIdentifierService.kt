@@ -20,7 +20,7 @@ class VehicleIdentifierService {
     companion object{
 
         private var stolenVehicles = listOf<Vehicle>()
-        private const val OBJECT_TO_PASS_TO_OCR = "License plate"
+        private const val OBJECT_TO_PASS_TO_OCR = "License"
 
         fun initialize(){
             VehicleRepository.getVehicles {vehicleList ->

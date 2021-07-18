@@ -60,7 +60,7 @@ abstract class OCR(
         val startFeedingTime = SystemClock.uptimeMillis()
 
         // required input format
-        val inputArray: Array<Any> = arrayOf<Any>(imgData)
+        val inputArray: Array<Any> = arrayOf(imgData)
 
         // output values will appear in this HashMap
         val outputMap = HashMap<Int, Any>()

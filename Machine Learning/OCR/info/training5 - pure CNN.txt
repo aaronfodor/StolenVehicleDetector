@@ -3,9 +3,9 @@ features: 64
 num blocks: 2
 layers per block: 2
 normalized [0..1) RGB image training
-	loss: 0.6728
-	val_loss: 0.1595
-	epoch: 19 (stopped)
+	loss: 0.4390
+	val_loss: 0.0951
+	epoch: 38 (stopped, but loss was still improving)
 	batch: 64
 	epoch: 100000
 	val_epoch: 10000
