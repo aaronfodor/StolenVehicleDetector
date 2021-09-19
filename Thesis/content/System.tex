@@ -8,7 +8,7 @@ In this section, the complete system is overviewed. I explain the main design de
 The applied pipeline aims to compress the traditional tasks into as few steps as possible. The structure is like the one used in WPOD-NET\cite{WPOD-NET}, with some differences.
 
 \begin{figure}[htb]
- \centerline{\includegraphics[width=.85\columnwidth]{.//Figure/System/pipeline.PNG}}
+ \centerline{\includegraphics[width=1.0\columnwidth]{.//Figure/System/pipeline.PNG}}
  \caption{The applied ALPR pipeline.}
  \label{fig:simple}
 \end{figure}
@@ -47,7 +47,7 @@ I used the Model View ViewModel (MVVM) UI design pattern. It is an event-driven 
 There are sub-layers in the model level of the application. I explain their hierarchy through the steps of reporting a single item. Suppose a new stolen vehicle was detected on the live camera feed, and the user selected to report it. In this case, the user sees a ReportActivity, which has a ViewModel storing its UI state. The report item gets stored in a list wrapped in a LiveData object (which is observable from the Activity). When the user clicks on the send button, the related data is transmitted to the RepositoryService in the model layer. Inside this service, there is the ReportRepository. It hides further data operations (database handling, API communication) from the outside. When it receives a new report, it transforms it into a format stored in the Report table and then persists it with ReportDAO (data access object) to the database. After that, it calls ApiService to send the report to the server. When the response arrives from the API, ReportRepository updates the corresponding item in the database. Until the operation is not successful, the user sees the report as pending. Pending items can be deleted or re-sent at any time.
 
 \begin{figure}[htb]
- \centerline{\includegraphics[width=.85\columnwidth]{.//Figure/System/AndroidArchitecture.png}}
+ \centerline{\includegraphics[width=1.0\columnwidth]{.//Figure/System/AndroidArchitecture.png}}
  \caption{MVVM layers in the application.}
  \label{fig:simple}
 \end{figure}
@@ -57,7 +57,7 @@ There are sub-layers in the model level of the application. I explain their hier
 Beyond reports, the application stores several other information in its local relational database (list of stolen vehicles, account information, metadata). Outside the relational database, the application stores user preferences as key-value pairs.
 
 \begin{figure}[htb]
- \centerline{\includegraphics[width=.85\columnwidth]{.//Figure/System/AppData.PNG}}
+ \centerline{\includegraphics[width=1.0\columnwidth]{.//Figure/System/AppData.PNG}}
  \caption{Application database schema.}
  \label{fig:simple}
 \end{figure}
@@ -77,7 +77,7 @@ In the business logic layer, the Authenticator module checks requests and does n
 The data access layer contains the DAO classes responsible for handling their tables and providing a unified interface for retrieving/writing data.
 
 \begin{figure}[htb]
- \centerline{\includegraphics[width=.85\columnwidth]{.//Figure/System/ServerStructure.PNG}}
+ \centerline{\includegraphics[width=1.0\columnwidth]{.//Figure/System/ServerStructure.PNG}}
  \caption{Structure diagram of the server.}
  \label{fig:simple}
 \end{figure}
@@ -91,7 +91,7 @@ There are tables of stolen vehicles, current reports, and user accounts. To thes
 The database serves requests from memory, making API responses fast because there is no need to wait for I/O operations. The memory content is synchronized with the corresponding table in the background. It is a viable solution as a large amount of data is never stored on the server (images are not uploaded). To validate this, I examined one item from the largest JSON object type (Report), which is precisely 173 bytes. Multiplied by 1 million, it turns out that the server needs 173 MB memory, which is acceptable. It is a severe overestimation, though, as the stolen vehicles list obtained by web scraping typically has few thousand items. That is the maximum number of records that the in-memory database ever has (if every stolen vehicle has been detected at once). As history content is only stored persistently, extensive API usage does not saturate the memory either.
 
 \begin{figure}[htb]
- \centerline{\includegraphics[width=.85\columnwidth]{.//Figure/System/ServerData.PNG}}
+ \centerline{\includegraphics[width=1.0\columnwidth]{.//Figure/System/ServerData.PNG}}
  \caption{Server data schema.}
  \label{fig:simple}
 \end{figure}
