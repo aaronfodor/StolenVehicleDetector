@@ -1,3 +1,25 @@
 %----------------------------------------------------------------------------
 \chapter{Introduction}
 %----------------------------------------------------------------------------
+
+In recent years, deep learning has shown breakthroughs in various applications, such as Computer Vision and Natural Language Processing. It is an actively researched area of machine learning that seems to provide effective solutions to tasks that have been difficult to solve with machines. Concurrently, smartphones are evolving at an explosive rate. The recent improvement of ARM CPUs and the advent of GPUs provide computing power comparable to desktop PCs.
+
+Vehicle identification is a common task that is often accomplished through ALPR (Automatic License Plate Recognition). This technology is used to check for road usage permits or to look for stolen vehicles. Such systems have been around for a long time, but they are usually expensive to develop and require unique hardware to operate. Traditional ALPR relies on hand-crafted feature extraction and contains independent processing steps. Deep learning can learn feature extraction on its own; thus, it can provide a more robust solution even for recognizing various license plates.
+
+This work describes how I create an end-to-end ALPR system for stolen vehicle identification. I chose this domain because it involves numerous tasks (vehicle- and license plate detection, optical character recognition) to solve. Using an ordinary smartphone, even as a dashboard camera, a driver can continuously monitor the traffic and report alerts automatically while driving. Although similar pre-installed systems exist, they typically run on stationary or expensive devices, not ordinary smartphones. The chosen task is not just one of the first such applications in the smartphone market; it can be easily generalized to other domains.
+
+In this work, I describe the main theory related to deep learning-based object detection and sequential processing. I assume knowledge of general deep learning concepts, like backpropagation, loss- and activation functions, vanishing/exploding gradient problems, neural networks, convolutional models. For a brief overview, please look at chapter 4 of the author's previous work\cite{BScThesis}, or for more detailed information, I recommend chapters 6, 7, 8, and 9 of the following literature\cite{DeepLearningBook}.
+
+\newpage
+The structure of this work is as follows:
+
+\begin{itemize}
+\item In \textit{Chapter 2}, I present the technologies I used to create deep learning algorithms and the system running them.
+\item \textit{Chapter 3} discusses the theoretical background of sequential data processing with neural networks.
+\item In \textit{Chapter 4}, I explain the fundamental ideas behind deep learning-based object detection.
+\item I present a high-level overview and discuss the general tasks of automatic license plate recognition in \textit{Chapter 5}.
+\item \textit{Chapter 6} summarizes the work done to implement a vehicle- and license plate detection algorithm.
+\item \textit{Chapter 7} focuses on my work related to optical character recognition. I propose multiple solutions to solve the same problem, then compare these models and draw conclusions.
+\item In \textit{Chapter 8}, I overview, explain the most important design decisions, and describe the limitations of the complete system.
+\item Finally, in \textit{Chapter 9}, I summarize the work done and propose further development ideas.
+\end{itemize}

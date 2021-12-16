@@ -14,41 +14,41 @@ import java.nio.ByteOrder
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 
-enum class Normalization{
-    NORMALIZE, STANDARDIZE, NOTHING
+enum class Preprocessing{
+    NORMALIZE, STANDARDIZE, NONE
 }
 
 /**
  * Abstract class for interacting with different tflite models the same way
  **/
 abstract class TfliteModel(
-        assets: AssetManager,
-        threads: Int,
-        // Model and label paths
-        val BASE_PATH: String,
-        val MODEL_PATH: String,
-        val LABEL_PATH: String,
+    assets: AssetManager,
+    threads: Int,
+    // Model and label paths
+    val BASE_PATH: String,
+    val MODEL_PATH: String,
+    val LABEL_PATH: String,
 
-        // Whether the model quantized or not
-        val GPU_INFERENCE_SUPPORT: Boolean,
+    // Whether the model quantized or not
+    val GPU_INFERENCE_SUPPORT: Boolean,
 
-        // input properties
-        // image properties
-        val NORMALIZATION: Normalization,
-        val IMAGE_MEAN: Float = 127.5f,
-        val IMAGE_STD: Float = 127.5f,
-        // Input image size required by the model
-        val IMAGE_SIZE_X: Int,
-        val IMAGE_SIZE_Y: Int,
-        // Input image channels (RGB)
-        val NUM_CHANNELS: Int,
-        // Number of bytes of a channel in a pixel
-        // 1 means Int input, 4 means floating point
-        val NUM_BYTES_PER_CHANNEL: Int,
-        // batch size dimension
-        val BATCH_SIZE: Int,
-        // type tag
-        val TAG: String
+    // input properties
+    // image properties
+    val PREPROCESSING: Preprocessing,
+    val IMAGE_MEAN: Float = 127.5f,
+    val IMAGE_STD: Float = 127.5f,
+    // Input image size required by the model
+    val IMAGE_SIZE_X: Int,
+    val IMAGE_SIZE_Y: Int,
+    // Input image channels (RGB)
+    val NUM_CHANNELS: Int,
+    // Number of bytes of a channel in a pixel
+    // 1 means Int input, 4 means floating point
+    val NUM_BYTES_PER_CHANNEL: Int,
+    // batch size dimension
+    val BATCH_SIZE: Int,
+    // type tag
+    val TAG: String
 ) {
 
     // the inference model
@@ -216,17 +216,17 @@ abstract class TfliteModel(
     }
 
     private fun normalize(rawValue: Float) : Float{
-        return when(NORMALIZATION){
+        return when(PREPROCESSING){
 
-            Normalization.NORMALIZE -> {
+            Preprocessing.NORMALIZE -> {
                 // normalization [0,1)
                 rawValue / 255f
             }
-            Normalization.STANDARDIZE -> {
+            Preprocessing.STANDARDIZE -> {
                 // standardization (-1,1)
                 ((rawValue - IMAGE_MEAN) / IMAGE_STD)
             }
-            Normalization.NOTHING -> {
+            Preprocessing.NONE -> {
                 // do nothing with the value
                 rawValue
             }

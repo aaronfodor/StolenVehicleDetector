@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.RectF
 import android.os.SystemClock
 import android.os.Trace
-import com.arpadfodor.stolenvehicledetector.android.app.model.ml.Normalization
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.Preprocessing
 import com.arpadfodor.stolenvehicledetector.android.app.model.ml.TfliteModel
 import kotlin.math.min
 
@@ -13,32 +13,32 @@ import kotlin.math.min
  * Abstract class for interacting with different OCR models the same way
  **/
 abstract class OCR(
-        assets: AssetManager,
-        threads: Int,
-        BASE_PATH: String,
-        MODEL_PATH: String,
-        LABEL_PATH: String,
-        GPU_INFERENCE_SUPPORT: Boolean,
-        NORMALIZATION: Normalization,
-        IMAGE_MEAN: Float,
-        IMAGE_STD: Float,
-        IMAGE_SIZE_X: Int,
-        IMAGE_SIZE_Y: Int,
-        NUM_CHANNELS: Int,
-        NUM_BYTES_PER_CHANNEL: Int,
-        BATCH_SIZE: Int,
-        TAG: String = "[OCR]",
+    assets: AssetManager,
+    threads: Int,
+    BASE_PATH: String,
+    MODEL_PATH: String,
+    LABEL_PATH: String,
+    GPU_INFERENCE_SUPPORT: Boolean,
+    Preprocessing: Preprocessing,
+    IMAGE_MEAN: Float,
+    IMAGE_STD: Float,
+    IMAGE_SIZE_X: Int,
+    IMAGE_SIZE_Y: Int,
+    NUM_CHANNELS: Int,
+    NUM_BYTES_PER_CHANNEL: Int,
+    BATCH_SIZE: Int,
+    TAG: String = "[OCR]",
 
         // output properties
         // returns this many text blocks
-        val NUM_BLOCKS: Int,
+    val NUM_BLOCKS: Int,
         // maximum text block length
-        val MAX_BLOCK_LENGTH: Int,
+    val MAX_BLOCK_LENGTH: Int,
         // returns this many char probabilities
-        val NUM_CHARACTERS: Int
+    val NUM_CHARACTERS: Int
 
 ) : TfliteModel(assets, threads, BASE_PATH, MODEL_PATH, LABEL_PATH, GPU_INFERENCE_SUPPORT,
-        NORMALIZATION, IMAGE_MEAN, IMAGE_STD, IMAGE_SIZE_X, IMAGE_SIZE_Y, NUM_CHANNELS,
+        Preprocessing, IMAGE_MEAN, IMAGE_STD, IMAGE_SIZE_X, IMAGE_SIZE_Y, NUM_CHANNELS,
         NUM_BYTES_PER_CHANNEL, BATCH_SIZE, TAG){
 
     // contains the recognized text sequence - array of shape [DIM_BATCH_SIZE, MAX_RESULTS, NUM_CHARACTERS]

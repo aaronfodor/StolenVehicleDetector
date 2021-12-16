@@ -1,218 +1,501 @@
-@article{Attention-basedExtract,
- author = {Zbigniew Wojna and Alex Gorban and Dar-Shyang Lee and Kevin Murphy and Qian Yu and Yeqing Li and Julian Ibarz},
- title = {Attention-based Extraction of Structured Information from Street View Imagery},
- journal = {arXiv:1704.03549v4},
- year = {2017}
+% General deep learning
+@article{overviewSGD,
+ author={Geoffrey Hinton and Nitish Srivastava and Kevin Swersky},
+ title={Neural Networks For Machine Learning: Lecture 6.}, 
+ year={2014},
+ pages={5-30},
+ howpublished = {\url{http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf}},
 }
- 
-@article{OrigamiNet,
- author = {Mohamed Yousef and Tom E. Bishop},
- title = {OrigamiNet: Weakly-Supervised, Segmentation-Free, One-Step, Full Page Text Recognition by learning to unfold},
- journal = {arXiv:2006.07491v1},
- year = {2020}
+
+@article{Adam,
+ author = {Diederik P. Kingma and Jimmy Lei Ba},
+ title = {ADAM: A METHOD FOR STOCHASTIC OPTIMIZATION},
+ journal = {arXiv:1412.6980v9},
+ year = {2017},
 }
- 
-@article{WPOD-NET,
- author = {Sergio Montazzolli Silva and Claudio Rosito Jung},
- title = {License Plate Detection and Recognition in Unconstrained Scenarios},
- journal = {ECCV 2018},
- year = {2018}
-}
- 
-@article{PadBlindSpot,
- author = {Bilal Alsallakh and Narine Kokhlikyan and Vivek Miglani and Jun Yuan and Orion Reblitz-Richardson},
- title = {MIND THE PAD – CNNS CAN DEVELOP BLIND SPOTS},
- journal = {arXiv:2010.02178v1},
- year = {2020}
-}
- 
-@article{ResNet,
- author = {Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian Sun},
- title = {Deep Residual Learning for Image Recognition},
- journal = {arXiv:1512.03385v1},
- year = {2015}
-}
- 
-@article{LSTM,
- author = {Sepp Hochreiter and Jurgen Schmidhuber},
- title = {LONG SHORT-TERM MEMORY},
- journal = {Neural Computation 9(8):1735-1780},
- year = {1997}
-}
- 
+
 @article{Hyperband,
  author = {Lisha Li and Kevin Jamieson and Giulia DeSalvo and Afshin Rostamizadeh and Ameet Talwalkar},
  title = {Hyperband: A Novel Bandit-Based Approach to Hyperparameter Optimization},
  journal = {arXiv:1603.06560v4},
- year = {2018}
+ year = {2018},
+}
+
+@misc{ValidationSet,
+ title = {Validation Set: Another Partition},
+ author = {Google Developers},
+ howpublished = {\url{https://developers.google.com/machine-learning/crash-course/validation/another-partition}},
+ note = {Accessed: 2021-12-03},
+}
+
+@misc{TFSigmoidFocalCrossEntropy,
+ title = {tfa.losses.SigmoidFocalCrossEntropy},
+ author = {TensorFlow},
+ howpublished = {\url{https://www.tensorflow.org/addons/api_docs/python/tfa/losses/SigmoidFocalCrossEntropy}},
+ note = {Accessed: 2021-12-03},
+}
+
+@misc{SmoothL1Loss,
+ title = {torch.nn.SmoothL1Loss},
+ author = {PyTorch},
+ howpublished = {\url{https://pytorch.org/docs/stable/generated/torch.nn.SmoothL1Loss.html}},
+ note = {Accessed: 2021-12-03},
+}
+
+% Experiments
+@article{PadBlindSpot,
+ author = {Bilal Alsallakh and Narine Kokhlikyan and Vivek Miglani and Jun Yuan and Orion Reblitz-Richardson},
+ title = {MIND THE PAD – CNNS CAN DEVELOP BLIND SPOTS},
+ journal = {arXiv:2010.02178v1},
+ year = {2020},
 }
  
 @article{Shift-Invariant,
  author = {Richard Zhang},
  title = {Making Convolutional Networks Shift-Invariant Again},
  journal = {arXiv:1904.11486v2},
- year = {2019}
+ year = {2019},
 }
- 
-@article{SSD,
- author = {Wei Liu and Dragomir Anguelov and Dumitru Erhan and Christian Szegedy and Scott Reed and Cheng-Yang Fu and Alexander C. Berg},
- title = {SSD: Single Shot MultiBox Detector},
- journal = {arXiv:1512.02325v5},
- year = {2016}
+
+% Recurrent
+@misc{WaveNet,
+ title={WaveNet: A Generative Model for Raw Audio}, 
+ author={Aaron van den Oord and Sander Dieleman and Heiga Zen and Karen Simonyan and Oriol Vinyals and Alex Graves and Nal Kalchbrenner and Andrew Senior and Koray Kavukcuoglu},
+ year={2016},
+ eprint={1609.03499},
+ archivePrefix={arXiv},
 }
- 
-@article{YOLO9000,
- author = {Joseph Redmon and Ali Farhadi},
- title = {YOLO9000: Better, Faster, Stronger},
- journal = {arXiv:1612.08242v1},
- year = {2016}
+
+@article{LSTM,
+ author = {Sepp Hochreiter and Jurgen Schmidhuber},
+ title = {LONG SHORT-TERM MEMORY},
+ journal = {Neural Computation 9(8):1735-1780},
+ year = {1997},
 }
- 
-@article{Adam,
- author = {Diederik P. Kingma and Jimmy Lei Ba},
- title = {ADAM: A METHOD FOR STOCHASTIC OPTIMIZATION},
- journal = {arXiv:1412.6980v9},
- year = {2017}
+
+@INPROCEEDINGS{LSTM-ForgetGate,
+ author={Gers, F.A. and Schmidhuber, J. and Cummins, F.},
+ booktitle={1999 Ninth International Conference on Artificial Neural Networks ICANN 99. (Conf. Publ. No. 470)}, 
+ title={Learning to forget: continual prediction with LSTM}, 
+ year={1999},
+ volume={2},
+ number={},
+ pages={850-855 vol.2},
+ doi={10.1049/cp:19991218}
+}
+
+@misc{GRU,
+ title={Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling}, 
+ author={Junyoung Chung and Caglar Gulcehre and KyungHyun Cho and Yoshua Bengio},
+ year={2014},
+ eprint={1412.3555},
+ archivePrefix={arXiv},
+}
+
+@article{SequentialLecture,
+ author={Szemenyei M\'arton},
+ title={Deep Learning in Visual Informatics: Lecture 8.}, 
+ year={2021},
+ pages={3, 11-20},
+}
+
+@article{Attention-basedExtract,
+ author = {Zbigniew Wojna and Alex Gorban and Dar-Shyang Lee and Kevin Murphy and Qian Yu and Yeqing Li and Julian Ibarz},
+ title = {Attention-based Extraction of Structured Information from Street View Imagery},
+ journal = {arXiv:1704.03549v4},
+ year = {2017},
 }
 
 @inproceedings{CTC,
  author = {Alex Graves and Santiago Fernandez and Faustino Gomez and Jurgen Schmidhuber},
- year = {2001},
+ year = {2006},
  title = {Connectionist Temporal Classification: Labelling Unsegmented Sequence Data with Recurrent Neural Networks},
- booktitle = {Proceedings of the 23rd International Conference on Machine Learning}
-}
- 
-@misc{ScaleWordSeg,
- author = {R. Manmatha and Nitin Srimal},
- title = {Scale Space Technique for Word Segmentation in Handwritten Documents},
- howpublished = {\url{http://ciir.cs.umass.edu/pubfiles/mm-27.pdf}},
- note = {Accessed: 2021-04-24}
-}
-
-@misc{PlatesMania,
- title = {PlatesMania.com},
- author = {PlatesMania},
- howpublished = {\url{http://platesmania.com}},
- note = {Accessed: 2021-04-22}
-}
-
-@misc{WordBeamSearch,
- title = {Word Beam Search: A Connectionist Temporal Classification Decoding Algorithm},
- author = {Harald Scheidl and Stefan Fiel and Robert Sablatnig},
- howpublished = {\url{https://repositum.tuwien.at/retrieve/1835}},
- note = {Accessed: 2021-04-23}
-}
-
-@misc{TfGrayscale,
- title = {TensorFlow's grayscale conversion},
- author = {TensorFlow},
- howpublished = {\url{https://github.com/tensorflow/tensorflow/blob/v2.4.1/tensorflow/python/ops/image_ops_impl.py#L2298-L2331}},
- note = {Accessed: 2021-04-20}
-}
-
-@misc{MLKitTextRecognition,
- title = {MLKit Text Recognition},
- author = {Google},
- howpublished = {\url{https://developers.google.com/ml-kit/vision/text-recognition}},
- note = {Accessed: 2021-04-23}
-}
-
-@misc{YOLOv5,
- title = {Ultralytic's YOLOv5},
- author = {G. Jocher and A. Stoken and J. Borovec and NanoCode012 and ChristopherSTAN and L. Changyu and Laughing and A. Hogan and lorenzomammana and tkianai and yxNONG, AlexWang1900 and L. Diaconu and Marc and wanghaoyang0106 and ml5ah and Doug and Hatovix and J. Poznanski and L. Y.  and changyu98 and P. Rai and R. Ferriday and T. Sullivan and W. Xinyu and YuriRibeiro and E. R. Claramunt and hopesala and pritul dave and yzchen},
- howpublished = {\url{https://github.com/ultralytics/yolov5}},
- note = {Accessed: 2021-04-23}
+ booktitle = {Proceedings of the 23rd International Conference on Machine Learning},
 }
 
 @misc{CTCexp,
  author = {Harald Scheidl},
  title = {An Intuitive Explanation of Connectionist Temporal Classification},
  howpublished = {\url{https://bit.ly/3aUSS3t}},
- note = {Accessed: 2021-04-22}
+ note = {Accessed: 2021-04-22},
+}
+ 
+@misc{ScaleWordSeg,
+ author = {R. Manmatha and Nitin Srimal},
+ title = {Scale Space Technique for Word Segmentation in Handwritten Documents},
+ howpublished = {\url{http://ciir.cs.umass.edu/pubfiles/mm-27.pdf}},
+ note = {Accessed: 2021-04-24},
+}
+
+@misc{WordBeamSearch,
+ title = {Word Beam Search: A Connectionist Temporal Classification Decoding Algorithm},
+ author = {Harald Scheidl and Stefan Fiel and Robert Sablatnig},
+ howpublished = {\url{https://repositum.tuwien.at/retrieve/1835}},
+ note = {Accessed: 2021-04-23},
+}
+
+% Networks
+@article{LeNet,
+ author={Lecun, Y. and Bottou, L. and Bengio, Y. and Haffner, P.},
+ journal={Proceedings of the IEEE}, 
+ title={Gradient-based learning applied to document recognition}, 
+ year={1998},
+ volume={86},
+ number={11},
+ pages={2278-2324},
+ doi={10.1109/5.726791}
+}
+
+@inproceedings{AlexNet,
+ author = {Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {F. Pereira and C. J. C. Burges and L. Bottou and K. Q. Weinberger},
+ pages = {},
+ publisher = {Curran Associates, Inc.},
+ title = {ImageNet Classification with Deep Convolutional Neural Networks},
+ url = {https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf},
+ volume = {25},
+ year = {2012},
+}
+
+@misc{GoogLeNet,
+ title={Going Deeper with Convolutions}, 
+ author={Christian Szegedy and Wei Liu and Yangqing Jia and Pierre Sermanet and Scott Reed and Dragomir Anguelov and Dumitru Erhan and Vincent Vanhoucke and Andrew Rabinovich},
+ year={2014},
+ eprint={1409.4842},
+ archivePrefix={arXiv},
+}
+
+@misc{VGG16,
+ title={Very Deep Convolutional Networks for Large-Scale Image Recognition}, 
+ author={Karen Simonyan and Andrew Zisserman},
+ year={2015},
+ eprint={1409.1556},
+ archivePrefix={arXiv},
+}
+
+@article{ResNet,
+ author = {Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian Sun},
+ title = {Deep Residual Learning for Image Recognition},
+ journal = {arXiv:1512.03385v1},
+ year = {2015},
+}
+
+@misc{MobileNetV2,
+ title={MobileNetV2: Inverted Residuals and Linear Bottlenecks}, 
+ author={Mark Sandler and Andrew Howard and Menglong Zhu and Andrey Zhmoginov and Liang-Chieh Chen},
+ year={2019},
+ eprint={1801.04381},
+ archivePrefix={arXiv},
+}
+
+@article{SpatialTransformerNetworks,
+ author = {Max Jaderberg and Karen Simonyan and Andrew Zisserman and Koray Kavukcuoglu},
+ title = {Spatial Transformer Networks},
+ journal = {arXiv:1506.02025v3},
+ year = {2016},
+}
+
+@article{OrigamiNet,
+ author = {Mohamed Yousef and Tom E. Bishop},
+ title = {OrigamiNet: Weakly-Supervised, Segmentation-Free, One-Step, Full Page Text Recognition by learning to unfold},
+ journal = {arXiv:2006.07491v1},
+ year = {2020},
+}
+ 
+@article{WPOD-NET,
+ author = {Sergio Montazzolli Silva and Claudio Rosito Jung},
+ title = {License Plate Detection and Recognition in Unconstrained Scenarios},
+ journal = {ECCV 2018},
+ year = {2018},
 }
 
 @article{CRAFT,
  author = {Youngmin Baek and Bado Lee and Dongyoon Han and Sangdoo Yun and Hwalsuk Lee},
  title = {Character Region Awareness for Text Detection},
  journal = {arXiv:1904.01941v1},
- year = {2019}
+ year = {2019},
+}
+
+% Datasets
+@article{ILSVRC,
+ author = {Olga Russakovsky and Jia Deng and Hao Su and Jonathan Krause and Sanjeev Satheesh and Sean Ma and Zhiheng Huang and Andrej Karpathy and Aditya Khosla and Michael Bernstein and Alexander C. Berg and Li Fei-Fei},
+ title = {{ImageNet Large Scale Visual Recognition Challenge}},
+ year = {2015},
+ journal   = {International Journal of Computer Vision (IJCV)},
+ doi = {10.1007/s11263-015-0816-y},
+ volume={115},
+ number={3},
+ pages={211-252}
+}
+
+@misc{PascalVOC,
+ author = {Everingham, M. and Van~Gool, L. and Williams, C. K. I. and Winn, J. and Zisserman, A.},
+ title = {The Pascal Visual Object Classes (VOC) Challenge},
+ journal = {International Journal of Computer Vision},
+ volume = {88},
+ year = {2010},
+ number = {2},
+ month = {jun},
+ pages = {303--338},
+ howpublished = {\url{http://host.robots.ox.ac.uk/pascal/VOC/}},
+ note = {Accessed: 2021-12-01},
+}
+
+@misc{MS-COCO,
+ title={Microsoft COCO: Common Objects in Context}, 
+ author={Tsung-Yi Lin and Michael Maire and Serge Belongie and Lubomir Bourdev and Ross Girshick and James Hays and Pietro Perona and Deva Ramanan and C. Lawrence Zitnick and Piotr Dollár},
+ year={2015},
+ eprint={1405.0312},
+ archivePrefix={arXiv},
+ howpublished = {\url{https://cocodataset.org/}},
+ note = {Accessed: 2021-12-01},
+}
+
+@article{OID,
+ author = {Alina Kuznetsova and Hassan Rom and Neil Alldrin and Jasper Uijlings and Ivan Krasin and Jordi Pont-Tuset and Shahab Kamali and Stefan Popov and Matteo Malloci and Alexander Kolesnikov and Tom Duerig and Vittorio Ferrari},
+ title = {The Open Images Dataset V4: Unified image classification, object detection, and visual relationship detection at scale},
+ year = {2020},
+ journal = {IJCV}
+}
+
+% Object detection
+@misc{VehicleDetectionHOG-SVM,
+ title = {Vehicle Detection with HOG and Linear SVM},
+ author = {Mithi},
+ howpublished = {\url{https://medium.com/@mithi/vehicles-tracking-with-hog-and-linear-svm-c9f27eaf521a}},
+ year = {2017},
+ note = {Accessed: 2021-12-01},
+}
+
+@article{ObjDetDeepLearningReview,
+ author = {Zhong-Qiu Zhao and Peng Zheng and Shou-tao Xu and Xindong Wu},
+ title = {Object Detection with Deep Learning: A Review},
+ journal = {arXiv:1807.05511v2},
+ year = {2019},
+}
+
+@misc{AnchorBoxes,
+ title = {Anchor Boxes - The key to quality object detection},
+ author = {Anders Christiansen},
+ howpublished = {\url{https://towardsdatascience.com/anchor-boxes-the-key-to-quality-object-detection-ddf9d612d4f9}},
+ year = {2018},
+ note = {Accessed: 2021-12-01},
+}
+
+@misc{IoULosses,
+ title = {Different IoU Losses for Faster and Accurate Object Detection},
+ author = {Renu Khandelwal},
+ howpublished = {\url{https://medium.com/analytics-vidhya/different-iou-losses-for-faster-and-accurate-object-detection-3345781e0bf}},
+ year = {2021},
+ note = {Accessed: 2021-12-01},
+}
+
+@misc{NMS,
+ title = {Non-maximum Suppression (NMS)},
+ author = {Sambasivarao. K},
+ howpublished = {\url{https://towardsdatascience.com/non-maximum-suppression-nms-93ce178e177c}},
+ year = {2019},
+ note = {Accessed: 2021-12-01},
+}
+
+@misc{mAP,
+ title = {mAP (mean Average Precision) for Object Detection},
+ author = {Jonathan Hui},
+ howpublished = {\url{https://jonathan-hui.medium.com/map-mean-average-precision-for-object-detection-45c121a31173}},
+ year = {2018},
+ note = {Accessed: 2021-12-01},
+}
+
+@book{IntroInfoRetrieval,
+ title = {Introduction to Information Retrieval},
+ author = {Christopher D. Manning and Prabhakar Raghavan and Hinrich Schütze},
+ publisher = {Cambridge University Press},
+ note = {\url{https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-ranked-retrieval-results-1.html}},
+ year = {2008},
+ chapter = {8},
+ pages = {158-163},
+}
+
+@misc{ObjDetArchitectures3,
+ title={Object Detection for Dummies Part 3: R-CNN Family}, 
+ author={Lilian Weng},
+ year={2017},
+ howpublished = {\url{https://lilianweng.github.io/lil-log/2017/12/31/object-recognition-for-dummies-part-3.html}},
+ note = {Accessed: 2021-12-02},
+}
+
+@misc{ObjDetArchitectures4,
+ title={Object Detection Part 4: Fast Detection Models}, 
+ author={Lilian Weng},
+ year={2018},
+ howpublished = {\url{https://lilianweng.github.io/lil-log/2018/12/27/object-detection-part-4.html}},
+ note = {Accessed: 2021-12-02},
+}
+
+@INPROCEEDINGS{DeepLearningShipDetection,
+ author={Nie, Xin and Yang, Meifang and Liu, Ryan Wen},
+ booktitle={2019 IEEE Intelligent Transportation Systems Conference (ITSC)}, 
+ title={Deep Neural Network-Based Robust Ship Detection Under Different Weather Conditions}, 
+ year={2019},
+ pages={47-52},
+ doi={10.1109/ITSC.2019.8917475}
+}
+
+% Object detection architectures
+@misc{R-CNN,
+ title={Rich feature hierarchies for accurate object detection and semantic segmentation}, 
+ author={Ross Girshick and Jeff Donahue and Trevor Darrell and Jitendra Malik},
+ year={2014},
+ eprint={1311.2524},
+ archivePrefix={arXiv},
+}
+
+@misc{FastR-CNN,
+ title={Fast R-CNN}, 
+ author={Ross Girshick},
+ year={2015},
+ eprint={1504.08083},
+ archivePrefix={arXiv},
+}
+
+@misc{FasterR-CNN,
+ title={Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks}, 
+ author={Shaoqing Ren and Kaiming He and Ross Girshick and Jian Sun},
+ year={2016},
+ eprint={1506.01497},
+ archivePrefix={arXiv},
+}
+
+@misc{MaskR-CNN,
+ title={Mask R-CNN}, 
+ author={Kaiming He and Georgia Gkioxari and Piotr Dollár and Ross Girshick},
+ year={2018},
+ eprint={1703.06870},
+ archivePrefix={arXiv},
+}
+
+@misc{LibraR-CNN,
+ title={Libra R-CNN: Towards Balanced Learning for Object Detection}, 
+ author={Jiangmiao Pang and Kai Chen and Jianping Shi and Huajun Feng and Wanli Ouyang and Dahua Lin},
+ year={2019},
+ eprint={1904.02701},
+ archivePrefix={arXiv},
+}
+
+@article{YOLO,
+ author = {Joseph Redmon and Santosh Divvala and Ross Girshick and Ali Farhadi},
+ title = {You Only Look Once: Unified, Real-Time Object Detection},
+ journal = {arXiv:1506.02640v5},
+ year = {2015},
 }
  
-@misc{Python,
- title = {Python programming language},
- author = {Python Software Foundation},
- howpublished = {\url{https://www.python.org/about/}},
- note = {Accessed: 2021-05-22}
+@article{YOLOv2,
+ author = {Joseph Redmon and Ali Farhadi},
+ title = {YOLO9000: Better, Faster, Stronger},
+ journal = {arXiv:1612.08242v1},
+ year = {2016},
 }
 
-@misc{Kotlin,
- title = {Kotlin programming language},
- author = {Kotlin Foundation},
- howpublished = {\url{https://kotlinlang.org/}},
- note = {Accessed: 2021-05-22}
+@article{YOLOv3,
+ author = {Joseph Redmon and Ali Farhadi},
+ title = {YOLOv3: An Incremental Improvement},
+ journal = {arXiv:1804.02767v1},
+ year = {2018},
 }
 
-@misc{Ktor,
- title = {The Ktor Framework},
- author = {JetBrains},
- howpublished = {\url{https://ktor.io/}},
- note = {Accessed: 2021-05-22}
+@article{YOLOv4,
+ author = {Alexey Bochkovskiy and Chien-Yao Wang and Hong-Yuan Mark Liao},
+ title = {YOLOv4: Optimal Speed and Accuracy of Object Detection},
+ journal = {arXiv:2004.10934v1},
+ year = {2020},
 }
 
-@misc{TensorFlowEager,
- title = {TensorFlow Eager execution},
- author = {TensorFlow},
- howpublished = {\url{https://www.tensorflow.org/guide/eager}},
- note = {Accessed: 2021-05-22}
+@misc{YOLOv5,
+ title = {Ultralytic's YOLOv5},
+ author = {G. Jocher and A. Stoken and J. Borovec and NanoCode012 and ChristopherSTAN and L. Changyu and Laughing and A. Hogan and lorenzomammana and tkianai and yxNONG, AlexWang1900 and L. Diaconu and Marc and wanghaoyang0106 and ml5ah and Doug and Hatovix and J. Poznanski and L. Y.  and changyu98 and P. Rai and R. Ferriday and T. Sullivan and W. Xinyu and YuriRibeiro and E. R. Claramunt and hopesala and pritul dave and yzchen},
+ howpublished = {\url{https://github.com/ultralytics/yolov5}},
+ year = {2020},
+ note = {Accessed: 2021-04-23},
 }
 
-@misc{TensorFlowQuant,
- title = {TensorFlow Post-Training Quantization},
- author = {TensorFlow},
- howpublished = {\url{https://www.tensorflow.org/guide/eager}},
- note = {Accessed: 2021-05-22}
+@article{EfficientDet,
+ author = {Mingxing Tan and Ruoming Pang and Quoc V. Le},
+ title = {EfficientDet: Scalable and Efficient Object Detection},
+ journal = {arXiv:1911.09070v7},
+ year = {2020},
 }
 
-@misc{Protobuf,
- title = {Protocol Buffers},
- author = {TensorFlow},
- howpublished = {\url{https://www.tensorflow.org/lite/performance/post_training_quantization}},
- note = {Accessed: 2021-05-22}
+@article{YOLOX,
+ author = {Zheng Ge and Songtao Liu and Feng Wang and Zeming Li and Jian Sun},
+ title = {YOLOX: Exceeding YOLO Series in 2021},
+ journal = {arXiv:2107.08430v2},
+ year = {2021},
 }
 
-@misc{Flatbuf,
- title = {Flatbuffers},
- author = {},
- howpublished = {\url{https://google.github.io/flatbuffers/}},
- note = {Accessed: 2021-05-22}
+@article{SSD,
+ author = {Wei Liu and Dragomir Anguelov and Dumitru Erhan and Christian Szegedy and Scott Reed and Cheng-Yang Fu and Alexander C. Berg},
+ title = {SSD: Single Shot MultiBox Detector},
+ journal = {arXiv:1512.02325v5},
+ year = {2016},
 }
 
-@misc{ProtobufVsFlatbuf,
- title = {JSON vs Protocol Buffers vs Flatbuffers},
- author = {Kartik Khare},
- howpublished = {\url{https://codeburst.io/json-vs-protocol-buffers-vs-flatbuffers-a4247f8bda6f}},
- note = {Accessed: 2021-05-22}
+@misc{RetinaNet,
+ title={Focal Loss for Dense Object Detection}, 
+ author={Tsung-Yi Lin and Priya Goyal and Ross Girshick and Kaiming He and Piotr Doll{\'a}r},
+ year={2018},
+ eprint={1708.02002},
+ archivePrefix={arXiv},
+ note = {Accessed: 2021-11-28},
+}
+
+@inproceedings{CenterNet,
+ title={Objects as Points},
+ author={Zhou, Xingyi and Wang, Dequan and Kr{\"a}henb{\"u}hl, Philipp},
+ booktitle={arXiv preprint arXiv:1904.07850},
+ year={2019},
+ note = {Accessed: 2021-11-28},
+}
+
+% ALPR
+@misc{PlatesMania,
+ title = {PlatesMania.com},
+ author = {PlatesMania},
+ howpublished = {\url{http://platesmania.com}},
+ note = {Accessed: 2021-04-22},
 }
 
 @misc{Sighthound,
  title = {Sighthound},
  author = {Sighthound},
  howpublished = {\url{https://https://www.sighthound.com/}},
- note = {Accessed: 2021-09-19}
+ note = {Accessed: 2021-09-19},
 }
 
 @misc{OpenALPR,
  title = {OpenALPR},
  author = {Rekor Systems},
  howpublished = {\url{https://www.openalpr.com/}},
- note = {Accessed: 2021-09-19}
+ note = {Accessed: 2021-09-19},
 }
 
 @article{RobustRealTimeALPR_YOLO,
  author = {Rayson Laroca and Evair Severo and Luiz A. Zanlorensi and Luiz S. Oliveira and Gabriel Resende Gonc¸alves and William Robson Schwartz and David Menotti},
  title = {A Robust Real-Time Automatic License Plate Recognition Based on the YOLO Detector},
  journal = {arXiv:1802.09567v6},
- year = {2018}
+ year = {2018},
+}
+
+@article{LarocaEfficientYOLO,
+ author = {R. Laroca and L. A. Zanlorensi and G. R. Gon{\c{c}}alves and E. Todt and W. R. Schwartz and D. Menotti},
+ title = {An Efficient and Layout-Independent Automatic License Plate Recognition System Based on the YOLO Detector},
+ journal = {IET Intelligent Transport Systems},
+ volume = {15},
+ number = {4},
+ pages = {483-503},
+ year = {2021},
+ ISSN = {1751-956X},
+ doi = {10.1049/itr2.12030},
 }
 
 @article{SSIG-ALPR,
@@ -227,75 +510,198 @@
  number = {5},
  pages = {1-5},
  pubstate = {published},
- tppubtype = {article}
+ tppubtype = {article},
 }
 
 @inproceedings{UFPR-ALPR, 
- author={R. Laroca and E. Severo and L. A. Zanlorensi and L. S. Oliveira and G. R. Goncalves and W. R. Schwartz and D. Menotti}, 
- booktitle={International Joint Conference on Neural Networks (IJCNN)}, 
- title={A Robust Real-Time Automatic License Plate Recognition Based on the {YOLO} Detector}, 
- year={2018}, 
- volume={}, 
- number={}, 
- pages={1-10}, 
- keywords={Cameras;Automobiles;Motorcycles;Character recognition;Object detection;Real-time systems;Licenses}, 
- doi={10.1109/IJCNN.2018.8489629}, 
- ISSN={2161-4407}, 
- month={July}
+ author = {R. Laroca and E. Severo and L. A. Zanlorensi and L. S. Oliveira and G. R. Goncalves and W. R. Schwartz and D. Menotti}, 
+ booktitle = {International Joint Conference on Neural Networks (IJCNN)}, 
+ title = {A Robust Real-Time Automatic License Plate Recognition Based on the {YOLO} Detector}, 
+ year = {2018}, 
+ volume = {}, 
+ number = {}, 
+ pages = {1-10}, 
+ keywords = {Cameras;Automobiles;Motorcycles;Character recognition;Object detection;Real-time systems;Licenses}, 
+ doi = {10.1109/IJCNN.2018.8489629}, 
+ ISSN = {2161-4407}, 
+ month = {July},
 }
 
 @misc{ANPR_history,
  title = {History of ANPR},
  author = {ANPR International},
  howpublished = {\url{http://www.anpr-international.com/history-of-anpr/}},
- note = {Accessed: 2021-09-19}
+ note = {Accessed: 2021-09-19},
 }
 
 @misc{DutchLicensePlates,
  title = {Vehicle registration plates of the Netherlands},
  author = {},
  howpublished = {\url{https://gaz.wiki/wiki/pt/Vehicle_registration_plates_of_the_Netherlands}},
- note = {Accessed: 2021-09-19}
+ note = {Accessed: 2021-09-19},
 }
 
 @misc{ANPR,
  title = {Automatic number-plate recognition},
  author = {},
  howpublished = {\url{https://en.wikipedia.org/wiki/Automatic_number-plate_recognition}},
- note = {Accessed: 2021-09-19}
+ note = {Accessed: 2021-09-19},
 }
 
 @misc{ProjectionProfileMethod,
  title = {Projection Profile method},
  author = {},
  howpublished = {\url{https://www.geeksforgeeks.org/projection-profile-method/}},
- note = {Accessed: 2021-09-19}
-}
-
-@article{SpatialTransformerNetworks,
- author = {Max Jaderberg and Karen Simonyan and Andrew Zisserman and Koray Kavukcuoglu},
- title = {Spatial Transformer Networks},
- journal = {arXiv:1506.02025v3},
- year = {2016}
+ note = {Accessed: 2021-09-19},
 }
 
 @misc{ImageFixedALPR,
  title = {Image of a fixed ALPR system},
  author = {Achraf Khazri},
  howpublished = {\url{https://towardsdatascience.com/automatic-license-plate-detection-recognition-using-deep-learning-624def07eaaf}},
- note = {Accessed: 2021-09-19}
+ note = {Accessed: 2021-09-19},
 }
 
 @misc{ImageMobileALPR,
  title = {Image of a mobile ALPR device},
  author = {Flickr},
  howpublished = {\url{https://c1.staticflickr.com/9/8284/7737315772_d3b5dcd9ee_b.jpg}},
- note = {Accessed: 2021-09-19}
+ note = {Accessed: 2021-09-19},
 }
 
 @misc{ShutterEffect,
  title = {How I Shoot},
  author = {Shoot Tokyo},
  howpublished = {\url{https://shoottokyo.com/shoot/}},
- note = {Accessed: 2021-09-19}
+ note = {Accessed: 2021-09-19},
+}
+
+% Technologies
+@misc{TfGrayscale,
+ title = {TensorFlow's grayscale conversion},
+ author = {TensorFlow},
+ howpublished = {\url{https://github.com/tensorflow/tensorflow/blob/v2.4.1/tensorflow/python/ops/image_ops_impl.py#L2298-L2331}},
+ note = {Accessed: 2021-04-20},
+}
+
+@misc{MLKitTextRecognition,
+ title = {MLKit Text Recognition},
+ author = {Google},
+ howpublished = {\url{https://developers.google.com/ml-kit/vision/text-recognition}},
+ note = {Accessed: 2021-04-23},
+}
+ 
+@misc{Python,
+ title = {Python programming language},
+ author = {Python Software Foundation},
+ howpublished = {\url{https://www.python.org/about/}},
+ note = {Accessed: 2021-05-22},
+}
+
+@misc{Kotlin,
+ title = {Kotlin programming language},
+ author = {Kotlin Foundation},
+ howpublished = {\url{https://kotlinlang.org/}},
+ note = {Accessed: 2021-05-22},
+}
+
+@misc{Ktor,
+ title = {The Ktor Framework},
+ author = {JetBrains},
+ howpublished = {\url{https://ktor.io/}},
+ note = {Accessed: 2021-05-22},
+}
+
+@misc{TensorFlowEager,
+ title = {TensorFlow Eager execution},
+ author = {TensorFlow},
+ howpublished = {\url{https://www.tensorflow.org/guide/eager}},
+ note = {Accessed: 2021-05-22},
+}
+
+@misc{TensorFlowQuant,
+ title = {TensorFlow Post-Training Quantization},
+ author = {TensorFlow},
+ howpublished = {\url{https://www.tensorflow.org/guide/eager}},
+ note = {Accessed: 2021-05-22},
+}
+
+@misc{TensorFlowLiteConverter,
+ title = {TensorFlow Lite converter},
+ author = {TensorFlow},
+ howpublished = {\url{https://www.tensorflow.org/lite/convert}},
+ note = {Accessed: 2021-12-04},
+}
+
+@misc{Protobuf,
+ title = {Protocol Buffers},
+ author = {TensorFlow},
+ howpublished = {\url{https://www.tensorflow.org/lite/performance/post_training_quantization}},
+ note = {Accessed: 2021-05-22},
+}
+
+@misc{Flatbuf,
+ title = {Flatbuffers},
+ author = {},
+ howpublished = {\url{https://google.github.io/flatbuffers/}},
+ note = {Accessed: 2021-05-22},
+}
+
+@misc{ProtobufVsFlatbuf,
+ title = {JSON vs Protocol Buffers vs Flatbuffers},
+ author = {Kartik Khare},
+ howpublished = {\url{https://codeburst.io/json-vs-protocol-buffers-vs-flatbuffers-a4247f8bda6f}},
+ note = {Accessed: 2021-05-22},
+}
+
+@misc{ONNX,
+ title = {Open Neural Network Exchange},
+ author = {},
+ howpublished = {\url{https://onnx.ai/}},
+ note = {Accessed: 2021-11-28},
+}
+
+@misc{TensorFlow,
+ title = {TensorFlow},
+ author = {},
+ howpublished = {\url{https://www.tensorflow.org/}},
+ note = {Accessed: 2021-11-28},
+}
+
+@misc{TensorFlowObjDetAPI,
+ title = {TensorFlow Object Detection API},
+ author = {},
+ howpublished = {\url{https://github.com/tensorflow/models/tree/master/research/object_detection}},
+ note = {Accessed: 2021-11-28},
+}
+
+@misc{PyTorch,
+ title = {PyTorch},
+ author = {},
+ howpublished = {\url{https://pytorch.org/}},
+ note = {Accessed: 2021-11-28},
+}
+
+@misc{TFRecord,
+ title = {TFRecord and tf.train.Example},
+ author = {},
+ howpublished = {\url{https://www.tensorflow.org/tutorials/load_data/tfrecord}},
+ note = {Accessed: 2021-12-03},
+}
+
+% Other
+@misc{BScThesis,
+ title = {Image recognition by machine learning and application on Android platform},
+ author = {Arpad Fodor},
+ howpublished = {\url{https://diplomaterv.vik.bme.hu/hu/Theses/Kepfelismeres-gepi-tanulassal-es-alkalmazasa}},
+ year = {2019},
+ note = {Accessed: 2021-12-01},
+}
+
+@book{DeepLearningBook,
+ title={Deep Learning},
+ author={Ian Goodfellow and Yoshua Bengio and Aaron Courville},
+ publisher={MIT Press},
+ note={\url{http://www.deeplearningbook.org}},
+ year={2016},
 }

@@ -1,7 +1,7 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model.ml.detector
 
 import android.content.res.AssetManager
-import com.arpadfodor.stolenvehicledetector.android.app.model.ml.Normalization
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.Preprocessing
 
 class MobileNetV3Coco(assets: AssetManager, threads: Int) : ObjectDetector(
     assets,
@@ -14,7 +14,7 @@ class MobileNetV3Coco(assets: AssetManager, threads: Int) : ObjectDetector(
 
     GPU_INFERENCE_SUPPORT = true,
 
-    NORMALIZATION = Normalization.NORMALIZE,
+    PREPROCESSING = Preprocessing.NORMALIZE,
     IMAGE_MEAN = 128f,
     IMAGE_STD = 128f,
 

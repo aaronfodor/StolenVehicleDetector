@@ -10,7 +10,6 @@ import com.arpadfodor.stolenvehicledetector.android.app.model.BoundingBoxDrawer
 import com.arpadfodor.stolenvehicledetector.android.app.model.ImageConverter
 import com.arpadfodor.stolenvehicledetector.android.app.model.ml.detector.ObjectDetectionService
 import com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr.OCRService
-import com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr.TextRecognitionService
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.VehicleRepository
 import com.arpadfodor.stolenvehicledetector.android.app.model.repository.dataclasses.Vehicle
 import java.util.*
@@ -38,7 +37,7 @@ class VehicleIdentifierService {
                 .replace("-", "")
                 .replace("_", "")
                 .replace(" ", "")
-                .toUpperCase(Locale.ROOT)
+                .uppercase(Locale.ROOT)
         }
 
     }

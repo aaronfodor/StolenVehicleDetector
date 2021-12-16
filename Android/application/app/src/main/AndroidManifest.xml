@@ -52,7 +52,8 @@
             android:icon="@mipmap/ic_launcher"
             android:rotationAnimation="seamless"
             android:screenOrientation="fullUser"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:exported="true">
 
             <!-- Main app intent filter -->
             <intent-filter>
@@ -76,7 +77,8 @@
             android:icon="@mipmap/ic_launcher"
             android:rotationAnimation="seamless"
             android:screenOrientation="fullUser"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:exported="false">
 
             <!-- Register as a system camera app -->
             <intent-filter>

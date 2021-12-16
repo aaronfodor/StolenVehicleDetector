@@ -86,7 +86,7 @@ class MapActivity : AppActivity(), OnMapReadyCallback {
             it.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
 
                 // Use default InfoWindow frame
-                override fun getInfoWindow(arg0: Marker?): View? {
+                override fun getInfoWindow(p0: Marker): View? {
                     return null
                 }
 
@@ -161,7 +161,7 @@ class MapActivity : AppActivity(), OnMapReadyCallback {
                 viewModel.removeMapMarkers()
 
                 val markerBitmap = ContextCompat.getDrawable(this, R.drawable.icon_recognition)?.toBitmap()
-                val markerDesc = BitmapDescriptorFactory.fromBitmap(markerBitmap)
+                val markerDesc = markerBitmap?.let { markerBitmap -> BitmapDescriptorFactory.fromBitmap(markerBitmap) }
 
                 for(report in reports){
 
@@ -178,7 +178,9 @@ class MapActivity : AppActivity(), OnMapReadyCallback {
                             .icon(markerDesc)
                     )
 
-                    viewModel.markers.add(currentMarker)
+                    if (currentMarker != null) {
+                        viewModel.markers.add(currentMarker)
+                    }
 
                 }
 

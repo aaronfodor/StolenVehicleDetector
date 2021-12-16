@@ -1,7 +1,7 @@
 package com.arpadfodor.stolenvehicledetector.android.app.model.ml.ocr
 
 import android.content.res.AssetManager
-import com.arpadfodor.stolenvehicledetector.android.app.model.ml.Normalization
+import com.arpadfodor.stolenvehicledetector.android.app.model.ml.Preprocessing
 
 class ResidualRCNN(assets: AssetManager, threads: Int) : OCR(
     assets,
@@ -14,7 +14,7 @@ class ResidualRCNN(assets: AssetManager, threads: Int) : OCR(
 
     GPU_INFERENCE_SUPPORT = false,
 
-    NORMALIZATION = Normalization.NORMALIZE,
+    Preprocessing = Preprocessing.NORMALIZE,
     IMAGE_MEAN = 127.5f,
     IMAGE_STD = 127.5f,
 

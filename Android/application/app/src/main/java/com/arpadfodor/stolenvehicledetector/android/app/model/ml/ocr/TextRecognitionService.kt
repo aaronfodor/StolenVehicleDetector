@@ -9,6 +9,7 @@ import android.util.Size
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -17,10 +18,10 @@ import kotlin.math.min
 class TextRecognitionService {
 
     companion object{
-        var model: TextRecognizer = TextRecognition.getClient()
+        var model: TextRecognizer = TextRecognition.getClient(TextRecognizerOptions.Builder().build())
 
         fun initialize(){
-            model = TextRecognition.getClient()
+            model = TextRecognition.getClient(TextRecognizerOptions.Builder().build())
         }
 
         private const val MAX_RECOGNITIONS_PER_IMAGE = 4

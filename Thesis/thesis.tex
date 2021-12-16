@@ -39,6 +39,9 @@
 
 \pagenumbering{gobble}
 
+% part,chapters,sections, subsections in the table of contents
+\setcounter{tocdepth}{2}
+
 %TODO These includes define guidelines -- remove these
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %\include{include/guideline}
@@ -46,11 +49,11 @@
 
 \selectthesislanguage
 
-%TODO Titlepage -- choose one from below
+%Titlepage -- choose one from below
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-\include{include/titlepage}		   % Szakdolgozat/Diplomaterv címlap
-%\include{include/titlepage-tdk}	% TDK címlap
-%\include{include/titlepage-otdk}   % OTDK címlap
+\include{include/titlepage}		   % Thesis title page
+%\include{include/titlepage-tdk}	% TDK title
+%\include{include/titlepage-otdk}   % OTDK title
 
 
 % Table of Contents
@@ -60,19 +63,21 @@
 
 % Declaration and Abstract
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-\include{include/declaration} %TODO Hallgatói nyilatkozat -- TDK és OTDK esetén törlendő!
-\include{content/abstract}    %TODO Összefoglaló -- TDK és OTDK esetén nem kötelező
+\include{include/declaration} %Declaration -- TDK és OTDK esetén törlendő!
+\include{content/abstract}    %Abstract -- TDK és OTDK esetén nem kötelező
 
 
 % The main part of the thesis
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \pagenumbering{arabic}
 
-%TODO import your own content
+%Import content
 \include{content/Introduction}
 \include{content/Technologies}
-\include{content/ALPR}
+\include{content/Sequential}
 \include{content/Detection}
+\include{content/ALPR}
+\include{content/PlateLocalization}
 \include{content/OCR}
 \include{content/System}
 \include{content/Summary}
@@ -91,13 +96,13 @@
 % Bibliography
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \addcontentsline{toc}{chapter}{\bibname}
-\bibliographystyle{unsrt}
+%\bibliographystyle{unsrt}
 \bibliography{bib/citings}
 
 
 % Appendix
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-\include{content/appendix}
+%\include{content/appendix}
 
 %\label{page:last}
 \end{document}
