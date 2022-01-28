@@ -16,7 +16,7 @@ The applied pipeline is shown by Figure \ref{fig:pipeline}. It compresses the tr
 The pipeline models are dynamically quantized TensorFlow Lite converted networks. On a Samsung Galaxy S10 smartphone, where an image contains only one license plate, the average runtime is roughly 160 ms. The processing steps are as follows:
 
 \begin{itemize}
-  \item image pre-processing (9 ms)
+  \item image preprocessing (9 ms)
   \item detector inference (75 ms on GPU)
   \item cutting and resizing the license plate image segment (3 ms)
   \item OCR inference (37 ms on CPU)
@@ -26,7 +26,7 @@ The pipeline models are dynamically quantized TensorFlow Lite converted networks
 
 This runtime may change depending on the number of plates on a picture, as the OCR steps must be repeated on each license plate image segment.
 
-Table \ref{tab:OCR_model_runtimes} summarizes the runtimes of different OCR models. Besides the best-performing network, I also tested the initial architecture (batch 128). It runs in 37 ms on the device's GPU. Keeping in mind the runtime, it is worth sacrificing marginal quality (+9.5e-3 loss) to acquire a $1.5\times$ speed-up. As a reference, Google's MLKit Vision Text Recognizer\cite{MLKitTextRecognition} runs in 40 ms on the same plate image with a single line of text. The MLKit model is a multiblock recognizer. However, when more than one block is present, its runtime increases drastically.
+Table \ref{tab:OCR_model_runtimes} summarizes the runtimes of different OCR models. Besides the best-performing network, I also tested the initial architecture (batch 128). It runs in 37 ms on the device's GPU. Keeping in mind the runtime, it is worth sacrificing marginal quality (+\({9.5} \times {10^{-3}}\) loss) to acquire a $1.5\times$ speed-up. As a reference, Google's MLKit Vision Text Recognizer\cite{MLKitTextRecognition} runs in 40 ms on the same plate image with a single line of text. The MLKit model is a multiblock recognizer. However, when more than one block is present, its runtime increases drastically.
 
 \begin{table}[htb]
 \caption{Running time in milliseconds for OCR models.}
@@ -50,7 +50,7 @@ Table \ref{tab:OCR_model_runtimes} summarizes the runtimes of different OCR mode
 
 The client application's main task is to detect stolen vehicles, then report them using location and time data. The application runs the pipeline on the device, and it is possible to run an evaluation on loaded images and the live image feed. The user constantly sees what has been recognized. Stolen vehicle and user data are stored in a local SQLite database, synchronized in the background with the API. Available camera operations include front/back camera switching, image saving, tap to focus, and pinch to zoom. I present the Android application's architecture and some details in the following.
 
-The application can receive inputs from two different sources. The first option is to load an image from the storage. In this case, the image is processed only once, and the meta-information (GPS location, UTC timestamp) is extracted from the image's Exif (Exchangeable image file format) content. This format is supported by almost any type of smartphone (if not, fallback values are used, which cannot be reported to the server). This is important because otherwise, a stolen vehicle image from the past could overwrite a more recent recognition on the server when reporting the match. The other option is to process the live camera feed. For this, the current camera frame is fed into the pipeline. When the results are ready, the current live frame is processed, meaning that frames are discarded while the pipeline is processing. The live-feed results are accompanied by the device's location and system UTC timestamp information. If they are unavailable, fallback values are used. In both cases, image preprocessing steps are applied shown by Figure \ref{fig:image_preprocessing}. Some images of the application are shown in Figure \ref{fig:AppImages}.
+The application can receive inputs from two different sources. The first option is to load an image from the storage. In this case, the image is processed only once, and the meta-information (GPS location, UTC timestamp) is extracted from the image's Exif (Exchangeable image file format) content. This format is supported by almost any type of smartphone (if not, fallback values are used, which cannot be reported to the server). This is important because otherwise, a stolen vehicle image from the past could overwrite a more recent recognition on the server when reporting the match. The other option is to process the live camera feed. For this, the current camera frame is fed into the pipeline. When the results are ready, the current live frame is processed, meaning that frames are discarded while the pipeline is processing. The live feed results are accompanied by the device's location and system UTC timestamp information. If they are unavailable, fallback values are used. In both cases, image preprocessing steps are applied shown by Figure \ref{fig:image_preprocessing}. Some images of the application are shown in Figure \ref{fig:AppImages}.
 
 \begin{figure}[htb]
  \centerline{\includegraphics[width=0.9\columnwidth]{.//Figure/System/image_preprocessing.png}}
@@ -60,7 +60,7 @@ The application can receive inputs from two different sources. The first option 
 
 \begin{figure}[H]
  \centerline{\includegraphics[width=1.0\columnwidth]{.//Figure/System/AppImages.png}}
- \caption{Live-feed recognition (1st screen) and an identified stolen vehicle (2nd screen). Details can be inspected and a message can be added to a recognition (3rd screen). When a vehicle is reported, its last known position is visible on the map (4th screen).}
+ \caption{Live feed recognition (1st screen) and an identified stolen vehicle (2nd screen). Details can be inspected and a message can be added to a recognition (3rd screen). When a vehicle is reported, its last known position is visible on the map (4th screen).}
  \label{fig:AppImages}
 \end{figure}
 

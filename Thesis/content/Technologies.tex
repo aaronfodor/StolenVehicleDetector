@@ -5,7 +5,7 @@ This chapter presents the technologies used to build the deep learning models an
 
 \section{Deep learning}
 
-I used the Python\cite{Python} programming language in deep learning-related tasks. Python is an interpreted, dynamically typed, high-level language with an object-oriented approach. Numerous libraries offer a deep learning repertoire in Python. However, two libraries stand out from these: PyTorch and TensorFlow. I only describe the technologies I used during this work in the following. My choice was driven primarily by the desire for Android interoperability, which is currently not widely supported by other tools than the selected ones.
+I used the Python\cite{Python} programming language in deep learning-related tasks. Python is an interpreted, dynamically typed, high-level language with an object-oriented approach. Numerous libraries offer a deep learning repertoire in Python. However, two libraries stand out from these: PyTorch and TensorFlow. In this section, I mainly describe the technologies used in this work. My choice was driven primarily by the desire for Android interoperability, which is currently not widely supported by other tools than the selected ones.
 
 \subsection{TensorFlow}
 
@@ -13,9 +13,9 @@ TensorFlow\cite{TensorFlow} is an open-source machine learning platform develope
 
 TensorFlow uses Google's protobuf\cite{Protobuf} format to store models. In this case, a .proto file defines a scheme, and Protocol Buffers generates the content. It is a denser format than XML or JSON, and it supports fast serialization, prevents scheme-violations, and guarantees type-safety\cite{ProtobufVsFlatbuf}. In turn, protobuf files are not as human-readable as opposed to JSON or XML.
 
-TensorFlow Lite is a lightweight, speed, or storage optimized format to deploy models on smartphones and IoT devices. Trained models can be transformed into this format with the TFLite converter. TFLite uses the Flat Buffer\cite{Flatbuf} format. It is similar to TensorFlow's protobuf; the main difference is that Flat Buffers do not require deserializing the entire content (coupled with per-object memory allocation) before accessing an item in it. Therefore, these files consume significantly less memory than protobufs. On the other hand, Flat Buffer encoding is more complicated than in JSON/protobuf formats - for this reason, TensorFlow does not use it. It is also why TFLite models cannot be trained.
+TensorFlow Lite is a lightweight, speed, or storage optimized format to deploy models on smartphones and IoT devices. Trained models can be transformed into this format with the TFLite converter. TFLite uses the Flat Buffer\cite{Flatbuf} format. It is similar to TensorFlow's protobuf; the main difference is that Flat Buffers do not require deserializing the entire content (coupled with per-object memory allocation) before accessing an item in it. Therefore, these files consume significantly less memory than protobufs. On the other hand, Flat Buffer encoding is more complicated than in JSON/protobuf formats - for this reason, TensorFlow does not use it. This is also why TFLite models could not be trained until TensorFlow 2.7\cite{TensorFlowLiteTraining}.
 
-During TFLite conversion, it can be selected whether it is required to minimize model size further with a slight model accuracy trade-off or not. These are the quantization options used to achieve further performance gains ($2-3\times$ faster inference, $2-4\times$ smaller networks). I used full integer quantization\cite{TensorFlowQuant} in which all the model maths are int8 based instead of the original float32.
+During TFLite conversion, it can be selected whether it is required to minimize model size further with a slight model accuracy trade-off or not. These quantization options are used to achieve further performance gains ($2-3\times$ faster inference, $2-4\times$ smaller networks). One technique is full integer quantization\cite{TensorFlowQuant} in which all the model maths are int8 based instead of the original float32.
 
 The TensorBoard component provides a helpful visualization tool where users see a dashboard of model performance and training/evaluation details. It can also display the current images fed to the network, the model's answer, and many more. I used this tool to monitor the training/evaluation process.
 
@@ -29,9 +29,9 @@ During this work, support for TF2 has arrived, making it possible to use Keras m
 
 \subsection{PyTorch}
 
-PyTorch\cite{PyTorch} is an open-source machine learning framework primarily developed by Meta/Facebook AI Research lab. In the previous years, the community started to use it more extensively, and numerous research implementations were written in it. PyTorch offers a pythonic and object-oriented approach, while TensorFlow has several options to choose from. In my opinion, developing in PyTorch requires more coding than using TensorFlow with Keras. However, it feels more stable and less fragile. The framework also has good interoperability with the Open Neural Network Exchange (ONNX)\cite{ONNX} format, which aims to bridge the compatibility gap between different libraries and frameworks. The PyTorch Mobile module provides both iOS and Android deployment with quantization and optimization. However, it is in the beta stage at the time of this work.
+PyTorch\cite{PyTorch} is an open-source machine learning framework primarily developed by Meta/Facebook AI Research lab. In the previous years, the community started to use it more extensively, and numerous research implementations were written using it. PyTorch offers a pythonic and object-oriented approach, while TensorFlow has several options to choose from. In my opinion, developing in PyTorch requires more coding than using TensorFlow with Keras. However, it feels more stable and less fragile. The framework also has good interoperability with the Open Neural Network Exchange (ONNX)\cite{ONNX} format, which aims to bridge the compatibility gap between different libraries and frameworks. The PyTorch Mobile module provides both iOS and Android deployment with quantization and optimization. However, it is in the beta stage at the time of this work.
 
-After evaluating the frameworks, I decided to work with TensorFlow/Keras. My primary motivations were finding more documentation for Android, and I assumed it was easier to work with an already matured tool (TensorFlow Lite) than the more risky beta stage PyTorch Mobile.
+After evaluating the frameworks, I decided to work with TensorFlow/Keras. My primary motivations were finding more documentation for Android, and I assumed it was easier to work with an already matured tool (TensorFlow Lite) than the more risky beta stage PyTorch Mobile. As a side note: both frameworks also offer C++ APIs, which can also run on Android using the platform's Native Development Kit.
 
 \subsection{Environment}
 
@@ -56,7 +56,7 @@ The model can be saved in three different ways:
 \pagebreak
 \section{Application}
 
-I used the Kotlin programming language\cite{Kotlin} for the frontend and the backend. Kotlin is a statically typed, cross-platform language with type inference. In addition to the object-oriented approach, it also contains functional programming tools.
+I used the Kotlin programming language\cite{Kotlin} for the frontend and the backend. Kotlin is a statically typed, cross-platform language with type inference. I used the JVM version, where the Kotlin standard library depends on the Java Class Library, but it can also compile to JavaScript. In addition to the object-oriented approach, Kotlin also contains functional programming tools.
 
 \subsection{Frontend}
 

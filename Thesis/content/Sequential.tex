@@ -11,20 +11,18 @@ Sequential modeling is a powerful way to solve numerous tasks, like video proces
   \item \textit{multiple-input-single-output} (MISO) models receive multiple inputs and output a single prediction. For example, the inputs are words of a textual review, and the prediction is the writer's sentiment.
   \item \textit{multiple-input-multiple-output} (MIMO) models receive multiple inputs and predict multiple outputs. These approaches can be divided into further subcategories:
     \begin{itemize}
-        \item Some models receive multiple inputs and immediately output the prediction based on that. In video classification, a model usually receives multiple frames and outputs the class for each time frame, but these are predicted simultaneously, depending on each other.
-	   \item In another configuration, popular in machine translation, models receive an input text and predict the current translated text on the fly, based on the current input. Here, input- and output sequences are shifted relative to each other (some input characters are needed for the first prediction). For example, Google Translate is a model of this kind.
+     \item Some models receive multiple inputs and immediately output the prediction based on that. In video classification, a model usually receives multiple frames and outputs the class for each time frame, but these are predicted simultaneously, depending on each other.
+	   \item In another configuration, popular in machine translation, models receive an input text and predict the current translated text on the fly, based on the current input. Here, input and output sequences are shifted relative to each other (some input characters are needed for the first prediction). For example, Google Translate is a model of this kind.
     \end{itemize}
 \end{itemize}
 
-A summary of the different tasks is illustrated by Figure \ref{fig:task_types}.
+A summary of the different tasks is illustrated by Figure \ref{fig:task_types}. Sequential data can be processed with different network types. In the following sections, I present these variants.
 
 \begin{figure}[htb]
  \centerline{\includegraphics[width=1.0\columnwidth]{.//Figure/Sequential/task_types.png}}
  \caption{The different types of sequential tasks.}
  \label{fig:task_types}
 \end{figure}
-
-Sequential data can be processed with different network types. In the following sections, I present these variants.
 
 \section{One-dimensional convolution}
 
@@ -44,7 +42,7 @@ When applying 1D convolution, the corresponding layer only sees the input in sli
  \label{fig:WaveNet_dilation}
 \end{figure}
 
-These models use solely convolutional layers, thus being relatively simple. While training, the simple backpropagation algorithm is used, and their runtime is fast. However, these models lack one crucial element to process long sequential inputs: memory.
+These models use solely convolutional layers, thus being relatively simple. While training, the simple backpropagation algorithm is used, and their runtime is only constrained by the convolution operation: in the case of two dimensions, if the input size is ${n}\times{n}$ and the kernel size is ${m}\times{m}$, the runtime is $\mathcal{O}({n^2}\times{m^2})$. However, these models lack one crucial element to process long sequential inputs: memory.
 
 \section{Recurrent neural networks}
 
@@ -81,7 +79,7 @@ Many time steps are needed to create long-term inner memory. During BPTT, the er
 
 For gradient exploding, possible solutions can be using saturating nonlinear activation functions or gradient clipping, where the values cannot go above a maximum. Skip connections can somehow compensate for the gradient vanishing problem, through which the error can flow freely back to the earlier time steps. However, these are not complete solutions.
 
-\section{Long short-term memory}
+\subsection{Long short-term memory}
 
 Long short-term memory\cite{LSTM} (LSTM) is a type of RNN cell which uses a gated approach. It implements a short-term memory that can be long enough to handle longer sequences than simple RNNs can do. An LSTM cell has three inputs in each time step:
 
@@ -100,7 +98,7 @@ There are multiple trainable gates within an LSTM cell, manipulating the signal 
 \item \textit{output}: Masks the hidden state output derived from the cell state.
 \end{itemize}
 
-In an LSTM cell, there are only saturating nonlinear activation functions, which can handle the gradient exploding problem. There is no activation function between the input- and the output cell state, only one multiplication (forget gate) and one addition. This means that the input signal can propagate to the output without severe decrease, and thus the gradients can backpropagate without downscaling. This path forms a gradient highway across the unfolded model (containing the same LSTM cell of each time step) during BPTT training. This path is essential in solving the gradient vanishing problem induced by the numerous time steps. The visual representation of an LSTM cell is illustrated by Figure \ref{fig:LSTM}.
+In an LSTM cell, there are only saturating nonlinear activation functions, which can handle the gradient exploding problem. There is no activation function between the input and the output cell state, only one multiplication (forget gate) and one addition. This means that the input signal can propagate to the output without severe decrease, and thus the gradients can backpropagate without downscaling. This path forms a gradient highway across the unfolded model (containing the same LSTM cell of each time step) during BPTT training. This path is essential in solving the gradient vanishing problem induced by the numerous time steps. The visual representation of an LSTM cell is illustrated by Figure \ref{fig:LSTM}.
 
 \begin{figure}[htb]
  \centerline{\includegraphics[width=1.0\columnwidth]{.//Figure/Sequential/LSTM.png}}
@@ -123,8 +121,8 @@ I illustrate the function's applicability on an example with an input image in w
 Because CTC tries to find the optimal label alignment, a good character encoding is needed to help distinguish good and bad ones. The characters are separated by a blank token (marked as ``|''), which separates the letters. This way, when a wide character is processed and triggers multiple predictions next to each other, we can merge them between the blank tokens to identify the actual letter. This also solves the problem of segregating the same characters next to each other. The encoding approach makes it possible to represent the same text multiple ways, allowing different alignments to match. The neural network is trained to predict the output in this encoded format.
 
 \begin{itemize}
-\item The word ``curent'' is recognized when the output is ``||ccu|rre|nn|t'', ``|ccc|uu|rr|eee|nnn|ttt|'', or ``c|u|r|e|n|t''.
-\item The word ``current'' is recognized when the output is ``||cc||u|rr|renn|t'', ``|ccccuu|rr|rrrreeennn|ttt|'', or ``c|u|r|r|e|n|t''.
+\item The word ``of'' is recognized when the output is ``|o|ff|'', ``|oooooo||||ffff||||'', or ``o|f''.
+\item The word ``off'' is recognized when the output is ``||oo|f||f'', ``|ooo|fff|f|'', or ``o|f|f''.
 \end{itemize}
 
 To calculate the scores for an alignment, we have to consider all the possible paths and sum the ones producing the same decoded text. The added up probability is the overall score of the path. Each path text is then compared to the ground truth label, and the loss value is calculated weighted by the path probabilities. The loss function needs to be minimized. For that, CTC uses the negative sum of the log probabilities. The probability is maximized when this loss is minimized, so the function motivates the model to find good predictions.

@@ -21,7 +21,7 @@ The first essential operation to understand is \textit{Intersection over Union}.
 
 \[IoU=\frac{area\textsubscript{overlap}}{area\textsubscript{union}}\]
 
-It measures how much a box overlaps with another box. This simple operation is used extensively in object detection, matching ground truth boxes with anchor boxes (at training). It is also used in non-maximum suppression\cite{NMS} for removing multiple predictions of the same object (at inference). Recently, it is also used as a differentiable localization loss function (CIoU\cite{IoULosses}) between ground truth boxes and predicted boxes (at training). Sometimes, there are predefined IoU thresholds for the different usages. For example, above 0.5, an anchor box is interpreted as positive w.r.t. a ground truth box, but below as a negative sample. These are hyperparameters to tune.
+It measures how much a box overlaps with another box. This simple operation is used extensively in object detection, matching ground truth boxes with anchor boxes (at training). It is also used in non-maximum suppression\cite{NMS} for removing multiple predictions of the same object (at inference). Recently, it is also used as a differentiable localization loss function (CIoU\cite{IoULosses}) between ground truth boxes and predicted boxes (at training). Sometimes, there are predefined IoU thresholds for the different usages. For example, above 0.5, an anchor box is interpreted as positive w.r.t. a ground truth box, but below as a negative sample. These are hyperparameters to tune. Figure \ref{fig:IoU} illustrates IoU values of different bounding box pairs.
 
 \begin{figure}[htb]
  \centerline{\includegraphics[width=1.0\columnwidth]{.//Figure/Detector/IoU.png}}
@@ -62,7 +62,7 @@ It is unclear which predictor is correct and which is not. The network needs to 
 
 \subsection{Anchor-based operation}
 
-Anchor-based object detectors do the same on a bigger scale the following way.
+Anchor-based object detectors apply the same solution on a larger scale as follows:
 
 \begin{itemize}
   \item They generate thousands of predefined anchor boxes; each mapped to a single predictor. One predictor is responsible for finding objects of its anchor box's location, size, and aspect ratio.
@@ -81,7 +81,7 @@ The massive number of anchor boxes means a positive-negative class imbalance bec
 
 The last problem is that anchor boxes are parameter-sensitive. Datasets have boxes of different sizes and shapes, and if the predefined anchors do not fit the properties of the ground truth boxes, low IoU values are calculated. Thus, the network does not even know that ground truth objects exist and cannot predict them. There are different approaches to finding ideal anchor configurations. Hand-crafted bounding boxes are used in SSD, while YOLOv3\cite{YOLOv3} uses a k-means algorithm to estimate ideal values w.r.t. a given dataset.
 
-To illustrate the phenomenon, Figure \ref{fig:anchor_bad_match} shows 1\% of the default anchor boxes (for the MS-COCO dataset) of RetinaNet. The matched bounding boxes are the following when training and evaluating the same model on the WiderFace dataset. Only a few ground truth boxes overlap with any of the anchor boxes. Thus the majority of the faces cannot be detected.
+To illustrate the phenomenon, Figure \ref{fig:anchor_bad_match} shows 1\% of the default anchor boxes (for the COCO dataset) of RetinaNet. The matched bounding boxes are the following when training and evaluating the same model on the WiderFace\cite{WiderFace} dataset. Only a few ground truth boxes overlap with any of the anchor boxes. Thus the majority of the faces cannot be detected.
 
 \begin{figure}[htb]
  \centerline{\includegraphics[width=1.0\columnwidth]{.//Figure/Detector/anchor_bad_match.png}}
@@ -175,7 +175,7 @@ The calculation of detection 4 of Table \ref{tab:sample_detection} is the follow
 
 \textit{Interpolated Average Precision} divides the recall value from 0 to 1 into n points. It is used to smooth out the zig-zag pattern of AP (at each recall level, replacing each precision value with the highest precision found to the right of that recall level\cite{IntroInfoRetrieval}). The IAP of the example is on Figure \ref{fig:transformed_precision_recall}. Interpolated AP is calculated based on the area below the smoothed values. It is the basic idea behind the mAP metric variants.
 
-\[IAP=\frac{1}{n}\sum_{n\in(0.0 ... 1.0)} AP\textsubscript{n}\]
+\[IAP=\frac{1}{n}\sum_{i\in(0.0 ... 1.0)} AP\textsubscript{i}\]
 
 \begin{figure}[htb]
  \centerline{\includegraphics[width=0.8\columnwidth]{.//Figure/Detector/transformed_precision_recall.png}}
@@ -183,11 +183,11 @@ The calculation of detection 4 of Table \ref{tab:sample_detection} is the follow
  \label{fig:transformed_precision_recall}
 \end{figure}
 
-The last metric discussed here is \textit{mean Average Precision (mAP)}. There are numerous types of mAP. In COCO, a 101-point interpolated AP is used, which is the average over 10 IoU levels starting from 0.5 to 0.95 with a step size of 0.05. Hereafter, I refer to the COCO implementation by this name.
+The last metric discussed here is \textit{mean Average Precision (mAP)}. There are numerous types of mAP. In the COCO\cite{MS-COCO} protocol, a 101-point interpolated AP is used, which is the average over 10 IoU levels starting from 0.5 to 0.95 with a step size of 0.05. Hereafter, I refer to the COCO implementation by this name.
 
 \section{Protocols}
 
-There is no consensus about the evaluation metrics of the object detection problem. Different competitions such as PASCAL VOC\cite{PascalVOC}, MS-COCO\cite{MS-COCO}, or Google Open Images Challenge\cite{OID} have their ways to measure performance\cite{mAP}.
+There is no consensus about the evaluation metrics of the object detection problem. Different competitions such as PASCAL VOC\cite{PascalVOC}, Common Objects in Context\cite{MS-COCO} (COCO), or Google Open Images Challenge\cite{OID} (OID) have their ways to measure performance\cite{mAP}.
 
 PASCAL VOC\cite{PascalVOC} has introduced mAP to evaluate detectors' quality with an 11-point interpolated AP definition.
 
@@ -252,9 +252,9 @@ Two-stage detectors can achieve high accuracy, but they are usually too slow for
 The first one-stage detector aiming for real-time inference was You Only Look Once\cite{YOLO} (YOLO). It was introduced in June 2015, initially written in the DarkNet framework. YOLO is a unified architecture with a single network containing 24 convolutional layers and two fully connected ones. The convolutional layers extract features from images, while the dense layers predict coordinates and probabilities. The input image is divided into an \(N \times N\) grid in which a cell is responsible for predicting boxes in its area. In YOLO, one box has six properties: \(X\textsubscript{center}, Y\textsubscript{center}, \frac{width}{2}, \frac{height}{2}, objectness\) and multi-hot encoded \textit{class confidence}. The localization values \((X\textsubscript{center}, Y\textsubscript{center}, \frac{width}{2}, \frac{height}{2})\) are normalized and directly predicted using fully connected layers. A single cell outputs two boxes and their confidence values for every \textit{C} classes, so the total output shape is \(N \times N \times ((2 \times 5)+C)\). This means that one grid cell can detect maximum one object. In YOLO, the loss function is a sum-squared error for both classification and localization. This loss function has the following limitations:
 
 \begin{itemize}
-  \item It weights regression (localization) and classification errors the same way, which is not optimal.
+  \item It weights regression (localization) and classification errors the same way, which is not optimal because they are fundamentally different problems (continuous and discrete domains).
   \item The high number of negative samples (in every image, many grid cells do not contain any object) tends to overpower the positive ones, pushing the confidence scores towards zero. This is handled in YOLO by predicting the objectness score and down-scaling bounding box losses with low objectness values.
-  \item The loss function equally weights errors in small- and large boxes, but the loss should reflect that slight deviation in large boxes matters less than in small boxes. To address this, YOLO predicts the square root of the bounding box width and height.
+  \item The loss function equally weights errors in small and large boxes, but the loss should reflect that slight deviation in large boxes matters less than in small boxes. To address this, YOLO predicts the square root of the bounding box width and height.
 \end{itemize}
 
 These problems regarding the loss function have been addressed in later architectures. When it was introduced, YOLO was considered fast and straightforward compared to the state-of-the-art and less likely to predict false positives on the background than two-staged detectors. On the other hand, it makes more localization mistakes (partly related to the loss function) and struggles with small objects.
@@ -326,7 +326,7 @@ EfficientDet\cite{EfficientDet} was introduced in July 2020 by Google Brain and 
 
 Over time, a massive number of new solutions emerged. The state-of-the-art solutions on the COCO dataset (as of December 2021) use transformer-based neural networks (like SwinV2-G(HTC++) or Florence CoSwin-H), different from the CNN-based approaches. These are computationally heavy algorithms, making them unsuitable for real-time inference.
 
-The fast-running YOLOv4\cite{YOLOv4} introduced further data augmentation and regularization techniques, a smaller backbone, and the Mish activation function. A month after YOLOv4, YOLOv5\cite{YOLOv5} was released. These architectures, however, do not contain significant modifications. Personally, it feels like they are a bit overly optimized to the anchor-based pipeline. For this reason, I do not discuss them. Instead, I touch anchor-free detectors in the following part, which has been the subject of numerous publications in recent years.
+The fast-running YOLOv4\cite{YOLOv4} introduced further data augmentation and regularization techniques, a smaller backbone, and the Mish activation function. A month after YOLOv4, YOLOv5\cite{YOLOv5} was released. These architectures, however, do not contain significant modifications. Personally, it feels like they are a bit overly optimized to the anchor-based pipeline. For this reason, I do not discuss them. Instead, I cover anchor-free detectors in the following part, which has been the subject of numerous publications in recent years.
 
 \subsubsection{CenterNet}
 

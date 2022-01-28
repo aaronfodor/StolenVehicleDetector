@@ -86,7 +86,7 @@ class VehicleIdentifierService {
                 val textImageSnippet = ImageConverter.cutPieceFromImage(bitmapNxN, scaledRectF)
                 val resizedOcrImage = ImageConverter.transformBitmapWithPad(textImageSnippet, ocrService.getInputSize())
 
-                val preparingDuration = SystemClock.uptimeMillis() - startPrepareTime
+                val preparingDuration: Long = SystemClock.uptimeMillis() - startPrepareTime
                 log("OCR image preparing duration: $preparingDuration")
                 Trace.endSection()
 
