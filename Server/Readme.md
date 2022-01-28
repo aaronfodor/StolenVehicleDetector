@@ -1,4 +1,4 @@
-# Stolen Vehicle Detector Server
+# Ktor backend
 
 This is the server of the Stolen Vehicle Detector system. Clients can upload new reports, and download the current ones. The server provides an API for Android clients and manages registered users. It provides a stateless REST API, so a user needs to authenticate itself every time querying the server.
 
